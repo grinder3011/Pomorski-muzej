@@ -1,95 +1,95 @@
-// schedule-utils.js (standalone)
+// schedule-utils.js
 
-function parseTimeToMinutes(t) {
+function parseTime(t) {
   const [h, m] = t.split(':').map(Number);
   return h * 60 + m;
 }
 
-function isNowInIntervals(intervals) {
-  if (!intervals) return false;
-  if (typeof intervals === 'string') intervals = [intervals];
-
+function nowInInterval(interval) {
   const now = new Date();
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
-  return intervals.some(interval => {
-    const [start, end] = interval.split('-').map(parseTimeToMinutes);
-    return nowMinutes >= start && nowMinutes < end;
-  });
+  const [startStr, endStr] = interval.split('-');
+  if (!startStr || !endStr) return false;
+
+  const start = parseTime(startStr);
+  const end = parseTime(endStr);
+
+  return nowMinutes >= start && nowMinutes < end;
 }
 
-// Convert "MM-DD" to a Date in current year (handles year wrap)
-function getDateFromMMDD(mmdd) {
-  const [month, day] = mmdd.split('-').map(Number);
-  const now = new Date();
-  return new Date(now.getFullYear(), month - 1, day);
+function isOpenNow(hours) {
+  if (!hours) return false;
+  if (typeof hours === 'string') {
+    if (hours.toLowerCase() === 'closed') return false;
+    return nowInInterval(hours);
+  }
+  if (Array.isArray(hours)) {
+    return hours.some(interval => nowInInterval(interval));
+  }
+  return false;
 }
 
-// Check if now is in [start, end] range, considering year wrap (e.g. Sept-Jun)
-function isDateInPeriod(now, startMMDD, endMMDD) {
-  let start = getDateFromMMDD(startMMDD);
-  let end = getDateFromMMDD(endMMDD);
+function inPeriod(now, startStr, endStr) {
+  const [startM, startD] = startStr.split('-').map(Number);
+  const [endM, endD] = endStr.split('-').map(Number);
 
-  // handle year wrap (end before start)
+  const year = now.getFullYear();
+  let start = new Date(year, startM - 1, startD);
+  let end = new Date(year, endM - 1, endD);
+
+  // If period crosses year boundary (e.g. 09-01 to 06-30)
   if (end < start) {
-    if (now < start) {
-      start.setFullYear(start.getFullYear() - 1);
-    } else {
-      end.setFullYear(end.getFullYear() + 1);
-    }
+    if (now < start) start.setFullYear(year - 1);
+    else end.setFullYear(year + 1);
   }
 
   return now >= start && now <= end;
 }
 
-// Get day key like "Mon", "Tue" etc.
-function getDayKey() {
-  return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date().getDay()];
-}
-
-/**
- * Main function to get status
- * @param {*} locationName string key from JSON
- * @param {*} allData entire JSON
- * @returns { isOpen:boolean, statusText:string, todayHours:string|null }
- */
-function getOpenStatus(locationName, allData) {
-  const location = allData.locations[locationName];
-  if (!location) {
-    return {
-      isOpen: false,
-      statusText: "Lokacija ni najdena",
-      todayHours: null
-    };
-  }
-
-  const now = new Date();
-  const dayKey = getDayKey();
-
-  // Find current period
-  const period = location.periods.find(p => isDateInPeriod(now, p.start, p.end));
-  if (!period) {
-    return {
-      isOpen: false,
-      statusText: "Danes zaprto",
-      todayHours: null
-    };
-  }
-
-  const todayHours = period.hours[dayKey] || null;
-  const isOpen = isNowInIntervals(todayHours);
-
-  return {
-    isOpen,
-    statusText: isOpen ? "Odprto" : "Zaprto",
-    todayHours: formatHours(todayHours)
-  };
-}
-
-// Format hours for display, supports array or string or null
 function formatHours(hours) {
   if (!hours) return "Zaprto";
   if (typeof hours === 'string') return hours.replace('-', '–');
   if (Array.isArray(hours)) return hours.map(h => h.replace('-', '–')).join(', ');
-  return "Zaprto";
+  return "";
+}
+
+function getTodayKey() {
+  return new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(new Date());
+}
+
+export function getOpenStatus(locationName, data) {
+  const location = data.locations?.[locationName];
+  if (!location) {
+    return {
+      isOpen: false,
+      statusText: "Lokacija ni najdena",
+      todayHours: "-"
+    };
+  }
+
+  const now = new Date();
+  const activePeriod = location.periods.find(p => inPeriod(now, p.start, p.end));
+
+  if (!activePeriod) {
+    return {
+      isOpen: false,
+      statusText: "Zaprto",
+      todayHours: "Danes zaprto"
+    };
+  }
+
+  const todayKey = getTodayKey();
+  let todayHours = activePeriod.hours[todayKey];
+
+  // Handle null as closed
+  if (todayHours === null) todayHours = null;
+
+  const open = isOpenNow(todayHours);
+
+  return {
+    isOpen: open,
+    statusText: open ? "Odprto" : "Zaprto",
+    todayHours: formatHours(todayHours) || "Zaprto"
+  };
 }
