@@ -5,7 +5,7 @@
   <title>Muzej delovni čas</title>
   <style>
     body {
-      margin:0; padding:0;
+      margin: 0; padding: 0;
       font-family: Arial, sans-serif;
       background: #222;
       color: white;
@@ -27,7 +27,6 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: white;
       text-transform: uppercase;
       animation: blink 2s infinite;
       box-shadow: 0 0 20px rgba(0,0,0,0.6);
@@ -35,12 +34,12 @@
     }
 
     #status.open {
-      background-color: #28a745; /* green */
+      background-color: #28a745;
       box-shadow: 0 0 25px #28a745;
     }
 
     #status.closed {
-      background-color: #d32f2f; /* red */
+      background-color: #d32f2f;
       box-shadow: 0 0 25px #d32f2f;
     }
 
@@ -62,112 +61,97 @@
   <div id="status" class="closed">Zaprto</div>
   <div id="hours">Nalaganje urnika...</div>
 
-<script>
-(async () => {
-  // Helper to parse time "HH:MM"
-  function parseTime(t) {
-    const [h,m] = t.split(':').map(Number);
-    return h * 60 + m;
-  }
-
-  // Check if current time is in interval(s)
-  function isOpenNow(hours) {
-    if (!hours) return false;
-    if (typeof hours === 'string') {
-      hours = [hours];
-    }
-    const now = new Date();
-    const currentMinutes = now.getHours()*60 + now.getMinutes();
-
-    return hours.some(interval => {
-      const [start, end] = interval.split('-').map(parseTime);
-      return currentMinutes >= start && currentMinutes < end;
-    });
-  }
-
-  // Format today's hours for display
-  function formatHours(hours) {
-    if (!hours) return "Danes zaprto";
-    if (typeof hours === 'string') return hours.replace('-', '–');
-    if (Array.isArray(hours)) return hours.map(h => h.replace('-', '–')).join(', ');
-    return "";
-  }
-
-  // Convert month-day to a Date object (year doesn't matter, just for comparison)
-  function monthDayToDate(str) {
-    const [m, d] = str.split('-').map(Number);
-    // Use current year but will handle year wrap below
-    const now = new Date();
-    return new Date(now.getFullYear(), m-1, d);
-  }
-
-  // Check if date is in period (consider period may cross year boundary)
-  function inPeriod(now, startStr, endStr) {
-    const year = now.getFullYear();
-    let start = new Date(year, ...startStr.split('-').map(x => Number(x)-1));
-    let end = new Date(year, ...endStr.split('-').map(x => Number(x)-1));
-
-    // If end < start, period crosses new year
-    if (end < start) {
-      if (now < start) {
-        start.setFullYear(year-1);
-      } else {
-        end.setFullYear(year+1);
+  <script>
+    (async () => {
+      function parseTime(t) {
+        const [h, m] = t.split(':').map(Number);
+        return h * 60 + m;
       }
-    }
-    return now >= start && now <= end;
-  }
 
-  // Map JS getDay() to our keys in JSON
-  const daysMap = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      function isOpenNow(hours) {
+        if (!hours) return false;
+        const now = new Date();
+        const nowMinutes = now.getHours() * 60 + now.getMinutes();
+        if (typeof hours === 'string') hours = [hours];
+        return hours.some(interval => {
+          const [start, end] = interval.split('-').map(parseTime);
+          return nowMinutes >= start && nowMinutes < end;
+        });
+      }
 
-  const params = new URLSearchParams(window.location.search);
-  const locParam = params.get('loc');
-  if (!locParam) {
-    document.getElementById('hours').innerText = "Lokacija ni podana";
-    return;
-  }
+      function formatHours(hours) {
+        if (!hours) return "Danes zaprto";
+        if (typeof hours === 'string') return hours.replace('-', '–');
+        if (Array.isArray(hours)) return hours.map(h => h.replace('-', '–')).join(', ');
+        return "";
+      }
 
-  // Load JSON schedule
-  const response = await fetch('./status-muzeja/schedule.json');
-  const data = await response.json();
+      function inPeriod(now, startStr, endStr) {
+        const [startMonth, startDay] = startStr.split('-').map(Number);
+        const [endMonth, endDay] = endStr.split('-').map(Number);
 
-  const locData = data.locations[locParam];
-  if (!locData) {
-    document.getElementById('hours').innerText = "Lokacija ni najdena";
-    return;
-  }
+        const year = now.getFullYear();
+        let start = new Date(year, startMonth - 1, startDay);
+        let end = new Date(year, endMonth - 1, endDay);
 
-  const now = new Date();
-  const dayKey = daysMap[now.getDay()];
+        if (end < start) {
+          if (now < start) start.setFullYear(year - 1);
+          else end.setFullYear(year + 1);
+        }
 
-  // Find the current active period for today
-  const currentPeriod = locData.periods.find(p => inPeriod(now, p.start, p.end));
-  if (!currentPeriod) {
-    document.getElementById('hours').innerText = "Danes zaprto";
-    return;
-  }
+        return now >= start && now <= end;
+      }
 
-  const todayHours = currentPeriod.hours[dayKey] || null;
-  const open = isOpenNow(todayHours);
+      const daysMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-  const statusDiv = document.getElementById('status');
-  const hoursDiv = document.getElementById('hours');
+      const params = new URLSearchParams(window.location.search);
+      const locParam = params.get('loc');
+      const statusDiv = document.getElementById('status');
+      const hoursDiv = document.getElementById('hours');
 
-  if (open) {
-    statusDiv.classList.remove('closed');
-    statusDiv.classList.add('open');
-    statusDiv.textContent = "ODPRTO";
-  } else {
-    statusDiv.classList.remove('open');
-    statusDiv.classList.add('closed');
-    statusDiv.textContent = "ZAPRTO";
-  }
+      if (!locParam) {
+        hoursDiv.textContent = "Lokacija ni podana";
+        return;
+      }
 
-  hoursDiv.textContent = "Danes: " + formatHours(todayHours);
+      let data;
+      try {
+        const response = await fetch('./status-muzeja/schedule.json');
+        if (!response.ok) throw new Error("Neuspelo nalaganje JSON-a");
+        data = await response.json();
+      } catch (e) {
+        hoursDiv.textContent = "Napaka pri nalaganju urnika.";
+        return;
+      }
 
-})();
-</script>
+      const locData = data.locations[locParam];
+      if (!locData) {
+        hoursDiv.textContent = "Lokacija ni najdena";
+        return;
+      }
+
+      const now = new Date();
+      const dayKey = daysMap[now.getDay()];
+      const period = locData.periods.find(p => inPeriod(now, p.start, p.end));
+
+      if (!period) {
+        statusDiv.classList.remove('open');
+        statusDiv.classList.add('closed');
+        statusDiv.textContent = "Zaprto";
+        hoursDiv.textContent = "Danes zaprto";
+        return;
+      }
+
+      const todayHours = period.hours[dayKey] || null;
+      const open = isOpenNow(todayHours);
+
+      statusDiv.classList.remove('open', 'closed');
+      statusDiv.classList.add(open ? 'open' : 'closed');
+      statusDiv.textContent = open ? "Odprto" : "Zaprto";
+
+      hoursDiv.textContent = "Danes: " + formatHours(todayHours);
+    })();
+  </script>
 
 </body>
 </html>
