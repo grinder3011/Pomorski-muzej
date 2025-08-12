@@ -191,37 +191,49 @@
   <script type="module">
     import { getOpenStatus } from './status-muzeja/schedule-utils.js';
 
-    async function updateStatusLights() {
-      try {
-        const res = await fetch('./status-muzeja/schedules.json');
-        if (!res.ok) throw new Error('Failed to load schedules.json');
-        const schedules = await res.json();
-
-        const listItems = document.querySelectorAll('ul.museum-list li');
-
-        listItems.forEach(li => {
-          const locName = li.dataset.location;
-          if (!locName) return;
-
-          const status = getOpenStatus(locName, schedules);
-
-          const circle = li.querySelector('circle');
-          if (!circle) return;
-
-          circle.setAttribute('fill', status.isOpen ? '#4CAF50' : '#E53935');
-
-          // blinking animation
-          let visible = true;
-          setInterval(() => {
-            visible = !visible;
-            circle.style.opacity = visible ? '1' : '0.4';
-          }, 1500);
-        });
-
-      } catch (err) {
-        console.error('Error updating status lights:', err);
+   async function updateStatusLights() {
+        try {
+          const res = await fetch('./status-muzeja/schedules.json');
+          if (!res.ok) throw new Error('Failed to load schedules.json');
+          const schedules = await res.json();
+      
+          const listItems = document.querySelectorAll('ul.museum-list li');
+      
+          listItems.forEach(li => {
+            const locName = li.dataset.location;
+            if (!locName) return;
+      
+            const status = getOpenStatus(locName, schedules);
+      
+            // Update circle color
+            const circle = li.querySelector('circle');
+            if (circle) {
+              circle.setAttribute('fill', status.isOpen ? '#4CAF50' : '#E53935');
+            }
+      
+            // Add blinking animation on circle
+            let visible = true;
+            setInterval(() => {
+              if (circle) {
+                visible = !visible;
+                circle.style.opacity = visible ? '1' : '0.4';
+              }
+            }, 1500);
+      
+            // Update status text next to icon
+            const statusTextElem = li.querySelector('.status-text');
+            if (statusTextElem) {
+              statusTextElem.textContent = status.statusText; // "Odprto" or "Zaprto"
+              statusTextElem.style.color = status.isOpen ? '#4CAF50' : '#E53935';
+              statusTextElem.style.marginLeft = '10px';
+              statusTextElem.style.fontWeight = 'bold';
+            }
+          });
+      
+        } catch (err) {
+          console.error('Error updating status lights:', err);
+        }
       }
-    }
 
     updateStatusLights();
   </script>
