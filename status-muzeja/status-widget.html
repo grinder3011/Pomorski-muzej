@@ -55,7 +55,7 @@
   </div>
 
   <script type="module">
-    import { getOpenStatus } from './status-muzeja/schedule-utils.js';
+    import { getOpenStatus } from 'schedule-utils.js';
 
     const urlParams = new URLSearchParams(window.location.search);
     const locationName = urlParams.get("location");
@@ -63,7 +63,7 @@
     if (!locationName) {
       document.getElementById("widget").innerHTML = "<p>Manjka parameter ?location=</p>";
     } else {
-      fetch('./status-muzeja/schedules.json')
+      fetch('schedules.json')
         .then(res => res.json())
         .then(data => {
           const status = getOpenStatus(locationName, data);
