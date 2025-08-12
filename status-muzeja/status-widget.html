@@ -15,20 +15,11 @@
     .status-container {
       border-radius: 8px;
       padding: 20px;
-      background-color: #fff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      color: white;
       display: inline-block;
       min-width: 220px;
-    }
-
-    .status-label {
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 4px;
-      display: inline-block;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: background-color 0.3s ease;
     }
 
     .open {
@@ -39,22 +30,25 @@
       background-color: #e53935;
     }
 
-    .today-hours {
-      font-size: 1.1rem;
-      margin-top: 10px;
-      color: #444;
-    }
-
     .location-title {
       font-size: 1.2rem;
       margin-bottom: 12px;
       font-weight: 600;
-      color: #2b2b2b;
+    }
+
+    .status-label {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .today-hours {
+      font-size: 1.1rem;
     }
   </style>
 </head>
 <body>
-  <div class="status-container" id="widget">
+  <div id="widget" class="status-container">
     <div class="location-title" id="locationName">Nalaganje...</div>
     <div class="status-label" id="statusText">...</div>
     <div class="today-hours" id="hoursText"></div>
@@ -74,11 +68,12 @@
         .then(data => {
           const status = getOpenStatus(locationName, data);
 
-          document.getElementById("locationName").textContent = locationName;
-          const statusText = document.getElementById("statusText");
-          statusText.textContent = status.statusText;
-          statusText.classList.add(status.isOpen ? 'open' : 'closed');
+          const widget = document.getElementById("widget");
+          widget.classList.remove('open', 'closed');
+          widget.classList.add(status.isOpen ? 'open' : 'closed');
 
+          document.getElementById("locationName").textContent = locationName;
+          document.getElementById("statusText").textContent = status.statusText;
           document.getElementById("hoursText").textContent = `Danes: ${status.todayHours}`;
         })
         .catch(err => {
