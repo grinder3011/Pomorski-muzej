@@ -6,62 +6,73 @@
 function parseTimeToday(timeStr) {
   const [hours, minutes] = timeStr.split(':').map(Number);
   const now = new Date();
-  const date = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-  return date;
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
 }
 
 /**
- * Format a day string to lowercase (e.g., "Tuesday")
+ * Return day key for today in "Mon", "Tue", etc. format
  */
 function getTodayKey() {
-  return new Intl.DateTimeFormat('en-US', { weekday: 'long' })
-    .format(new Date())
-    .toLowerCase();
+  return new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(new Date());
 }
 
 /**
- * Returns true if today falls within a date range
+ * Check if today is between two ISO date strings
  */
-function isTodayInRange(from, to) {
+function isTodayInRange(fromStr, toStr) {
   const today = new Date();
-  const fromDate = new Date(from);
-  const toDate = new Date(to);
-  return today >= fromDate && today <= toDate;
+  const from = new Date(fromStr);
+  const to = new Date(toStr);
+  return today >= from && today <= to;
 }
 
 /**
- * Finds the active schedule block for today
+ * Find today's hours from the active schedule block
  */
-function findActiveSchedule(locationData) {
-  if (!locationData.schedules || locationData.schedules.length === 0) return null;
+function findActiveHours(locationData) {
+  const todayKey = getTodayKey();
 
-  const today = new Date();
+  if (!locationData.schedules || !Array.isArray(locationData.schedules)) return null;
+
   for (const block of locationData.schedules) {
     if (isTodayInRange(block.from, block.to)) {
-      return block.hours;
+      return block.hours?.[todayKey] ?? "closed";
     }
   }
-  return null;
+
+  return "closed";
 }
 
 /**
- * Checks if current time is within open hours
+ * Check whether current time is within one or more time ranges
  */
-function isWithinHours(openingHours) {
-  if (!openingHours || openingHours === "closed") return false;
-  const [start, end] = openingHours.split('-');
+function isWithinHours(hours) {
+  if (!hours || hours === "closed") return false;
+
   const now = new Date();
-  const startTime = parseTimeToday(start);
-  const endTime = parseTimeToday(end);
-  return now >= startTime && now <= endTime;
+
+  if (typeof hours === 'string') {
+    const [start, end] = hours.split('-');
+    return now >= parseTimeToday(start) && now <= parseTimeToday(end);
+  }
+
+  if (Array.isArray(hours)) {
+    return hours.some(interval => {
+      const [start, end] = interval.split('-');
+      return now >= parseTimeToday(start) && now <= parseTimeToday(end);
+    });
+  }
+
+  return false;
 }
 
 /**
- * Main function: evaluates whether a location is currently open
+ * Main exported function to get open status
  */
 export function getOpenStatus(locationName, allData) {
-  const location = allData[locationName];
-  if (!location) {
+  const locationData = allData[locationName];
+
+  if (!locationData) {
     return {
       isOpen: false,
       statusText: "Lokacija ni najdena",
@@ -69,25 +80,22 @@ export function getOpenStatus(locationName, allData) {
     };
   }
 
-  const todayStr = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-  const todayKey = getTodayKey();
+  const todayStr = new Date().toISOString().slice(0, 10); // e.g. "2025-08-12"
   let todayHours = null;
 
-  // Apply exception first
-  if (location.exceptions && location.exceptions[todayStr]) {
-    todayHours = location.exceptions[todayStr];
+  // Check exception first
+  if (locationData.exceptions && locationData.exceptions[todayStr]) {
+    todayHours = locationData.exceptions[todayStr];
   } else {
-    const activeBlock = findActiveSchedule(location);
-    if (activeBlock) {
-      todayHours = activeBlock[todayKey] || "closed";
-    }
+    todayHours = findActiveHours(locationData);
   }
 
-  const isOpen = isWithinHours(todayHours);
+  const open = isWithinHours(todayHours);
 
   return {
-    isOpen,
-    statusText: isOpen ? "Odprto" : "Zaprto",
-    todayHours: todayHours === "closed" ? "Zaprto" : todayHours
+    isOpen: open,
+    statusText: open ? "Odprto" : "Zaprto",
+    todayHours: todayHours === "closed" || todayHours === null ? "Zaprto" :
+      Array.isArray(todayHours) ? todayHours.join(", ") : todayHours
   };
 }
