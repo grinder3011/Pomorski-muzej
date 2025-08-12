@@ -95,11 +95,10 @@
       text-decoration: underline;
     }
 
-    ul.museum-list iframe {
-      width: 70px;
-      height: 30px;
-      border: none;
-      background: transparent;
+    svg.status-light {
+      flex-shrink: 0;
+      vertical-align: middle;
+      cursor: default;
     }
 
     @media (max-width: 768px) {
@@ -108,10 +107,6 @@
       }
       ul.museum-list li {
         font-size: 1.1rem;
-      }
-      ul.museum-list iframe {
-        width: 60px;
-        height: 25px;
       }
     }
   </style>
@@ -133,17 +128,23 @@
       <div class="links">
         <h3>Piranske enote (muzeji)</h3>
         <ul class="museum-list">
-          <li>
+          <li data-location="Piranski-svetilnik">
             <a href="lokalne-enote/piranski-svetilnik/index.html">Piranski Svetilnik</a>
-            <iframe src="https://grinder3011.github.io/Pomorski-muzej/status-muzeja/status-light.html?location=Piranski-svetilnik" title="Status Piranski Svetilnik" scrolling="no" loading="lazy"></iframe>
+            <svg class="status-light" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-label="Status svetilnik" role="img" >
+              <circle cx="9" cy="9" r="8" fill="gray" />
+            </svg>
           </li>
-          <li>
+          <li data-location="Palača-Gabrieli">
             <a href="lokalne-enote/palaca-gabrieli/index.html">Palača Gabrieli</a>
-            <iframe src="https://grinder3011.github.io/Pomorski-muzej/status-muzeja/status-light.html?location=Palača-Gabrieli" title="Status Palača Gabrieli" scrolling="no" loading="lazy"></iframe>
+            <svg class="status-light" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-label="Status palača" role="img" >
+              <circle cx="9" cy="9" r="8" fill="gray" />
+            </svg>
           </li>
-          <li>
+          <li data-location="Tartinijeva-hiša">
             <a href="Tartinijeva-hisa.html">Tartinijeva hiša</a>
-            <iframe src="https://grinder3011.github.io/Pomorski-muzej/status-muzeja/status-light.html?location=Tartinijeva-hiša" title="Status Tartinijeva hiša" scrolling="no" loading="lazy"></iframe>
+            <svg class="status-light" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-label="Status tartinijeva" role="img" >
+              <circle cx="9" cy="9" r="8" fill="gray" />
+            </svg>
           </li>
         </ul>
       </div>
@@ -157,23 +158,67 @@
       <div class="links">
         <h3>Muzeji izven Pirana</h3>
         <ul class="museum-list">
-          <li>
+          <li data-location="Monfort">
             <a href="Monfort.html">Monfort</a>
-            <iframe src="https://grinder3011.github.io/Pomorski-muzej/status-muzeja/status-light.html?location=Monfort" title="Status Monfort" scrolling="no" loading="lazy"></iframe>
+            <svg class="status-light" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-label="Status monfort" role="img" >
+              <circle cx="9" cy="9" r="8" fill="gray" />
+            </svg>
           </li>
-          <li>
+          <li data-location="Soline">
             <a href="Soline.html">Soline</a>
-            <iframe src="https://grinder3011.github.io/Pomorski-muzej/status-muzeja/status-light.html?location=Soline" title="Status Soline" scrolling="no" loading="lazy"></iframe>
+            <svg class="status-light" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-label="Status soline" role="img" >
+              <circle cx="9" cy="9" r="8" fill="gray" />
+            </svg>
           </li>
-          <li>
+          <li data-location="Tonina-hiša">
             <a href="Tonina-hisa.html">Tonina hiša</a>
-            <iframe src="https://grinder3011.github.io/Pomorski-muzej/status-muzeja/status-light.html?location=Tonina-hiša" title="Status Tonina hiša" scrolling="no" loading="lazy"></iframe>
+            <svg class="status-light" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-label="Status tonina" role="img" >
+              <circle cx="9" cy="9" r="8" fill="gray" />
+            </svg>
           </li>
         </ul>
       </div>
     </div>
 
   </div>
+
+  <script type="module">
+    import { getOpenStatus } from './status-muzeja/schedule-utils.js';
+
+    async function updateStatusLights() {
+      try {
+        const res = await fetch('./status-muzeja/schedules.json');
+        if (!res.ok) throw new Error('Failed to load schedules.json');
+        const schedules = await res.json();
+
+        const listItems = document.querySelectorAll('ul.museum-list li');
+
+        listItems.forEach(li => {
+          const locName = li.dataset.location;
+          if (!locName) return;
+
+          const status = getOpenStatus(locName, schedules);
+
+          const circle = li.querySelector('circle');
+          if (!circle) return;
+
+          circle.setAttribute('fill', status.isOpen ? '#4CAF50' : '#E53935');
+
+          // blinking animation
+          let visible = true;
+          setInterval(() => {
+            visible = !visible;
+            circle.style.opacity = visible ? '1' : '0.4';
+          }, 1500);
+        });
+
+      } catch (err) {
+        console.error('Error updating status lights:', err);
+      }
+    }
+
+    updateStatusLights();
+  </script>
 
 </body>
 </html>
