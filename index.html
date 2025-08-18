@@ -275,50 +275,53 @@
   </script>
 
   <script>
-  let deferredPrompt;
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault(); // Prevent the default prompt
-    deferredPrompt = e;
-
-    // Show the button
+    let deferredPrompt;
     const btn = document.getElementById('a2hs-btn');
-    if (btn) btn.style.display = 'block';
-  });
-
-  // Button click handler
-  document.getElementById('a2hs-btn')?.addEventListener('click', async () => {
-    const btn = document.getElementById('a2hs-btn');
-    btn.style.display = 'none'; // Hide button after click
-
-    if (!deferredPrompt) return;
-
-    deferredPrompt.prompt();
-    const result = await deferredPrompt.userChoice;
-
-    if (result.outcome === 'accepted') {
-      console.log("User accepted the A2HS prompt");
-    } else {
-      console.log("User dismissed the A2HS prompt");
+  
+    // Trigger listener after interaction (required on mobile)
+    function setupA2HS() {
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault(); // Stop auto-prompt
+        deferredPrompt = e;
+        btn.style.display = 'block';
+      });
+  
+      // Optional: hide if already installed
+      window.addEventListener('appinstalled', () => {
+        console.log("App installed");
+        btn.style.display = 'none';
+      });
+  
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+      if (isStandalone) btn.style.display = 'none';
     }
-
-    deferredPrompt = null;
-  });
-
-  // Optional: hide button if already installed
-  window.addEventListener('appinstalled', () => {
-    console.log("App installed");
-    const btn = document.getElementById('a2hs-btn');
-    if (btn) btn.style.display = 'none';
-  });
-
-  // Detect already installed (some mobile browsers)
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  if (isStandalone) {
-    const btn = document.getElementById('a2hs-btn');
-    if (btn) btn.style.display = 'none';
-  }
-</script>
+  
+    // Attach user gesture listeners (works for mobile)
+    ['click', 'touchstart', 'scroll'].forEach(event =>
+      window.addEventListener(event, function once() {
+        setupA2HS();
+        // Remove listener after first trigger
+        window.removeEventListener(event, once);
+      }, { once: true })
+    );
+  
+    // Button click → trigger prompt
+    btn?.addEventListener('click', async () => {
+      btn.style.display = 'none';
+      if (!deferredPrompt) return;
+  
+      deferredPrompt.prompt();
+      const result = await deferredPrompt.userChoice;
+  
+      if (result.outcome === 'accepted') {
+        console.log("User accepted A2HS prompt");
+      } else {
+        console.log("User dismissed A2HS prompt");
+      }
+  
+      deferredPrompt = null;
+    });
+  </script>
 
 </body>
 </html>
