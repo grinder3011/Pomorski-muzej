@@ -124,6 +124,33 @@
       background-color: #006680;
     }
 
+    #language-select {
+      margin-left: 20px;
+      padding: 6px 10px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1.5px solid #004d66;
+      background-color: white;
+      color: #004d66;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+    }
+
+#language-select:hover,
+#language-select:focus {
+  border-color: #006680;
+  outline: none;
+}
+
+/* Optional: place it inline with header text */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* or space-between if you want it to the right */
+  gap: 10px;
+}
+
+    
     @media (max-width: 768px) {
       .section {
         flex-direction: column;
@@ -139,6 +166,13 @@
 
   <header>
     <h1 data-i18n="site_title">Pomorski Muzej Piran</h1>
+    <select id="language-select" aria-label="Select language">
+      <option value="sl">Slovenščina</option>
+      <option value="en">English</option>
+      <option value="it">Italiano</option>
+      <option value="de">Deutsch</option>
+    </select>
+
     <p data-i18n="site_subtitle">Lokacije muzejev</p>
   </header>
 
