@@ -278,47 +278,44 @@
     let deferredPrompt;
     const btn = document.getElementById('a2hs-btn');
   
-    // Trigger listener after interaction (required on mobile)
-    function setupA2HS() {
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault(); // Stop auto-prompt
-        deferredPrompt = e;
-        btn.style.display = 'block';
-      });
+    // Listen for beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();  // Prevent automatic prompt
+      deferredPrompt = e;
+      btn.style.display = 'block';  // Show the install button
+      btn.disabled = false;          // Enable it
+    });
   
-      // Optional: hide if already installed
-      window.addEventListener('appinstalled', () => {
-        console.log("App installed");
-        btn.style.display = 'none';
-      });
-  
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-      if (isStandalone) btn.style.display = 'none';
-    }
-  
-    // Attach user gesture listeners (works for mobile)
-    ['click', 'touchstart', 'scroll'].forEach(event =>
-      window.addEventListener(event, function once() {
-        setupA2HS();
-        // Remove listener after first trigger
-        window.removeEventListener(event, once);
-      }, { once: true })
-    );
-  
-    // Button click → trigger prompt
-    btn?.addEventListener('click', async () => {
+    // Hide button after installation
+    window.addEventListener('appinstalled', () => {
+      console.log("App installed");
       btn.style.display = 'none';
+    });
+  
+    // Hide button if already installed or running standalone
+    function checkStandalone() {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+      if (isStandalone) {
+        btn.style.display = 'none';
+      }
+    }
+    checkStandalone();
+  
+    // Button click triggers install prompt
+    btn.addEventListener('click', async () => {
       if (!deferredPrompt) return;
   
+      btn.disabled = true; // prevent multiple clicks
       deferredPrompt.prompt();
-      const result = await deferredPrompt.userChoice;
   
-      if (result.outcome === 'accepted') {
-        console.log("User accepted A2HS prompt");
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+        btn.style.display = 'none';
       } else {
-        console.log("User dismissed A2HS prompt");
+        console.log('User dismissed the install prompt');
+        btn.disabled = false; // re-enable button to allow retry
       }
-  
       deferredPrompt = null;
     });
   </script>
