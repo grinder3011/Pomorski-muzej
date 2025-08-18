@@ -103,6 +103,27 @@
       cursor: default;
     }
 
+    #a2hs-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #004d66;
+      color: white;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 30px;
+      font-size: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      cursor: pointer;
+      z-index: 999;
+      display: none;
+      transition: background-color 0.3s ease;
+    }
+    
+    #a2hs-btn:hover {
+      background-color: #006680;
+    }
+
     @media (max-width: 768px) {
       .section {
         flex-direction: column;
@@ -111,6 +132,7 @@
         font-size: 1.1rem;
       }
     }
+    
   </style>
 </head>
 <body>
@@ -119,6 +141,10 @@
     <h1>Pomorski Muzej Piran</h1>
     <p>Lokacije muzejev</p>
   </header>
+  <!-- Add to Home Screen Button -->
+  <button id="a2hs-btn" style="display: none;">
+    📲 Dodaj na domači zaslon
+  </button>
 
   <div class="container">
 
@@ -247,6 +273,52 @@
         .catch(err => console.error("SW registration failed!", err));
     }
   </script>
+
+  <script>
+  let deferredPrompt;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault(); // Prevent the default prompt
+    deferredPrompt = e;
+
+    // Show the button
+    const btn = document.getElementById('a2hs-btn');
+    if (btn) btn.style.display = 'block';
+  });
+
+  // Button click handler
+  document.getElementById('a2hs-btn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('a2hs-btn');
+    btn.style.display = 'none'; // Hide button after click
+
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+    const result = await deferredPrompt.userChoice;
+
+    if (result.outcome === 'accepted') {
+      console.log("User accepted the A2HS prompt");
+    } else {
+      console.log("User dismissed the A2HS prompt");
+    }
+
+    deferredPrompt = null;
+  });
+
+  // Optional: hide button if already installed
+  window.addEventListener('appinstalled', () => {
+    console.log("App installed");
+    const btn = document.getElementById('a2hs-btn');
+    if (btn) btn.style.display = 'none';
+  });
+
+  // Detect already installed (some mobile browsers)
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if (isStandalone) {
+    const btn = document.getElementById('a2hs-btn');
+    if (btn) btn.style.display = 'none';
+  }
+</script>
 
 </body>
 </html>
