@@ -77,6 +77,31 @@
     .map-section img:hover {
       transform: scale(1.02);
     }
+
+    .back-home-container {
+      text-align: center;
+      margin: 15px 0;
+    }
+    
+    .back-home-btn {
+      display: inline-block;
+      background: #004d66;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    
+    .back-home-btn:hover,
+    .back-home-btn:focus {
+      background-color: #006680;
+      outline: none;
+    }
   </style>
 </head>
 <body>
@@ -85,6 +110,9 @@
     <h1>Soline</h1>
   </header>
 
+  <div class="back-home-container">
+    <a href="../../index.html" class="back-home-btn" aria-label="Back to home" title="Domov">← Domov</a>
+  </div>
   <div class="container">
 
     <img src="soline.jpg" alt="Soline" class="museum-image" />
