@@ -1,0 +1,54 @@
+{
+  "sl": {
+    "site_title": "Pomorski Muzej Piran",
+    "site_subtitle": "Lokacije muzejev",
+    "add_to_home_screen": "📲 Dodaj na domači zaslon",
+    "section_piran_title": "Piranske enote (muzeji)",
+    "museum_lighthouse": "Piranski Svetilnik",
+    "museum_gabrielli": "Palača Gabrieli",
+    "museum_tartini_house": "Tartinijeva hiša",
+    "section_outside_piran_title": "Muzeji izven Pirana",
+    "museum_monfort": "Monfort",
+    "museum_saltworks": "Soline",
+    "museum_tonina_house": "Tonina hiša"
+  },
+  "en": {
+    "site_title": "Piran Maritime Museum",
+    "site_subtitle": "Museum Locations",
+    "add_to_home_screen": "📲 Add to Home Screen",
+    "section_piran_title": "Museums in Piran",
+    "museum_lighthouse": "Piran Lighthouse",
+    "museum_gabrielli": "Gabrielli Palace",
+    "museum_tartini_house": "Tartini’s House",
+    "section_outside_piran_title": "Museums Outside Piran",
+    "museum_monfort": "Monfort",
+    "museum_saltworks": "Saltworks",
+    "museum_tonina_house": "Tonina House"
+  },
+  "it": {
+    "site_title": "Museo Marittimo di Pirano",
+    "site_subtitle": "Sedi del museo",
+    "add_to_home_screen": "📲 Aggiungi alla schermata iniziale",
+    "section_piran_title": "Sedi museali a Pirano",
+    "museum_lighthouse": "Faro di Pirano",
+    "museum_gabrielli": "Palazzo Gabrielli",
+    "museum_tartini_house": "Casa di Tartini",
+    "section_outside_piran_title": "Musei fuori Pirano",
+    "museum_monfort": "Monfort",
+    "museum_saltworks": "Saline",
+    "museum_tonina_house": "Casa Tonina"
+  },
+  "de": {
+    "site_title": "Maritimes Museum Piran",
+    "site_subtitle": "Museumsstandorte",
+    "add_to_home_screen": "📲 Zum Startbildschirm hinzufügen",
+    "section_piran_title": "Museen in Piran",
+    "museum_lighthouse": "Leuchtturm Piran",
+    "museum_gabrielli": "Gabrielli-Palast",
+    "museum_tartini_house": "Tartinis Haus",
+    "section_outside_piran_title": "Museen außerhalb Pirans",
+    "museum_monfort": "Monfort",
+    "museum_saltworks": "Salzwerke",
+    "museum_tonina_house": "Toninas Haus"
+  }
+}
