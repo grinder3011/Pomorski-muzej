@@ -13,7 +13,7 @@ export async function loadTranslations(jsonFileBaseName) {
     const currentPagePath = window.location.pathname.split('/').slice(0, -1).join('/'); // Exclude 'index.html'
 
     // Construct path to the translation file
-    const translationPath = `${currentPagePath}/translations-${jsonFileBaseName}.json?t=${Date.now()}`;
+    const translationPath = `${currentPagePath}/translations/${jsonFileBaseName}.json?t=${Date.now()}`;
     console.log('Fetching translation file:', translationPath);
 
     // Fetch the translation JSON file
