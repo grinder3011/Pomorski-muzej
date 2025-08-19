@@ -9,37 +9,37 @@ export async function loadTranslations(jsonFileBaseName) {
     // Save the selected language in localStorage
     localStorage.setItem('site_lang', lang);
 
-    // Get the current folder path relative to the root (handles subfolders)
-    const currentPagePath = window.location.pathname.split('/').slice(0, -1).join('/'); // Exclude 'index.html'
+    // Determine the correct base path (this works regardless of the folder structure)
+    const basePath = window.location.pathname.split('/').slice(0, -1).join('/'); // Removes the current page name
 
-    // Construct path to the translation file
-    const translationPath = `${currentPagePath}/translations/${jsonFileBaseName}.json?t=${Date.now()}`;
-    console.log('Fetching translation file:', translationPath);
+    // Add cache buster to avoid stale fetches
+    // Correct the path here to load from the translations folder
+    const path = `${basePath}/translations/${jsonFileBaseName}.json?t=${Date.now()}`;
+    console.log('Fetching translation file:', path);
 
-    // Fetch the translation JSON file
-    const res = await fetch(translationPath);
-    if (!res.ok) throw new Error(`Translation file not found: ${translationPath}`);
+    const res = await fetch(path);
+    if (!res.ok) throw new Error(`Translation file not found: ${path}`);
 
     const allTranslations = await res.json();
     const translations = allTranslations[lang];
     if (!translations) throw new Error(`No translations found for language "${lang}"`);
 
-    // Apply translations to elements with 'data-i18n' attribute
+    // Apply translations to elements, updating only text content inside <a> tags
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
       const translation = translations[key];
 
       if (translation) {
-        // If there's an <a> tag, update only the text inside the <a> tag
+        // If the element has an <a> tag, update only the text inside the <a> tag
         const link = el.querySelector('a');
         if (link) {
-          link.textContent = translation;  // Update text inside <a> only
+          link.textContent = translation;  // Update only the text of <a>
         } else {
-          // If no <a> tag, update the text content of the element
+          // If there's no <a>, only replace text content
           replaceTextContent(el, translation);
         }
       } else {
-        // Fallback: leave the key as-is (for debugging)
+        // In case no translation found, leave the key as fallback (debugging purpose)
         el.textContent = `[${key}]`;
       }
     });
