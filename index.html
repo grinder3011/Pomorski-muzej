@@ -125,14 +125,17 @@
       font-size: 1.15rem;
     }
     
-    ul.museum-list li a {
+   ul.museum-list li a {
       color: #004d66;
       text-decoration: none;
       flex-grow: 1;
+      transition: color 0.3s ease;
     }
     
     ul.museum-list li a:hover {
-      text-decoration: underline;
+      text-decoration: none;              /* No underline */
+      color: #007a99;                     /* Optional highlight color on hover */
+      font-weight: 600;                   /* Optional bold for better feedback */
     }
     
     svg.status-light {
