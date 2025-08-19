@@ -1,0 +1,58 @@
+{
+  "sl": {
+    "page_title": "Palača Gabrieli",
+    "museum_title": "Palača Gabrieli",
+    "back_to_home": "← Domov",
+    "ticket_prices_title": "Cenik vstopnic",
+    "ticket_type": "Vrsta vstopnice",
+    "ticket_price": "Cena",
+    "adults": "Odrasli",
+    "students_senior": "Študenti, dijaki, upokojenci",
+    "family_ticket": "Družinska (2 odrasla + otroci)",
+    "children_under_6": "Otroci do 6 let",
+    "guided_tour": "Vodstvo (po predhodnem dogovoru)",
+    "click_for_directions": "Klikni za pot do nas"
+  },
+  "en": {
+    "page_title": "Gabrieli Palace",
+    "museum_title": "Gabrieli Palace",
+    "back_to_home": "← Home",
+    "ticket_prices_title": "Ticket Prices",
+    "ticket_type": "Ticket Type",
+    "ticket_price": "Price",
+    "adults": "Adults",
+    "students_senior": "Students, High Schoolers, Seniors",
+    "family_ticket": "Family (2 adults + children)",
+    "children_under_6": "Children under 6",
+    "guided_tour": "Guided Tour (by prior arrangement)",
+    "click_for_directions": "Click for directions"
+  },
+  "it": {
+    "page_title": "Palazzo Gabrieli",
+    "museum_title": "Palazzo Gabrieli",
+    "back_to_home": "← Casa",
+    "ticket_prices_title": "Prezzi dei biglietti",
+    "ticket_type": "Tipo di biglietto",
+    "ticket_price": "Prezzo",
+    "adults": "Adulti",
+    "students_senior": "Studenti, scuole superiori, pensionati",
+    "family_ticket": "Famiglia (2 adulti + bambini)",
+    "children_under_6": "Bambini sotto i 6 anni",
+    "guided_tour": "Visita guidata (su prenotazione)",
+    "click_for_directions": "Clicca per le indicazioni"
+  },
+  "de": {
+    "page_title": "Gabrieli Palast",
+    "museum_title": "Gabrieli Palast",
+    "back_to_home": "← Zuhause",
+    "ticket_prices_title": "Preise für Tickets",
+    "ticket_type": "Ticketart",
+    "ticket_price": "Preis",
+    "adults": "Erwachsene",
+    "students_senior": "Studenten, Schüler, Senioren",
+    "family_ticket": "Familienticket (2 Erwachsene + Kinder)",
+    "children_under_6": "Kinder unter 6 Jahren",
+    "guided_tour": "Führung (nach vorheriger Vereinbarung)",
+    "click_for_directions": "Klicken Sie für den Weg"
+  }
+}
