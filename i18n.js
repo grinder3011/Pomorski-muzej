@@ -23,10 +23,24 @@ export async function loadTranslations(jsonFileBaseName) {
     const translations = allTranslations[lang];
     if (!translations) throw new Error(`No translations found for language "${lang}"`);
 
-    // Apply translations to elements
+    // Apply translations to elements, updating only text content inside <a> tags
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
-      el.textContent = translations[key] || `[${key}]`;
+      const translation = translations[key];
+
+      if (translation) {
+        // If the element has an <a> tag, only update the <a> tag text content
+        if (el.querySelector('a')) {
+          const link = el.querySelector('a');
+          link.textContent = translation;  // Update only the text inside the <a> tag
+        } else {
+          // If there's no <a>, just replace the text content of the element itself
+          el.textContent = translation;
+        }
+      } else {
+        // In case no translation found, leave the key as fallback (debugging purpose)
+        el.textContent = `[${key}]`;
+      }
     });
 
     // Language selector logic
