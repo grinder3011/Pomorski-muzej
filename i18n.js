@@ -2,18 +2,17 @@ export async function loadTranslations(jsonFileBaseName) {
   try {
     const supportedLangs = ['sl', 'en', 'it', 'de'];
 
-    // Detect preferred language
+    // First, get the saved language from localStorage, or detect the browser's language if not set
     let lang = localStorage.getItem('site_lang') || navigator.language.split('-')[0];
-    if (!supportedLangs.includes(lang)) lang = 'sl';
+    if (!supportedLangs.includes(lang)) lang = 'sl';  // Default to 'sl' if language is not supported
 
-    // Save the selected language in localStorage
+    // Save the selected language in localStorage if it's not set
     localStorage.setItem('site_lang', lang);
 
     // Determine the correct base path (this works regardless of the folder structure)
     const basePath = window.location.pathname.split('/').slice(0, -1).join('/'); // Removes the current page name
 
     // Add cache buster to avoid stale fetches
-    // Correct the path here to load from the translations folder
     const path = `${basePath}/translations/${jsonFileBaseName}.json?t=${Date.now()}`;
     console.log('Fetching translation file:', path);
 
