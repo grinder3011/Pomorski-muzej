@@ -29,13 +29,13 @@ export async function loadTranslations(jsonFileBaseName) {
       const translation = translations[key];
 
       if (translation) {
-        // If the element has an <a> tag, only update the <a> tag text content
-        if (el.querySelector('a')) {
-          const link = el.querySelector('a');
-          link.textContent = translation;  // Update only the text inside the <a> tag
+        // If the element has an <a> tag, update only the text inside the <a> tag
+        const link = el.querySelector('a');
+        if (link) {
+          link.textContent = translation;  // Update only the text of <a>
         } else {
-          // If there's no <a>, just replace the text content of the element itself
-          el.textContent = translation;
+          // If there's no <a>, only replace text content
+          replaceTextContent(el, translation);
         }
       } else {
         // In case no translation found, leave the key as fallback (debugging purpose)
@@ -64,4 +64,15 @@ export async function loadTranslations(jsonFileBaseName) {
   } catch (err) {
     console.error('Error loading translations:', err);
   }
+}
+
+// Helper function to replace only the text nodes and preserve emojis
+function replaceTextContent(el, translation) {
+  // Loop through all child nodes of the element
+  el.childNodes.forEach(child => {
+    if (child.nodeType === Node.TEXT_NODE) {
+      // Replace the text node with the translation
+      child.textContent = translation;
+    }
+  });
 }
