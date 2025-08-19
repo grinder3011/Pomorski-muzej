@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Palača Gabrieli</title>
+  <title data-i18n="page_title">Palača Gabrieli</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -115,11 +115,11 @@
 <body>
 
   <header>
-    <h1>Palača Gabrieli</h1>
+    <h1 data-i18n="museum_title">Palača Gabrieli</h1>
   </header>
 
   <div class="back-home-container">
-    <a href="../../index.html" class="back-home-btn" aria-label="Back to home" title="Domov">← Domov</a>
+    <a href="../../index.html" class="back-home-btn" aria-label="Back to home" title="Domov" data-i18n="back_to_home">← Domov</a>
   </div>
   <div class="container">
 
@@ -130,30 +130,30 @@
 
     <!-- Prices -->
     <div class="prices">
-      <h2>Cenik vstopnic</h2>
+      <h2 data-i18n="ticket_prices_title">Cenik vstopnic</h2>
       <table>
         <tr>
-          <th>Vrsta vstopnice</th>
-          <th>Cena</th>
+          <th data-i18n="ticket_type">Vrsta vstopnice</th>
+          <th data-i18n="ticket_price">Cena</th>
         </tr>
         <tr>
-          <td>Odrasli</td>
+          <td data-i18n="adults">Odrasli</td>
           <td>5,00 €</td>
         </tr>
         <tr>
-          <td>Študenti, dijaki, upokojenci</td>
+          <td data-i18n="students_senior">Študenti, dijaki, upokojenci</td>
           <td>3,00 €</td>
         </tr>
         <tr>
-          <td>Družinska (2 odrasla + otroci)</td>
+          <td data-i18n="family_ticket">Družinska (2 odrasla + otroci)</td>
           <td>10,00 €</td>
         </tr>
         <tr>
-          <td>Otroci do 6 let</td>
+          <td data-i18n="children_under_6">Otroci do 6 let</td>
           <td>Brezplačno</td>
         </tr>
         <tr>
-          <td>Vodstvo (po predhodnem dogovoru)</td>
+          <td data-i18n="guided_tour">Vodstvo (po predhodnem dogovoru)</td>
           <td>15,00 €</td>
         </tr>
       </table>
@@ -162,7 +162,7 @@
     <!-- Google Maps -->
     <div class="map-section">
       <a href="https://www.google.com/maps/place/45%C2%B031'39.3%22N+13%C2%B034'05.1%22E/@45.5275766,13.5678101,19z/data=!4m6!3m5!1s0x0:0x0!7e2!8m2!3d45.5275862!4d13.5680895" target="_blank">
-        <h2>Klikni za pot do nas:</h2>
+        <h2 data-i18n="click_for_directions">Klikni za pot do nas:</h2>
       </a>
       <a href="https://www.google.com/maps/place/45%C2%B031'39.3%22N+13%C2%B034'05.1%22E/@45.5275766,13.5678101,19z/data=!4m6!3m5!1s0x0:0x0!7e2!8m2!3d45.5275862!4d13.5680895" target="_blank">
         <img src="map-gabrielli.png" alt="Zemljevid Palača Gabrieli" />
@@ -170,6 +170,11 @@
     </div>
 
   </div>
+
+  <script type="module">
+    import { loadTranslations } from './i18n.js';
+    loadTranslations('translations-palaca-gabrieli');  <!-- Specify the translation file -->
+  </script>
 
 </body>
 </html>
