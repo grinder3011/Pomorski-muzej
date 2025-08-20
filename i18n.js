@@ -26,6 +26,9 @@ export async function loadTranslations(jsonFileBaseName) {
     const translations = allTranslations[lang];
     if (!translations) throw new Error(`No translations found for language "${lang}"`);
 
+    // Store translations globally so that they can be accessed elsewhere
+    window.translations = translations;
+
     // Apply translations to elements
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
