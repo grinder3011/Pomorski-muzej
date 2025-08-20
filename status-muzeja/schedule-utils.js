@@ -1,7 +1,7 @@
-// schedule-utils.js
+import { t } from '../i18n.js';
 
-function parseTime(t) {
-  const [h, m] = t.split(':').map(Number);
+function parseTime(tStr) {
+  const [h, m] = tStr.split(':').map(Number);
   return h * 60 + m;
 }
 
@@ -38,7 +38,6 @@ function inPeriod(now, startStr, endStr) {
   let start = new Date(year, startM - 1, startD);
   let end = new Date(year, endM - 1, endD);
 
-  // If period crosses year boundary (e.g. 09-01 to 06-30)
   if (end < start) {
     if (now < start) start.setFullYear(year - 1);
     else end.setFullYear(year + 1);
@@ -48,7 +47,7 @@ function inPeriod(now, startStr, endStr) {
 }
 
 function formatHours(hours) {
-  if (!hours) return "Zaprto";
+  if (!hours) return t("status_closed");
   if (typeof hours === 'string') return hours.replace('-', '–');
   if (Array.isArray(hours)) return hours.map(h => h.replace('-', '–')).join(', ');
   return "";
@@ -63,7 +62,7 @@ export function getOpenStatus(locationName, data) {
   if (!location) {
     return {
       isOpen: false,
-      statusText: "Lokacija ni najdena",
+      statusText: t("locationNotFound"),
       todayHours: "-"
     };
   }
@@ -74,22 +73,21 @@ export function getOpenStatus(locationName, data) {
   if (!activePeriod) {
     return {
       isOpen: false,
-      statusText: "Zaprto",
-      todayHours: "Danes zaprto"
+      statusText: t("status_closed"),
+      todayHours: t("todayClosed")
     };
   }
 
   const todayKey = getTodayKey();
   let todayHours = activePeriod.hours[todayKey];
 
-  // Handle null as closed
   if (todayHours === null) todayHours = null;
 
   const open = isOpenNow(todayHours);
 
   return {
     isOpen: open,
-    statusText: open ? "Odprto" : "Zaprto",
-    todayHours: formatHours(todayHours) || "Zaprto"
+    statusText: open ? t("status_open") : t("status_closed"),
+    todayHours: formatHours(todayHours) || t("status_closed")
   };
 }
