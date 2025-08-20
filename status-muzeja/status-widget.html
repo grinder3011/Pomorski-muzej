@@ -54,45 +54,34 @@
     <div class="today-hours" id="hoursText"></div>
   </div>
 
-  <script type="module">
-    import { getOpenStatus } from './schedule-utils.js'; // ✅ FIXED
-    import { loadTranslations } from '/../../i18n.js';  // Adjust the path as needed for your folder structure
+<script type="module">
+  import { getOpenStatus } from './schedule-utils.js'; // ✅ FIXED
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const locationName = urlParams.get("location");
+  const urlParams = new URLSearchParams(window.location.search);
+  const locationName = urlParams.get("location");
 
-    // Fetch the translations first
-    loadTranslations('translations-status-widget');  // Load the widget translation JSON
+  if (!locationName) {
+    document.getElementById("widget").innerHTML = "<p>Manjka parameter ?location=</p>";
+  } else {
+    fetch('schedules.json')
+      .then(res => res.json())
+      .then(data => {
+        const status = getOpenStatus(locationName, data);
 
-    if (!locationName) {
-      document.getElementById("widget").innerHTML = "<p>Manjka parameter ?location=</p>";
-    } else {
-      fetch('schedules.json')
-        .then(res => res.json())
-        .then(data => {
-          const status = getOpenStatus(locationName, data);
+        const widget = document.getElementById("widget");
+        widget.classList.remove('open', 'closed');
+        widget.classList.add(status.isOpen ? 'open' : 'closed');
 
-          const widget = document.getElementById("widget");
-          widget.classList.remove('open', 'closed');
-          widget.classList.add(status.isOpen ? 'open' : 'closed');
+        document.getElementById("locationName").textContent = window.translations[locationName] || locationName;
+        document.getElementById("statusText").textContent = window.translations[status.statusText] || status.statusText;
+        document.getElementById("hoursText").textContent = window.translations[`Danes: ${status.todayHours}`] || `Danes: ${status.todayHours}`;
+      })
+      .catch(err => {
+        document.getElementById("widget").innerHTML = "<p>Napaka pri nalaganju podatkov.</p>";
+        console.error(err);
+      });
+  }
+</script>
 
-          // Apply the translations
-          document.getElementById("locationName").textContent = locationName;
-          document.getElementById("statusText").textContent = translate(status.statusText);  // Use translation for status
-          document.getElementById("hoursText").textContent = `${translate("today")}: ${status.todayHours}`;  // Use translation for "Today"
-        })
-        .catch(err => {
-          document.getElementById("widget").innerHTML = "<p>Napaka pri nalaganju podatkov.</p>";
-          console.error(err);
-        });
-    }
-
-    // Helper function to retrieve translations from the loaded JSON
-    function translate(key) {
-      const lang = localStorage.getItem('site_lang') || 'sl'; // Fallback to Slovenian if no lang
-      const translations = window.translations || {}; // Ensure translations object exists
-      return translations[lang] && translations[lang][key] ? translations[lang][key] : key;
-    }
-  </script>
 </body>
 </html>
