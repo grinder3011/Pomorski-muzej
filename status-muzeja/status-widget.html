@@ -49,19 +49,23 @@
 </head>
 <body>
   <div id="widget" class="status-container">
-    <div class="location-title" id="locationName">Nalaganje...</div>
+    <div class="location-title" id="locationName">...</div>
     <div class="status-label" id="statusText">...</div>
     <div class="today-hours" id="hoursText"></div>
   </div>
 
   <script type="module">
-    import { getOpenStatus } from './schedule-utils.js'; // ✅ FIXED
+    import { getOpenStatus } from './schedule-utils.js';
+    import { loadTranslations, t } from '../i18n.js';
+
+    // Load widget-specific translations
+    await loadTranslations("translations-status-widget");
 
     const urlParams = new URLSearchParams(window.location.search);
     const locationName = urlParams.get("location");
 
     if (!locationName) {
-      document.getElementById("widget").innerHTML = "<p>Manjka parameter ?location=</p>";
+      document.getElementById("widget").innerHTML = `<p>${t("missingLocationParam")}</p>`;
     } else {
       fetch('schedules.json')
         .then(res => res.json())
@@ -74,10 +78,10 @@
 
           document.getElementById("locationName").textContent = locationName;
           document.getElementById("statusText").textContent = status.statusText;
-          document.getElementById("hoursText").textContent = `Danes: ${status.todayHours}`;
+          document.getElementById("hoursText").textContent = `${t("today")}: ${status.todayHours}`;
         })
         .catch(err => {
-          document.getElementById("widget").innerHTML = "<p>Napaka pri nalaganju podatkov.</p>";
+          document.getElementById("widget").innerHTML = `<p>${t("dataLoadError")}</p>`;
           console.error(err);
         });
     }
