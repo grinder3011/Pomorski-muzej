@@ -1,0 +1,10 @@
+{
+  "sl": {
+    "status_open": "Odprto",
+    "status_closed": "Zaprto"
+  },
+  "en": {
+    "status_open": "Open",
+    "status_closed": "Closed"
+  }
+}
