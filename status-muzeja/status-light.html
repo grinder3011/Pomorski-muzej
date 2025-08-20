@@ -58,98 +58,52 @@
 </head>
 <body>
 
-  <div id="status" class="closed">Zaprto</div>
-  <div id="hours">Nalaganje urnika...</div>
+  <div id="status" class="closed">…</div>
+  <div id="hours">…</div>
 
-  <script>
+  <script type="module">
+    import { loadTranslations, t } from '../i18n.js';
+    import { getOpenStatus } from './schedule-utils.js';
+
     (async () => {
-      function parseTime(t) {
-        const [h, m] = t.split(':').map(Number);
-        return h * 60 + m;
-      }
-
-      function isOpenNow(hours) {
-        if (!hours) return false;
-        const now = new Date();
-        const nowMinutes = now.getHours() * 60 + now.getMinutes();
-        if (typeof hours === 'string') hours = [hours];
-        return hours.some(interval => {
-          const [start, end] = interval.split('-').map(parseTime);
-          return nowMinutes >= start && nowMinutes < end;
-        });
-      }
-
-      function formatHours(hours) {
-        if (!hours) return "Danes zaprto";
-        if (typeof hours === 'string') return hours.replace('-', '–');
-        if (Array.isArray(hours)) return hours.map(h => h.replace('-', '–')).join(', ');
-        return "";
-      }
-
-      function inPeriod(now, startStr, endStr) {
-        const [startMonth, startDay] = startStr.split('-').map(Number);
-        const [endMonth, endDay] = endStr.split('-').map(Number);
-
-        const year = now.getFullYear();
-        let start = new Date(year, startMonth - 1, startDay);
-        let end = new Date(year, endMonth - 1, endDay);
-
-        if (end < start) {
-          if (now < start) start.setFullYear(year - 1);
-          else end.setFullYear(year + 1);
-        }
-
-        return now >= start && now <= end;
-      }
-
-      const daysMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-      const params = new URLSearchParams(window.location.search);
-      const locParam = params.get('loc');
       const statusDiv = document.getElementById('status');
       const hoursDiv = document.getElementById('hours');
 
+      const params = new URLSearchParams(window.location.search);
+      const locParam = params.get('loc');
+
+      // Load translations for widget
+      await loadTranslations("translations-status-widget");
+
       if (!locParam) {
-        hoursDiv.textContent = "Lokacija ni podana";
+        hoursDiv.textContent = t("error_missing_location");
         return;
       }
 
       let data;
       try {
-        const response = await fetch('./status-muzeja/schedule.json');
-        if (!response.ok) throw new Error("Neuspelo nalaganje JSON-a");
+        const response = await fetch('./schedules.json');
+        if (!response.ok) throw new Error("JSON load failed");
         data = await response.json();
       } catch (e) {
-        hoursDiv.textContent = "Napaka pri nalaganju urnika.";
+        hoursDiv.textContent = t("error_loading");
         return;
       }
 
-      const locData = data.locations[locParam];
-      if (!locData) {
-        hoursDiv.textContent = "Lokacija ni najdena";
+      // Check if location exists
+      if (!data.locations || !data.locations[locParam]) {
+        hoursDiv.textContent = t("error_location_not_found");
         return;
       }
 
-      const now = new Date();
-      const dayKey = daysMap[now.getDay()];
-      const period = locData.periods.find(p => inPeriod(now, p.start, p.end));
-
-      if (!period) {
-        statusDiv.classList.remove('open');
-        statusDiv.classList.add('closed');
-        statusDiv.textContent = "Zaprto";
-        hoursDiv.textContent = "Danes zaprto";
-        return;
-      }
-
-      const todayHours = period.hours[dayKey] || null;
-      const open = isOpenNow(todayHours);
+      // Use shared logic
+      const status = getOpenStatus(locParam, data);
 
       statusDiv.classList.remove('open', 'closed');
-      statusDiv.classList.add(open ? 'open' : 'closed');
-      statusDiv.textContent = open ? "Odprto" : "Zaprto";
+      statusDiv.classList.add(status.isOpen ? 'open' : 'closed');
+      statusDiv.textContent = status.isOpen ? t("status_open") : t("status_closed");
 
-      hoursDiv.textContent = "Danes: " + formatHours(todayHours);
+      hoursDiv.textContent = `${t("today")}: ${status.todayHours}`;
     })();
   </script>
 
