@@ -1,0 +1,22 @@
+{
+  "sl": {
+    "status_open": "Odprto",
+    "status_closed": "Zaprto",
+    "today": "Danes"
+  },
+  "en": {
+    "status_open": "Open",
+    "status_closed": "Closed",
+    "today": "Today"
+  },
+  "it": {
+    "status_open": "Aperto",
+    "status_closed": "Chiuso",
+    "today": "Oggi"
+  },
+  "de": {
+    "status_open": "Geöffnet",
+    "status_closed": "Geschlossen",
+    "today": "Heute"
+  }
+}
