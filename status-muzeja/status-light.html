@@ -65,18 +65,21 @@
     import { getOpenStatus } from './schedule-utils.js';
     import { loadTranslations, t } from '../i18n.js';
 
-    // ✅ Load translations
-    await loadTranslations("translations-status-widget");
+    async function init() {
+      // ✅ Ensure translations are loaded before we call t()
+      await loadTranslations("translations-status-widget");
 
-    const params = new URLSearchParams(window.location.search);
-    const locationName = params.get("location");
+      const params = new URLSearchParams(window.location.search);
+      const locationName = params.get("location");
 
-    const statusDiv = document.getElementById("status");
-    const hoursDiv = document.getElementById("hours");
+      const statusDiv = document.getElementById("status");
+      const hoursDiv = document.getElementById("hours");
 
-    if (!locationName) {
-      hoursDiv.textContent = t("missingLocationParam");
-    } else {
+      if (!locationName) {
+        hoursDiv.textContent = t("missingLocationParam");
+        return;
+      }
+
       try {
         const response = await fetch('./status-muzeja/schedule.json');
         if (!response.ok) throw new Error("Failed JSON load");
@@ -86,7 +89,7 @@
 
         statusDiv.classList.remove('open', 'closed');
         statusDiv.classList.add(status.isOpen ? 'open' : 'closed');
-        statusDiv.textContent = status.statusText;
+        statusDiv.textContent = status.statusText; // ✅ now translated!
 
         hoursDiv.textContent = `${t("today")}: ${status.todayHours}`;
       } catch (e) {
@@ -94,6 +97,8 @@
         console.error(e);
       }
     }
+
+    init(); // run
   </script>
 
 </body>
