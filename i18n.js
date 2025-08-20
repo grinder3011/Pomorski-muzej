@@ -35,31 +35,27 @@ export async function loadTranslations(jsonFileBaseName) {
       const translation = translations[key];
 
       if (translation) {
-        // If the element has an <a> tag, update only the text inside the <a> tag
         const link = el.querySelector('a');
         if (link) {
           link.textContent = translation;
         } else {
-          // If there's no <a> tag, just replace text content
           replaceTextContent(el, translation);
         }
       } else {
-        // Fallback: if no translation found, display the key (for debugging)
         el.textContent = `[${key}]`;
       }
     });
 
-    // Language selector logic: apply selected language in the dropdown
+    // Language selector logic
     const select = document.getElementById('language-select');
     if (select) {
       select.value = lang;
-      // Avoid attaching multiple listeners
       if (!select.dataset.listenerSet) {
         select.addEventListener('change', () => {
           const newLang = select.value;
           if (newLang && newLang !== lang) {
             localStorage.setItem('site_lang', newLang);
-            location.reload(); // Force reload to apply new language
+            location.reload();
           }
         });
         select.dataset.listenerSet = 'true';
@@ -71,11 +67,19 @@ export async function loadTranslations(jsonFileBaseName) {
   }
 }
 
-// Helper function to replace only the text nodes and preserve emojis
+// Helper function to replace only the text nodes
 function replaceTextContent(el, translation) {
   el.childNodes.forEach(child => {
     if (child.nodeType === Node.TEXT_NODE) {
       child.textContent = translation;
     }
   });
+}
+
+// ✅ New helper for JS lookups
+export function t(key) {
+  if (window.translations && window.translations[key]) {
+    return window.translations[key];
+  }
+  return `[${key}]`; // fallback
 }
