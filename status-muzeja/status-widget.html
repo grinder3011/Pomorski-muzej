@@ -49,15 +49,16 @@
 </head>
 <body>
   <div id="widget" class="status-container">
-    <div class="location-title" id="locationName">Nalaganje...</div>
-    <div class="status-label" id="statusText">...</div>
-    <div class="today-hours" id="hoursText"></div>
+    <!-- Adding data-i18n for translation -->
+    <div class="location-title" id="locationName" data-i18n="location_name">Nalaganje...</div>
+    <div class="status-label" id="statusText" data-i18n="status_text">...</div>
+    <div class="today-hours" id="hoursText" data-i18n="today_hours">Danes: ...</div>
   </div>
 
   <script type="module">
     import { getOpenStatus } from './schedule-utils.js'; 
 
-    // Fetch translation for the widget, if any, based on the location
+    // Fetch translations before proceeding
     loadTranslations('translations-palaca-gabrieli')
       .then(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -77,12 +78,17 @@
             widget.classList.remove('open', 'closed');
             widget.classList.add(status.isOpen ? 'open' : 'closed');
 
-            // Translate location name if a translation exists
-            const locationNameTranslation = window.translations[lang]?.[locationName] || locationName;
-            
-            document.getElementById("locationName").textContent = locationNameTranslation;
+            // Translate the content of widget elements using the i18n logic
+            document.getElementById("locationName").textContent = locationName;
             document.getElementById("statusText").textContent = status.statusText;
             document.getElementById("hoursText").textContent = `Danes: ${status.todayHours}`;
+
+            // Now apply translations for i18n elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+              const key = el.getAttribute('data-i18n');
+              const translation = window.translations[lang]?.[key] || key;
+              el.textContent = translation;
+            });
           })
           .catch(err => {
             document.getElementById("widget").innerHTML = "<p>Napaka pri nalaganju podatkov.</p>";
