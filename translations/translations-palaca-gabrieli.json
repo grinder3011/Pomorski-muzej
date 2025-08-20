@@ -10,6 +10,7 @@
     "students_senior": "Študenti, dijaki, upokojenci",
     "family_ticket": "Družinska (2 odrasla + otroci)",
     "children_under_6": "Otroci do 6 let",
+    "free_ticket": "Brezplačno",
     "guided_tour": "Vodstvo (po predhodnem dogovoru)",
     "click_for_directions": "Klikni za pot do nas"
   },
@@ -24,6 +25,7 @@
     "students_senior": "Students, High Schoolers, Seniors",
     "family_ticket": "Family (2 adults + children)",
     "children_under_6": "Children under 6",
+    "free_ticket": "Free",
     "guided_tour": "Guided Tour (by prior arrangement)",
     "click_for_directions": "Click for directions"
   },
@@ -37,7 +39,8 @@
     "adults": "Adulti",
     "students_senior": "Studenti, scuole superiori, pensionati",
     "family_ticket": "Famiglia (2 adulti + bambini)",
-    "children_under_6": "Bambini sotto i 6 anni",
+    "children_under_6": "Bambini sotto i 6 anni",   
+    "free_ticket": "Gratuito",
     "guided_tour": "Visita guidata (su prenotazione)",
     "click_for_directions": "Clicca per le indicazioni"
   },
@@ -52,6 +55,7 @@
     "students_senior": "Studenten, Schüler, Senioren",
     "family_ticket": "Familienticket (2 Erwachsene + Kinder)",
     "children_under_6": "Kinder unter 6 Jahren",
+    "free_ticket": "Gratis",
     "guided_tour": "Führung (nach vorheriger Vereinbarung)",
     "click_for_directions": "Klicken Sie für den Weg"
   }
