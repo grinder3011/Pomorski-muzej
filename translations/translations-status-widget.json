@@ -2,21 +2,37 @@
   "sl": {
     "status_open": "Odprto",
     "status_closed": "Zaprto",
-    "today": "Danes"
+    "today": "Danes",
+    "todayClosed": "Danes zaprto",
+    "locationNotFound": "Lokacija ni najdena",
+    "dataLoadError": "Napaka pri nalaganju podatkov.",
+    "missingLocationParam": "Manjka parameter ?location="
   },
   "en": {
     "status_open": "Open",
     "status_closed": "Closed",
-    "today": "Today"
+    "today": "Today",
+    "todayClosed": "Closed today",
+    "locationNotFound": "Location not found",
+    "dataLoadError": "Error loading data.",
+    "missingLocationParam": "Missing ?location= parameter"
   },
   "it": {
     "status_open": "Aperto",
     "status_closed": "Chiuso",
-    "today": "Oggi"
+    "today": "Oggi",
+    "todayClosed": "Chiuso oggi",
+    "locationNotFound": "Località non trovata",
+    "dataLoadError": "Errore durante il caricamento dei dati.",
+    "missingLocationParam": "Parametro ?location= mancante"
   },
   "de": {
     "status_open": "Geöffnet",
     "status_closed": "Geschlossen",
-    "today": "Heute"
+    "today": "Heute",
+    "todayClosed": "Heute geschlossen",
+    "locationNotFound": "Standort nicht gefunden",
+    "dataLoadError": "Fehler beim Laden der Daten.",
+    "missingLocationParam": "Fehlender Parameter ?location="
   }
 }
