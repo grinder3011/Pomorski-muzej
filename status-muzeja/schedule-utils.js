@@ -1,93 +1,96 @@
+// schedule-utils.js
 import { t } from '../i18n.js';
 
-function parseTime(tStr) {
-  const [h, m] = tStr.split(':').map(Number);
+/**
+ * Parse a "HH:MM" time string into total minutes since midnight.
+ */
+function parseTime(timeStr) {
+  const [h, m] = timeStr.split(':').map(Number);
   return h * 60 + m;
 }
 
-function nowInInterval(interval) {
+/**
+ * Check if the current time is within one of the given opening intervals.
+ */
+function isOpenNow(hours) {
+  if (!hours) return false;
   const now = new Date();
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
-  const [startStr, endStr] = interval.split('-');
-  if (!startStr || !endStr) return false;
+  if (typeof hours === 'string') hours = [hours];
 
-  const start = parseTime(startStr);
-  const end = parseTime(endStr);
-
-  return nowMinutes >= start && nowMinutes < end;
+  return hours.some(interval => {
+    const [start, end] = interval.split('-').map(parseTime);
+    return nowMinutes >= start && nowMinutes < end;
+  });
 }
 
-function isOpenNow(hours) {
-  if (!hours) return false;
-  if (typeof hours === 'string') {
-    if (hours.toLowerCase() === 'closed') return false;
-    return nowInInterval(hours);
-  }
-  if (Array.isArray(hours)) {
-    return hours.some(interval => nowInInterval(interval));
-  }
-  return false;
-}
-
-function inPeriod(now, startStr, endStr) {
-  const [startM, startD] = startStr.split('-').map(Number);
-  const [endM, endD] = endStr.split('-').map(Number);
-
-  const year = now.getFullYear();
-  let start = new Date(year, startM - 1, startD);
-  let end = new Date(year, endM - 1, endD);
-
-  if (end < start) {
-    if (now < start) start.setFullYear(year - 1);
-    else end.setFullYear(year + 1);
-  }
-
-  return now >= start && now <= end;
-}
-
+/**
+ * Format hours into a human-readable string.
+ */
 function formatHours(hours) {
-  if (!hours) return t("status_closed");
+  if (!hours) return t("todayClosed");
   if (typeof hours === 'string') return hours.replace('-', '–');
   if (Array.isArray(hours)) return hours.map(h => h.replace('-', '–')).join(', ');
   return "";
 }
 
-function getTodayKey() {
-  return new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(new Date());
+/**
+ * Check if today's date is inside a seasonal period.
+ */
+function inPeriod(now, startStr, endStr) {
+  const [startMonth, startDay] = startStr.split('-').map(Number);
+  const [endMonth, endDay] = endStr.split('-').map(Number);
+
+  const year = now.getFullYear();
+  let start = new Date(year, startMonth - 1, startDay);
+  let end = new Date(year, endMonth - 1, endDay);
+
+  if (end < start) {
+    // Period crosses year boundary
+    if (now < start) {
+      start.setFullYear(year - 1);
+    } else {
+      end.setFullYear(year + 1);
+    }
+  }
+
+  return now >= start && now <= end;
 }
 
+/**
+ * Main function: determine open/closed status and today's hours for a location.
+ */
 export function getOpenStatus(locationName, data) {
-  const location = data.locations?.[locationName];
-  if (!location) {
+  const now = new Date();
+  const daysMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  const locData = data.locations[locationName];
+  if (!locData) {
     return {
       isOpen: false,
       statusText: t("locationNotFound"),
-      todayHours: "-"
+      todayHours: t("todayClosed"),
     };
   }
 
-  const now = new Date();
-  const activePeriod = location.periods.find(p => inPeriod(now, p.start, p.end));
+  const dayKey = daysMap[now.getDay()];
+  const period = locData.periods.find(p => inPeriod(now, p.start, p.end));
 
-  if (!activePeriod) {
+  if (!period) {
     return {
       isOpen: false,
-      statusText: t("status_closed"),
-      todayHours: t("todayClosed")
+      statusText: t("status_closed"), // ✅ translated
+      todayHours: t("todayClosed"),
     };
   }
 
-  const todayKey = getTodayKey();
-  let todayHours = activePeriod.hours[todayKey];
-
-  if (todayHours === null) todayHours = null;
-
+  const todayHours = period.hours[dayKey] || null;
   const open = isOpenNow(todayHours);
 
   return {
     isOpen: open,
-    statusText: open ? t("status_open") : t("status_closed"),
-    todayHours: formatHours(todayHours) || t("status_closed")
+    statusText: open ? t("status_open") : t("status_closed"), // ✅ FIXED
+    todayHours: todayHours ? formatHours(todayHours) : t("todayClosed"),
   };
 }
