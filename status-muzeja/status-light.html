@@ -64,41 +64,48 @@
   <script type="module">
     import { getOpenStatus } from './schedule-utils.js';
     import { loadTranslations, t } from '../i18n.js';
-
+  
     async function init() {
-      // ✅ Ensure translations are loaded before we call t()
-      await loadTranslations("translations-status-light");
-
-      const params = new URLSearchParams(window.location.search);
-      const locationName = params.get("location");
-
-      const statusDiv = document.getElementById("status");
-      const hoursDiv = document.getElementById("hours");
-
-      if (!locationName) {
-        hoursDiv.textContent = t("missingLocationParam");
-        return;
-      }
-
       try {
+        // ✅ First, load translations and wait until they’re set
+        await loadTranslations("translations-status-widget");
+        if (!window.translations) {
+          throw new Error("Translations not loaded!");
+        }
+  
+        const params = new URLSearchParams(window.location.search);
+        const locationName = params.get("location");
+  
+        const statusDiv = document.getElementById("status");
+        const hoursDiv = document.getElementById("hours");
+  
+        if (!locationName) {
+          hoursDiv.textContent = t("missingLocationParam");
+          return;
+        }
+  
+        // ✅ Then, fetch schedule data
         const response = await fetch('./status-muzeja/schedule.json');
         if (!response.ok) throw new Error("Failed JSON load");
         const data = await response.json();
-
+  
+        // ✅ Finally, get status with translations guaranteed ready
         const status = getOpenStatus(locationName, data);
-
+  
         statusDiv.classList.remove('open', 'closed');
         statusDiv.classList.add(status.isOpen ? 'open' : 'closed');
-        statusDiv.textContent = status.statusText; // ✅ now translated!
-
+        statusDiv.textContent = status.statusText;
+  
         hoursDiv.textContent = `${t("today")}: ${status.todayHours}`;
+  
       } catch (e) {
-        hoursDiv.textContent = t("dataLoadError");
-        console.error(e);
+        console.error("Widget error:", e);
+        document.getElementById("hours").textContent = t("dataLoadError");
       }
     }
-
-    init(); // run
+  
+    // Kick it off
+    init();
   </script>
 
 </body>
