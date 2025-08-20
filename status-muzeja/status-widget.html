@@ -49,17 +49,14 @@
 </head>
 <body>
   <div id="widget" class="status-container">
-    <div class="location-title" id="locationName" data-i18n="location_title">Nalaganje...</div>
-    <div class="status-label" id="statusText" data-i18n="status_label">...</div>
-    <div class="today-hours" id="hoursText" data-i18n="today_hours">...</div>
+    <div class="location-title" id="locationName">Nalaganje...</div>
+    <div class="status-label" id="statusText">...</div>
+    <div class="today-hours" id="hoursText"></div>
   </div>
 
   <script type="module">
-    // Import the loadTranslations function from the main i18n.js
-    import { loadTranslations } from '../i18n.js'; // Adjust the path based on where the i18n.js is located
-    loadTranslations('translations-status-widget'); // Fetch translations for the status widget
+    import { getOpenStatus } from './schedule-utils.js'; // ✅ FIXED
 
-    // Now handle the widget logic for fetching the schedule data, etc.
     const urlParams = new URLSearchParams(window.location.search);
     const locationName = urlParams.get("location");
 
@@ -69,7 +66,7 @@
       fetch('schedules.json')
         .then(res => res.json())
         .then(data => {
-          const status = getOpenStatus(locationName, data); // Use your utility function for fetching the status
+          const status = getOpenStatus(locationName, data);
 
           const widget = document.getElementById("widget");
           widget.classList.remove('open', 'closed');
