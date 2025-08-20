@@ -2,20 +2,23 @@ export async function loadTranslations(jsonFileBaseName) {
   try {
     const supportedLangs = ['sl', 'en', 'it', 'de'];
 
-    // First, get the saved language from localStorage, or detect the browser's language if not set
+    // Get the preferred language (from localStorage or browser language)
     let lang = localStorage.getItem('site_lang') || navigator.language.split('-')[0];
-    if (!supportedLangs.includes(lang)) lang = 'sl';  // Default to 'sl' if language is not supported
+    
+    // If the language is not supported, default to 'sl'
+    if (!supportedLangs.includes(lang)) lang = 'sl';
 
-    // Save the selected language in localStorage if it's not set
+    // Save the selected language in localStorage
     localStorage.setItem('site_lang', lang);
 
-    // Determine the correct base path (this works regardless of the folder structure)
-    const basePath = window.location.pathname.split('/').slice(0, -1).join('/'); // Removes the current page name
+    // Determine the base path of your site (to support GitHub pages / subfolders)
+    const basePath = window.location.pathname.split('/').slice(0, 2).join('/');
 
-    // Add cache buster to avoid stale fetches
+    // Build the path to the translation file
     const path = `${basePath}/translations/${jsonFileBaseName}.json?t=${Date.now()}`;
     console.log('Fetching translation file:', path);
 
+    // Fetch the translation file
     const res = await fetch(path);
     if (!res.ok) throw new Error(`Translation file not found: ${path}`);
 
@@ -23,7 +26,7 @@ export async function loadTranslations(jsonFileBaseName) {
     const translations = allTranslations[lang];
     if (!translations) throw new Error(`No translations found for language "${lang}"`);
 
-    // Apply translations to elements, updating only text content inside <a> tags
+    // Apply translations to elements
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
       const translation = translations[key];
@@ -32,22 +35,21 @@ export async function loadTranslations(jsonFileBaseName) {
         // If the element has an <a> tag, update only the text inside the <a> tag
         const link = el.querySelector('a');
         if (link) {
-          link.textContent = translation;  // Update only the text of <a>
+          link.textContent = translation;
         } else {
-          // If there's no <a>, only replace text content
+          // If there's no <a> tag, just replace text content
           replaceTextContent(el, translation);
         }
       } else {
-        // In case no translation found, leave the key as fallback (debugging purpose)
+        // Fallback: if no translation found, display the key (for debugging)
         el.textContent = `[${key}]`;
       }
     });
 
-    // Language selector logic
+    // Language selector logic: apply selected language in the dropdown
     const select = document.getElementById('language-select');
     if (select) {
       select.value = lang;
-
       // Avoid attaching multiple listeners
       if (!select.dataset.listenerSet) {
         select.addEventListener('change', () => {
@@ -68,10 +70,8 @@ export async function loadTranslations(jsonFileBaseName) {
 
 // Helper function to replace only the text nodes and preserve emojis
 function replaceTextContent(el, translation) {
-  // Loop through all child nodes of the element
   el.childNodes.forEach(child => {
     if (child.nodeType === Node.TEXT_NODE) {
-      // Replace the text node with the translation
       child.textContent = translation;
     }
   });
