@@ -16,95 +16,95 @@
       height: 100vh;
       user-select: none;
     }
-
-    #status {
-      width: 280px;
-      height: 140px;
-      border-radius: 20px;
+    #status-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    #status-text {
       font-size: 2.5rem;
       font-weight: 700;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
       text-transform: uppercase;
-      animation: blink 2s infinite;
-      box-shadow: 0 0 20px rgba(0,0,0,0.6);
-      margin-bottom: 15px;
+      margin: 0;
+      padding: 0;
     }
-
-    #status.open {
-      background-color: #28a745;
+    #status-light {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      box-shadow: 0 0 25px;
+      background: gray;
+      display: inline-block;
+    }
+    #status-light.open {
+      background: #28a745;
       box-shadow: 0 0 25px #28a745;
     }
-
-    #status.closed {
-      background-color: #d32f2f;
+    #status-light.closed {
+      background: #d32f2f;
       box-shadow: 0 0 25px #d32f2f;
-    }
-
-    #hours {
-      font-size: 1.1rem;
-      text-align: center;
-      max-width: 280px;
-      line-height: 1.3;
-    }
-
-    @keyframes blink {
-      0%, 50%, 100% { opacity: 1; }
-      25%, 75% { opacity: 0.6; }
     }
   </style>
 </head>
 <body>
 
-  <div id="status" class="closed">…</div>
-  <div id="hours">…</div>
+  <div id="status-row">
+    <span id="status-text">…</span>
+    <span id="status-light" class="closed"></span>
+  </div>
 
 <script type="module">
   import { getOpenStatus } from './schedule-utils.js';
-  import { loadTranslations, t } from '../i18n.js';
+
+  // Helper for language
+  function getLang() {
+    const supported = ['sl', 'en', 'it', 'de'];
+    let lang = localStorage.getItem('site_lang') || navigator.language.split('-')[0];
+    if (!supported.includes(lang)) lang = 'sl';
+    return lang;
+  }
+
+  async function fetchTranslations(lang) {
+    const basePath = window.location.pathname.split('/').slice(0, 2).join('/');
+    const url = `${basePath}/translations/translations-status-widget.json?t=${Date.now()}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Translation file not found');
+    const allTranslations = await res.json();
+    return allTranslations[lang] || {};
+  }
 
   async function init() {
     try {
-      // ✅ First, load translations and wait until they’re set
-      await loadTranslations("translations-status-widget");
-      if (!window.translations) {
-        throw new Error("Translations not loaded!");
-      }
+      const lang = getLang();
+      const translations = await fetchTranslations(lang);
 
       const params = new URLSearchParams(window.location.search);
       const locationName = params.get("location");
 
-      const statusDiv = document.getElementById("status");
-      const hoursDiv = document.getElementById("hours");
+      const statusText = document.getElementById("status-text");
+      const statusLight = document.getElementById("status-light");
 
       if (!locationName) {
-        hoursDiv.textContent = t("missingLocationParam");
+        statusText.textContent = translations["missingLocationParam"] || "Manjka lokacija";
+        statusLight.className = "closed";
         return;
       }
 
-      // ✅ Then, fetch schedule data
       const response = await fetch('./status-muzeja/schedule.json');
       if (!response.ok) throw new Error("Failed JSON load");
       const data = await response.json();
 
-      // ✅ Finally, get status with translations guaranteed ready
       const status = getOpenStatus(locationName, data);
+      const openClosedKey = status.isOpen ? "status_open" : "status_closed";
 
-      statusDiv.classList.remove('open', 'closed');
-      statusDiv.classList.add(status.isOpen ? 'open' : 'closed');
-      statusDiv.textContent = status.statusText;
-
-      hoursDiv.textContent = `${t("today")}: ${status.todayHours}`;
-
+      statusText.textContent = translations[openClosedKey] || (status.isOpen ? "Odprto" : "Zaprto");
+      statusLight.className = status.isOpen ? "open" : "closed";
     } catch (e) {
-      console.error("Widget error:", e);
-      document.getElementById("hours").textContent = t("dataLoadError");
+      document.getElementById("status-text").textContent = "Napaka pri nalaganju";
+      document.getElementById("status-light").className = "closed";
+      console.error(e);
     }
   }
-
-  // Kick it off
   init();
 </script>
 
