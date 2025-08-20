@@ -54,34 +54,45 @@
     <div class="today-hours" id="hoursText"></div>
   </div>
 
-<script type="module">
-  import { getOpenStatus } from './schedule-utils.js'; // ✅ FIXED
+  <script type="module">
+    import { getOpenStatus } from './schedule-utils.js'; 
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const locationName = urlParams.get("location");
+    // Fetch translation for the widget, if any, based on the location
+    loadTranslations('translations-palaca-gabrieli')
+      .then(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const locationName = urlParams.get("location");
 
-  if (!locationName) {
-    document.getElementById("widget").innerHTML = "<p>Manjka parameter ?location=</p>";
-  } else {
-    fetch('schedules.json')
-      .then(res => res.json())
-      .then(data => {
-        const status = getOpenStatus(locationName, data);
+        if (!locationName) {
+          document.getElementById("widget").innerHTML = "<p>Manjka parameter ?location=</p>";
+          return;
+        }
 
-        const widget = document.getElementById("widget");
-        widget.classList.remove('open', 'closed');
-        widget.classList.add(status.isOpen ? 'open' : 'closed');
+        fetch('schedules.json')
+          .then(res => res.json())
+          .then(data => {
+            const status = getOpenStatus(locationName, data);
 
-        document.getElementById("locationName").textContent = window.translations[locationName] || locationName;
-        document.getElementById("statusText").textContent = window.translations[status.statusText] || status.statusText;
-        document.getElementById("hoursText").textContent = window.translations[`Danes: ${status.todayHours}`] || `Danes: ${status.todayHours}`;
+            const widget = document.getElementById("widget");
+            widget.classList.remove('open', 'closed');
+            widget.classList.add(status.isOpen ? 'open' : 'closed');
+
+            // Translate location name if a translation exists
+            const locationNameTranslation = window.translations[lang]?.[locationName] || locationName;
+            
+            document.getElementById("locationName").textContent = locationNameTranslation;
+            document.getElementById("statusText").textContent = status.statusText;
+            document.getElementById("hoursText").textContent = `Danes: ${status.todayHours}`;
+          })
+          .catch(err => {
+            document.getElementById("widget").innerHTML = "<p>Napaka pri nalaganju podatkov.</p>";
+            console.error(err);
+          });
       })
       .catch(err => {
-        document.getElementById("widget").innerHTML = "<p>Napaka pri nalaganju podatkov.</p>";
-        console.error(err);
+        console.error("Error loading translations:", err);
       });
-  }
-</script>
 
+  </script>
 </body>
 </html>
