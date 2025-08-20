@@ -56,9 +56,13 @@
 
   <script type="module">
     import { getOpenStatus } from './schedule-utils.js'; // ✅ FIXED
+    import { loadTranslations } from '/../../i18n.js';  // Adjust the path as needed for your folder structure
 
     const urlParams = new URLSearchParams(window.location.search);
     const locationName = urlParams.get("location");
+
+    // Fetch the translations first
+    loadTranslations('translations-status-widget');  // Load the widget translation JSON
 
     if (!locationName) {
       document.getElementById("widget").innerHTML = "<p>Manjka parameter ?location=</p>";
@@ -72,14 +76,22 @@
           widget.classList.remove('open', 'closed');
           widget.classList.add(status.isOpen ? 'open' : 'closed');
 
+          // Apply the translations
           document.getElementById("locationName").textContent = locationName;
-          document.getElementById("statusText").textContent = status.statusText;
-          document.getElementById("hoursText").textContent = `Danes: ${status.todayHours}`;
+          document.getElementById("statusText").textContent = translate(status.statusText);  // Use translation for status
+          document.getElementById("hoursText").textContent = `${translate("today")}: ${status.todayHours}`;  // Use translation for "Today"
         })
         .catch(err => {
           document.getElementById("widget").innerHTML = "<p>Napaka pri nalaganju podatkov.</p>";
           console.error(err);
         });
+    }
+
+    // Helper function to retrieve translations from the loaded JSON
+    function translate(key) {
+      const lang = localStorage.getItem('site_lang') || 'sl'; // Fallback to Slovenian if no lang
+      const translations = window.translations || {}; // Ensure translations object exists
+      return translations[lang] && translations[lang][key] ? translations[lang][key] : key;
     }
   </script>
 </body>
