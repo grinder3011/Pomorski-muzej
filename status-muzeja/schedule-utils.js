@@ -29,7 +29,7 @@ function isOpenNow(hours) {
  * Format hours into a human-readable string.
  */
 function formatHours(hours) {
-  if (!hours) return t("todayClosed");
+  if (!hours) return t("todayClosed"); // ✅ translated
   if (typeof hours === 'string') return hours.replace('-', '–');
   if (Array.isArray(hours)) return hours.map(h => h.replace('-', '–')).join(', ');
   return "";
@@ -69,8 +69,8 @@ export function getOpenStatus(locationName, data) {
   if (!locData) {
     return {
       isOpen: false,
-      statusText: t("locationNotFound"),
-      todayHours: t("todayClosed"),
+      statusText: t("locationNotFound"), // ✅ translated
+      todayHours: t("todayClosed"),      // ✅ translated
     };
   }
 
@@ -81,7 +81,7 @@ export function getOpenStatus(locationName, data) {
     return {
       isOpen: false,
       statusText: t("status_closed"), // ✅ translated
-      todayHours: t("todayClosed"),
+      todayHours: t("todayClosed"),   // ✅ translated
     };
   }
 
@@ -90,7 +90,7 @@ export function getOpenStatus(locationName, data) {
 
   return {
     isOpen: open,
-    statusText: open ? t("status_open") : t("status_closed"), // ✅ FIXED
+    statusText: open ? t("status_open") : t("status_closed"), // ✅ translated
     todayHours: todayHours ? formatHours(todayHours) : t("todayClosed"),
   };
 }
