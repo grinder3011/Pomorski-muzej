@@ -57,8 +57,7 @@
   import { getOpenStatus } from './schedule-utils.js';
   import { loadTranslations, t } from '../i18n.js';
 
-  async function init() {
-    try {
+
       // Load translations for this widget
       await loadTranslations("translations-status-light");
 
@@ -82,11 +81,7 @@
 
       statusText.textContent = status.statusText; // This will be translated
       statusLight.className = status.isOpen ? "open" : "closed";
-    } catch (e) {
-      document.getElementById("status-text").textContent = t("dataLoadError");
-      document.getElementById("status-light").className = "closed";
-      console.error(e);
-    }
+
   }
   init();
 </script>
