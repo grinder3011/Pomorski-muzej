@@ -10,7 +10,15 @@
     "section_outside_piran_title": "Muzeji izven Pirana",
     "museum_monfort": "Monfort",
     "museum_saltworks": "Soline",
-    "museum_tonina_house": "Tonina hiša"
+    "museum_tonina_house": "Tonina hiša",
+
+    "status_open": "Odprto",
+    "status_closed": "Zaprto",
+    "todayClosed": "Danes zaprto",
+    "today": "Danes",
+    "locationNotFound": "Lokacija ni najdena",
+    "dataLoadError": "Napaka pri nalaganju urnika",
+    "missingLocationParam": "Lokacija ni podana"
   },
   "en": {
     "site_title": "Piran Maritime Museum",
@@ -23,7 +31,15 @@
     "section_outside_piran_title": "Museums Outside Piran",
     "museum_monfort": "Monfort",
     "museum_saltworks": "Saltworks",
-    "museum_tonina_house": "Tona's House"
+    "museum_tonina_house": "Tona's House",
+
+    "status_open": "Open",
+    "status_closed": "Closed",
+    "todayClosed": "Closed today",
+    "today": "Today",
+    "locationNotFound": "Location not found",
+    "dataLoadError": "Error loading schedule",
+    "missingLocationParam": "Location not specified"
   },
   "it": {
     "site_title": "Museo del mare di Pirano",
@@ -36,7 +52,15 @@
     "section_outside_piran_title": "Musei fuori Pirano",
     "museum_monfort": "Monfort",
     "museum_saltworks": "Saline",
-    "museum_tonina_house": "Casa di Tona"
+    "museum_tonina_house": "Casa di Tona",
+
+    "status_open": "Aperto",
+    "status_closed": "Chiuso",
+    "todayClosed": "Chiuso oggi",
+    "today": "Oggi",
+    "locationNotFound": "Sede non trovata",
+    "dataLoadError": "Errore nel caricamento dell'orario",
+    "missingLocationParam": "Sede non specificata"
   },
   "de": {
     "site_title": "Maritimes Museum Piran",
@@ -49,6 +73,14 @@
     "section_outside_piran_title": "Museen außerhalb Pirans",
     "museum_monfort": "Monfort",
     "museum_saltworks": "Salzwerke",
-    "museum_tonina_house": "Tona Haus"
+    "museum_tonina_house": "Tona Haus",
+
+    "status_open": "Geöffnet",
+    "status_closed": "Geschlossen",
+    "todayClosed": "Heute geschlossen",
+    "today": "Heute",
+    "locationNotFound": "Standort nicht gefunden",
+    "dataLoadError": "Fehler beim Laden des Zeitplans",
+    "missingLocationParam": "Standort nicht angegeben"
   }
 }
