@@ -54,54 +54,32 @@
 
 <script type="module">
   import { getOpenStatus } from './schedule-utils.js';
-
-  function getLang() {
-    const supported = ['sl', 'en', 'it', 'de'];
-    let lang = localStorage.getItem('site_lang') || navigator.language.split('-')[0];
-    if (!supported.includes(lang)) lang = 'sl';
-    return lang;
-  }
-
-  async function fetchTranslations(lang) {
-    const basePath = window.location.pathname.split('/').slice(0, 2).join('/');
-    const url = `${basePath}/translations/translations-status-widget.json?t=${Date.now()}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Translation file not found');
-    const allTranslations = await res.json();
-    return allTranslations[lang] || {};
-  }
+  import { loadTranslations } from '../i18n.js';
 
   async function init() {
-    try {
-      const lang = getLang();
-      const translations = await fetchTranslations(lang);
+    await loadTranslations("translations-status-widget");
 
-      const params = new URLSearchParams(window.location.search);
-      const locationName = params.get("location");
+    const params = new URLSearchParams(window.location.search);
+    const locationName = params.get("location");
 
-      const statusText = document.getElementById("status-text");
-      const statusLight = document.getElementById("status-light");
+    const statusText = document.getElementById("status-text");
+    const statusLight = document.getElementById("status-light");
 
-      if (!locationName) {
-        statusText.textContent = translations["missingLocationParam"] || "Manjka lokacija";
-        statusLight.className = "closed";
-        return;
-      }
-
-      const response = await fetch('./status-muzeja/schedule.json');
-      if (!response.ok) throw new Error("Failed JSON load");
-      const data = await response.json();
-
-      const status = getOpenStatus(locationName, data);
-
-      // FIX: Use the key, not the already-translated value!
-      statusText.textContent = translations[status.isOpen ? "status_open" : "status_closed"] || (status.isOpen ? "Odprto" : "Zaprto");
-      statusLight.className = status.isOpen ? "open" : "closed";
-    } catch (e) {
-      document.getElementById("status-text").textContent = "Napaka pri nalaganju";
-      document.getElementById("status-light").className = "closed";
-      console.error(e);
+    if (!locationName) {
+      // Use the t() helper for missing location, since translations are loaded
+      import { t } from '../i18n.js';
+      statusText.textContent = t("missingLocationParam");
+      statusLight.className = "closed";
+      return;
     }
+
+    const response = await fetch('./status-muzeja/schedule.json');
+    if (!response.ok) throw new Error("Failed JSON load");
+    const data = await response.json();
+
+    const status = getOpenStatus(locationName, data);
+    statusText.textContent = status.statusText; // Already translated
+    statusLight.className = status.isOpen ? "open" : "closed";
   }
   init();
 </script>
