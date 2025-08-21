@@ -298,37 +298,51 @@
     import { getOpenStatus } from './status-muzeja/schedule-utils.js';
     import { loadTranslations, t } from './i18n.js';
   
-    // Load translations (merged JSON you showed me)
-    await loadTranslations("translations-home-page"); 
+    // ✅ Load translations
+    await loadTranslations("translations-home-page");
   
-    const urlParams = new URLSearchParams(window.location.search);
-    const locationName = urlParams.get("location");
+    // ✅ Fetch schedules and update all list items
+    fetch('schedules.json')
+      .then(res => res.json())
+      .then(data => {
+        document.querySelectorAll("li[data-location]").forEach(li => {
+          const location = li.getAttribute("data-location");
+          const status = getOpenStatus(location, data);
   
-    const widget = document.getElementById("widget");
+          const statusText = li.querySelector(".status-text");
+          const statusLight = li.querySelector(".status-light circle");
   
-    if (!locationName) {
-      widget.innerHTML = `<p>${t("missingLocationParam")}</p>`;
-    } else {
-      fetch('schedules.json')
-        .then(res => res.json())
-        .then(data => {
-          const status = getOpenStatus(locationName, data);
+          // Update text
+          if (statusText) {
+            statusText.textContent = status.statusText; // already localized
+            statusText.style.color = status.isOpen ? "green" : "red";
+            statusText.style.fontWeight = "bold";
+          }
   
-          widget.classList.remove('open', 'closed');
-          widget.classList.add(status.isOpen ? 'open' : 'closed');
+          // Update light color
+          if (statusLight) {
+            statusLight.setAttribute("fill", status.isOpen ? "green" : "red");
   
-          document.getElementById("locationName").textContent = 
-            t(`museum_${locationName}`) || locationName; // ✅ translate museum name if available
-          document.getElementById("statusText").textContent = 
-            status.statusText; // already translated by getOpenStatus()
-          document.getElementById("hoursText").textContent = 
-            `${t("today")}: ${status.todayHours}`;
-        })
-        .catch(err => {
-          widget.innerHTML = `<p>${t("dataLoadError")}</p>`;
-          console.error(err);
+            // Add blinking effect when open
+            if (status.isOpen) {
+              statusLight.animate(
+                [
+                  { opacity: 1 },
+                  { opacity: 0.2 },
+                  { opacity: 1 }
+                ],
+                {
+                  duration: 1200,
+                  iterations: Infinity
+                }
+              );
+            }
+          }
         });
-    }
+      })
+      .catch(err => {
+        console.error("❌ Error loading schedules.json:", err);
+      });
   </script>
 
   <script>
