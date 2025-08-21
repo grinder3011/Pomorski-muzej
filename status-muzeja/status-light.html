@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="sl">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Muzej delovni čas</title>
+  <title>Museum Status</title>
   <style>
     body {
       margin: 0; padding: 0;
@@ -47,6 +47,7 @@
   </style>
 </head>
 <body>
+
   <div id="status-row">
     <span id="status-text">…</span>
     <span id="status-light" class="closed"></span>
@@ -54,34 +55,37 @@
 
 <script type="module">
   import { getOpenStatus } from './schedule-utils.js';
-  import { loadTranslations } from '../i18n.js';
 
   async function init() {
-    await loadTranslations("translations-status-widget");
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const locationName = params.get("location");
 
-    const params = new URLSearchParams(window.location.search);
-    const locationName = params.get("location");
+      const statusText = document.getElementById("status-text");
+      const statusLight = document.getElementById("status-light");
 
-    const statusText = document.getElementById("status-text");
-    const statusLight = document.getElementById("status-light");
+      if (!locationName) {
+        statusText.textContent = "Location missing";
+        statusLight.className = "closed";
+        return;
+      }
 
-    if (!locationName) {
-      // Use the t() helper for missing location, since translations are loaded
-      import { t } from '../i18n.js';
-      statusText.textContent = t("missingLocationParam");
-      statusLight.className = "closed";
-      return;
+      const response = await fetch('./status-muzeja/schedule.json');
+      if (!response.ok) throw new Error("Failed JSON load");
+      const data = await response.json();
+
+      const status = getOpenStatus(locationName, data);
+
+      statusText.textContent = status.isOpen ? "Open" : "Closed";
+      statusLight.className = status.isOpen ? "open" : "closed";
+    } catch (e) {
+      document.getElementById("status-text").textContent = "Error loading";
+      document.getElementById("status-light").className = "closed";
+      console.error(e);
     }
-
-    const response = await fetch('./status-muzeja/schedule.json');
-    if (!response.ok) throw new Error("Failed JSON load");
-    const data = await response.json();
-
-    const status = getOpenStatus(locationName, data);
-    statusText.textContent = status.statusText; // Already translated
-    statusLight.className = status.isOpen ? "open" : "closed";
   }
   init();
 </script>
+
 </body>
 </html>
