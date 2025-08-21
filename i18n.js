@@ -12,10 +12,7 @@ export async function loadTranslations(jsonFileBaseName) {
     localStorage.setItem('site_lang', lang);
 
     // Determine the base path of your site (to support GitHub pages / subfolders)
-    const basePath = window.location.pathname.split('/').slice(0, 2).join('/');
-
-    // Build the path to the translation file
-    const path = `${basePath}/translations/${jsonFileBaseName}.json?t=${Date.now()}`;
+    const path = `./translations/${jsonFileBaseName}.json?t=${Date.now()}`;
     console.log('Fetching translation file:', path);
 
     // Fetch the translation file
