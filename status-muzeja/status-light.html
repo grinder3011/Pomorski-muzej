@@ -47,7 +47,6 @@
   </style>
 </head>
 <body>
-
   <div id="status-row">
     <span id="status-text">…</span>
     <span id="status-light" class="closed"></span>
@@ -56,7 +55,6 @@
 <script type="module">
   import { getOpenStatus } from './schedule-utils.js';
 
-  // Helper for language
   function getLang() {
     const supported = ['sl', 'en', 'it', 'de'];
     let lang = localStorage.getItem('site_lang') || navigator.language.split('-')[0];
@@ -95,9 +93,9 @@
       const data = await response.json();
 
       const status = getOpenStatus(locationName, data);
-      const openClosedKey = status.isOpen ? "status_open" : "status_closed";
 
-      statusText.textContent = translations[openClosedKey] || (status.isOpen ? "Odprto" : "Zaprto");
+      // FIX: Use the key, not the already-translated value!
+      statusText.textContent = translations[status.isOpen ? "status_open" : "status_closed"] || (status.isOpen ? "Odprto" : "Zaprto");
       statusLight.className = status.isOpen ? "open" : "closed";
     } catch (e) {
       document.getElementById("status-text").textContent = "Napaka pri nalaganju";
@@ -107,6 +105,5 @@
   }
   init();
 </script>
-
 </body>
 </html>
