@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sl">
 <head>
   <meta charset="UTF-8" />
-  <title>Museum Status</title>
+  <title>Muzej delovni čas</title>
   <style>
     body {
       margin: 0; padding: 0;
@@ -16,75 +16,142 @@
       height: 100vh;
       user-select: none;
     }
-    #status-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    #status-text {
+
+    #status {
+      width: 280px;
+      height: 140px;
+      border-radius: 20px;
       font-size: 2.5rem;
       font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-transform: uppercase;
-      margin: 0;
-      padding: 0;
+      animation: blink 2s infinite;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+      margin-bottom: 15px;
     }
-    #status-light {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      box-shadow: 0 0 25px;
-      background: gray;
-      display: inline-block;
-    }
-    #status-light.open {
-      background: #28a745;
+
+    #status.open {
+      background-color: #28a745;
       box-shadow: 0 0 25px #28a745;
     }
-    #status-light.closed {
-      background: #d32f2f;
+
+    #status.closed {
+      background-color: #d32f2f;
       box-shadow: 0 0 25px #d32f2f;
+    }
+
+    #hours {
+      font-size: 1.1rem;
+      text-align: center;
+      max-width: 280px;
+      line-height: 1.3;
+    }
+
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0.6; }
     }
   </style>
 </head>
 <body>
 
-  <div id="status-row">
-    <span id="status-text">…</span>
-    <span id="status-light" class="closed"></span>
-  </div>
+  <div id="status" class="closed">Zaprto</div>
+  <div id="hours">Nalaganje urnika...</div>
 
-<script type="module">
-  import { getOpenStatus } from './schedule-utils.js';
-  import { loadTranslations, t } from '../i18n.js';
+  <script>
+    (async () => {
+      function parseTime(t) {
+        const [h, m] = t.split(':').map(Number);
+        return h * 60 + m;
+      }
 
+      function isOpenNow(hours) {
+        if (!hours) return false;
+        const now = new Date();
+        const nowMinutes = now.getHours() * 60 + now.getMinutes();
+        if (typeof hours === 'string') hours = [hours];
+        return hours.some(interval => {
+          const [start, end] = interval.split('-').map(parseTime);
+          return nowMinutes >= start && nowMinutes < end;
+        });
+      }
 
-      // Load translations for this widget
-      await loadTranslations("translations-status-light");
+      function formatHours(hours) {
+        if (!hours) return "Danes zaprto";
+        if (typeof hours === 'string') return hours.replace('-', '–');
+        if (Array.isArray(hours)) return hours.map(h => h.replace('-', '–')).join(', ');
+        return "";
+      }
+
+      function inPeriod(now, startStr, endStr) {
+        const [startMonth, startDay] = startStr.split('-').map(Number);
+        const [endMonth, endDay] = endStr.split('-').map(Number);
+
+        const year = now.getFullYear();
+        let start = new Date(year, startMonth - 1, startDay);
+        let end = new Date(year, endMonth - 1, endDay);
+
+        if (end < start) {
+          if (now < start) start.setFullYear(year - 1);
+          else end.setFullYear(year + 1);
+        }
+
+        return now >= start && now <= end;
+      }
+
+      const daysMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
       const params = new URLSearchParams(window.location.search);
-      const locationName = params.get("location");
+      const locParam = params.get('loc');
+      const statusDiv = document.getElementById('status');
+      const hoursDiv = document.getElementById('hours');
 
-      const statusText = document.getElementById("status-text");
-      const statusLight = document.getElementById("status-light");
-
-      if (!locationName) {
-        statusText.textContent = t("missingLocationParam");
-        statusLight.className = "closed";
+      if (!locParam) {
+        hoursDiv.textContent = "Lokacija ni podana";
         return;
       }
 
-      const response = await fetch('./status-muzeja/schedule.json');
-      if (!response.ok) throw new Error("Failed JSON load");
-      const data = await response.json();
+      let data;
+      try {
+        const response = await fetch('./status-muzeja/schedule.json');
+        if (!response.ok) throw new Error("Neuspelo nalaganje JSON-a");
+        data = await response.json();
+      } catch (e) {
+        hoursDiv.textContent = "Napaka pri nalaganju urnika.";
+        return;
+      }
 
-      const status = getOpenStatus(locationName, data);
+      const locData = data.locations[locParam];
+      if (!locData) {
+        hoursDiv.textContent = "Lokacija ni najdena";
+        return;
+      }
 
-      statusText.textContent = status.statusText; // This will be translated
-      statusLight.className = status.isOpen ? "open" : "closed";
+      const now = new Date();
+      const dayKey = daysMap[now.getDay()];
+      const period = locData.periods.find(p => inPeriod(now, p.start, p.end));
 
-  }
-  init();
-</script>
+      if (!period) {
+        statusDiv.classList.remove('open');
+        statusDiv.classList.add('closed');
+        statusDiv.textContent = "Zaprto";
+        hoursDiv.textContent = "Danes zaprto";
+        return;
+      }
+
+      const todayHours = period.hours[dayKey] || null;
+      const open = isOpenNow(todayHours);
+
+      statusDiv.classList.remove('open', 'closed');
+      statusDiv.classList.add(open ? 'open' : 'closed');
+      statusDiv.textContent = open ? "Odprto" : "Zaprto";
+
+      hoursDiv.textContent = "Danes: " + formatHours(todayHours);
+    })();
+  </script>
 
 </body>
 </html>
