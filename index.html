@@ -302,7 +302,7 @@
     await loadTranslations("translations-home-page");
   
     // ✅ Fetch schedules and update all list items
-    fetch('schedules.json')
+   fetch('./status-muzeja/schedules.json')
       .then(res => res.json())
       .then(data => {
         document.querySelectorAll("li[data-location]").forEach(li => {
