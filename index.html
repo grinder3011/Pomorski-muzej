@@ -294,54 +294,40 @@
   </div>
 
   <script type="module">
-    import { getOpenStatus } from './status-muzeja/schedule-utils.js';
-    import { t } from './i18n.js';
-
-    async function updateStatusLights() {
-        try {
-          const res = await fetch('./status-muzeja/schedules.json');
-          if (!res.ok) throw new Error('Failed to load schedules.json');
-          const schedules = await res.json();
-      
-          const listItems = document.querySelectorAll('ul.museum-list li');
-      
-          listItems.forEach(li => {
-            const locName = li.dataset.location;
-            if (!locName) return;
-      
-            const status = getOpenStatus(locName, schedules);
-      
-            // Update circle color
-            const circle = li.querySelector('circle');
-            if (circle) {
-              circle.setAttribute('fill', status.isOpen ? '#4CAF50' : '#E53935');
-            }
-      
-            // Add blinking animation on circle
-            let visible = true;
-            setInterval(() => {
-              if (circle) {
-                visible = !visible;
-                circle.style.opacity = visible ? '1' : '0.4';
-              }
-            }, 1500);
-      
-            // Update status text next to icon (translated)
-            const statusTextElem = li.querySelector('.status-text');
-            if (statusTextElem) {
-              statusTextElem.textContent = status.isOpen ? t("status_open") : t("status_closed");
-              statusTextElem.style.color = status.isOpen ? '#4CAF50' : '#E53935';
-              statusTextElem.style.marginLeft = '10px';
-              statusTextElem.style.fontWeight = 'bold';
-            }
-          });
-      
-        } catch (err) {
-          console.error('Error updating status lights:', err);
-        }
-      }
-
-    updateStatusLights();
+    import { getOpenStatus } from './schedule-utils.js';
+    import { loadTranslations, t } from './i18n.js';
+  
+    // Load translations (merged JSON you showed me)
+    await loadTranslations("translations-homepage"); 
+  
+    const urlParams = new URLSearchParams(window.location.search);
+    const locationName = urlParams.get("location");
+  
+    const widget = document.getElementById("widget");
+  
+    if (!locationName) {
+      widget.innerHTML = `<p>${t("missingLocationParam")}</p>`;
+    } else {
+      fetch('schedules.json')
+        .then(res => res.json())
+        .then(data => {
+          const status = getOpenStatus(locationName, data);
+  
+          widget.classList.remove('open', 'closed');
+          widget.classList.add(status.isOpen ? 'open' : 'closed');
+  
+          document.getElementById("locationName").textContent = 
+            t(`museum_${locationName}`) || locationName; // ✅ translate museum name if available
+          document.getElementById("statusText").textContent = 
+            status.statusText; // already translated by getOpenStatus()
+          document.getElementById("hoursText").textContent = 
+            `${t("today")}: ${status.todayHours}`;
+        })
+        .catch(err => {
+          widget.innerHTML = `<p>${t("dataLoadError")}</p>`;
+          console.error(err);
+        });
+    }
   </script>
 
   <script>
