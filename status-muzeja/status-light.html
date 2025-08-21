@@ -55,9 +55,13 @@
 
 <script type="module">
   import { getOpenStatus } from './schedule-utils.js';
+  import { loadTranslations, t } from '../i18n.js';
 
   async function init() {
     try {
+      // Load translations for this widget
+      await loadTranslations("translations-status-widget");
+
       const params = new URLSearchParams(window.location.search);
       const locationName = params.get("location");
 
@@ -65,7 +69,7 @@
       const statusLight = document.getElementById("status-light");
 
       if (!locationName) {
-        statusText.textContent = "Location missing";
+        statusText.textContent = t("missingLocationParam");
         statusLight.className = "closed";
         return;
       }
@@ -76,10 +80,10 @@
 
       const status = getOpenStatus(locationName, data);
 
-      statusText.textContent = status.isOpen ? "Open" : "Closed";
+      statusText.textContent = status.statusText; // This will be translated
       statusLight.className = status.isOpen ? "open" : "closed";
     } catch (e) {
-      document.getElementById("status-text").textContent = "Error loading";
+      document.getElementById("status-text").textContent = t("dataLoadError");
       document.getElementById("status-light").className = "closed";
       console.error(e);
     }
