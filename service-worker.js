@@ -1,6 +1,9 @@
+const CACHE_NAME = "muzej-cache-v2"; // bump version when you change stuff
+
 self.addEventListener("install", (e) => {
   e.waitUntil(
-    caches.open("muzej-cache").then(async (cache) => {
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
       const filesToCache = [
         "/Pomorski-muzej/",
         "/Pomorski-muzej/index.html",
@@ -15,7 +18,6 @@ self.addEventListener("install", (e) => {
         "/Pomorski-muzej/icon-muzej-512.png"
       ];
 
-      // Try adding each file individually and skip any that fail
       await Promise.allSettled(
         filesToCache.map(file =>
           cache.add(file).catch(err =>
@@ -23,12 +25,49 @@ self.addEventListener("install", (e) => {
           )
         )
       );
-    })
+    })()
+  );
+
+  // ⚡ Immediately activate the new service worker
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", (e) => {
+  e.waitUntil(
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(
+        keys
+          .filter((key) => key !== CACHE_NAME)
+          .map((key) => caches.delete(key))
+      );
+      // ⚡ Take control of all clients right away
+      await self.clients.claim();
+    })()
   );
 });
 
 self.addEventListener("fetch", (e) => {
-  e.respondWith(
-    caches.match(e.request).then((response) => response || fetch(e.request))
-  );
+  const requestUrl = new URL(e.request.url);
+
+  // Special case for JSON: always try network first, fallback to cache
+  if (requestUrl.pathname.endsWith(".json")) {
+    e.respondWith(
+      fetch(e.request)
+        .then((response) => {
+          return caches.open(CACHE_NAME).then((cache) => {
+            cache.put(e.request, response.clone());
+            return response;
+          });
+        })
+        .catch(() => caches.match(e.request))
+    );
+  } else {
+    // Default: cache-first
+    e.respondWith(
+      caches.match(e.request).then(
+        (response) => response || fetch(e.request)
+      )
+    );
+  }
 });
