@@ -195,6 +195,16 @@
     ul.museum-list li .emoji {
        margin-left: 14px;; /* Adjust for desired space */
     }
+
+    /* Normalize icon alignment in museum list */
+    ul.museum-list li .icon {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 2.5rem;   /* reserve equal space for all icons */
+      font-size: 1.2rem;
+      flex-shrink: 0;  /* prevent shrinking on small screens */
+    }
   </style>
 </head>
 <body>
@@ -228,7 +238,7 @@
         <h3 data-i18n="section_piran_title">Piranske enote (muzeji)</h3>
         <ul class="museum-list">
           <li data-location="Palača-Gabrielli">
-            📍🏛️
+            <span class="icon">📍🏛️</span>
             <a href="lokalne-enote/palaca-gabrieli/index.html" data-i18n="museum_gabrielli">Pomorski Muzej Piran</a>
             <span class="status-text" data-i18n="status_open">Odprto</span>
             <svg class="status-light" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-label="Status palača" role="img">
@@ -236,7 +246,7 @@
             </svg>
           </li>
           <li data-location="Piranski-svetilnik">
-            <span class="emoji">🏛️</span>
+            <span class="icon">🏛️</span>
             <a href="lokalne-enote/piranski-svetilnik/index.html" data-i18n="museum_lighthouse">Piranski Svetilnik</a>
             <span class="status-text" data-i18n="status_open">Odprto</span>
             <svg class="status-light" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-label="Status svetilnik" role="img">
@@ -244,7 +254,7 @@
             </svg>
           </li>
           <li data-location="Tartinijeva-hiša">
-            <span class="emoji">🏛️</span>
+            <span class="icon">🏛️</span>
             <a href="lokalne-enote/tartinijeva-hisa/index.html" data-i18n="museum_tartini_house">Tartinijeva hiša</a>
             <span class="status-text" data-i18n="status_open">Odprto</span>
             <svg class="status-light" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-label="Status tartinijeva" role="img">
