@@ -1,4 +1,4 @@
-const CACHE_NAME = "muzej-cache-v2"; // bump version when you change stuff
+const CACHE_NAME = "muzej-cache-v2.1"; // bump version when you change stuff
 
 self.addEventListener("install", (e) => {
   e.waitUntil(
