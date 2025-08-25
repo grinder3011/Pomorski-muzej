@@ -1,0 +1,58 @@
+{
+  "sl": {
+    "page_title": "Piranski svetilnik",
+    "museum_title": "Piranski svetilnik",
+    "museum_subtitle": "Najbolj znan svetilnik Pirana",
+    "back_to_home": "← Domov",
+    "ticket_prices_title": "Cenik vstopnic",
+    "ticket_type": "Vrsta vstopnice",
+    "ticket_price": "Cena",
+    "adults": "Odrasli",
+    "children_under_6": "Otroci do 6 let",
+    "free_ticket": "Brezplačno",
+    "note_price": "* Cena velja za samostojen ogled brez vodstva.",
+    "click_for_directions": "Klikni za pot do nas"
+  },
+  "en": {
+    "page_title": "Piran Lighthouse",
+    "museum_title": "Piran Lighthouse",
+    "museum_subtitle": "The most famous lighthouse of Piran",
+    "back_to_home": "← Home",
+    "ticket_prices_title": "Ticket Prices",
+    "ticket_type": "Ticket Type",
+    "ticket_price": "Price",
+    "adults": "Adults",
+    "children_under_6": "Children under 6",
+    "free_ticket": "Free",
+    "note_price": "* Price applies for independent visit without guide.",
+    "click_for_directions": "Click for directions"
+  },
+  "it": {
+    "page_title": "Faro di Pirano",
+    "museum_title": "Faro di Pirano",
+    "museum_subtitle": "Il faro più famoso di Pirano",
+    "back_to_home": "← Casa",
+    "ticket_prices_title": "Prezzi dei biglietti",
+    "ticket_type": "Tipo di biglietto",
+    "ticket_price": "Prezzo",
+    "adults": "Adulti",
+    "children_under_6": "Bambini sotto i 6 anni",
+    "free_ticket": "Gratuito",
+    "note_price": "* Prezzo valido per visita indipendente senza guida.",
+    "click_for_directions": "Clicca per le indicazioni"
+  },
+  "de": {
+    "page_title": "Leuchtturm von Piran",
+    "museum_title": "Leuchtturm von Piran",
+    "museum_subtitle": "Der bekannteste Leuchtturm Pirans",
+    "back_to_home": "← Zuhause",
+    "ticket_prices_title": "Preise für Tickets",
+    "ticket_type": "Ticketart",
+    "ticket_price": "Preis",
+    "adults": "Erwachsene",
+    "children_under_6": "Kinder unter 6 Jahren",
+    "free_ticket": "Gratis",
+    "note_price": "* Preis gilt für selbstständige Besichtigung ohne Führung.",
+    "click_for_directions": "Klicken Sie für den Weg"
+  }
+}
