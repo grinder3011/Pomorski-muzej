@@ -76,7 +76,10 @@
           widget.classList.remove('open', 'closed');
           widget.classList.add(status.isOpen ? 'open' : 'closed');
 
-          document.getElementById("locationName").textContent = locationName;
+          // ✅ translate location name using new JSON locations block
+          document.getElementById("locationName").textContent =
+            t(`locations.${locationName}`) || locationName;
+
           document.getElementById("statusText").textContent = status.statusText;
           document.getElementById("hoursText").textContent = `${t("today")}: ${status.todayHours}`;
         })
