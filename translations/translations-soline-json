@@ -1,0 +1,98 @@
+{
+  "sl": {
+    "title": "Soline",
+    "header": "Soline",
+    "backHome": "← Domov",
+    "imageAlt": "Soline",
+    "prices": {
+      "title": "Cenik vstopnic",
+      "season1": { "title": "Sezona 1 (1. april – 31. oktober)" },
+      "season2": { "title": "Sezona 2 (1. november – 31. marec)" },
+      "type": "Vrsta vstopnice",
+      "price": "Cena",
+      "adults": "Odrasli",
+      "students": "Študenti, dijaki, upokojenci",
+      "children": "Otroci do 6 let",
+      "family": "Družinska vstopnica",
+      "annual": "Letna vstopnica",
+      "guided": "Vodstvo (po predhodnem dogovoru)",
+      "waiting": "Čakanje skupine (na uro)",
+      "noShow": "Neprihod skupine",
+      "free": "Brezplačno"
+    },
+    "map": "Klikni za pot do nas:",
+    "mapAlt": "Zemljevid Soline"
+  },
+  "en": {
+    "title": "Soline",
+    "header": "Soline",
+    "backHome": "← Home",
+    "imageAlt": "Soline",
+    "prices": {
+      "title": "Ticket Prices",
+      "season1": { "title": "Season 1 (April 1 – October 31)" },
+      "season2": { "title": "Season 2 (November 1 – March 31)" },
+      "type": "Ticket type",
+      "price": "Price",
+      "adults": "Adults",
+      "students": "Students, pupils, seniors",
+      "children": "Children up to 6 years",
+      "family": "Family ticket",
+      "annual": "Annual ticket",
+      "guided": "Guided tour (by prior arrangement)",
+      "waiting": "Waiting for group (per hour)",
+      "noShow": "Group no-show",
+      "free": "Free"
+    },
+    "map": "Click for directions:",
+    "mapAlt": "Map of Soline"
+  },
+  "de": {
+    "title": "Soline",
+    "header": "Soline",
+    "backHome": "← Startseite",
+    "imageAlt": "Soline",
+    "prices": {
+      "title": "Eintrittspreise",
+      "season1": { "title": "Saison 1 (1. April – 31. Oktober)" },
+      "season2": { "title": "Saison 2 (1. November – 31. März)" },
+      "type": "Ticketart",
+      "price": "Preis",
+      "adults": "Erwachsene",
+      "students": "Studenten, Schüler, Rentner",
+      "children": "Kinder bis 6 Jahre",
+      "family": "Familienkarte",
+      "annual": "Jahreskarte",
+      "guided": "Führung (nach Vereinbarung)",
+      "waiting": "Warten auf Gruppe (pro Stunde)",
+      "noShow": "Nicht-Erscheinen der Gruppe",
+      "free": "Kostenlos"
+    },
+    "map": "Klicken Sie für die Anfahrt:",
+    "mapAlt": "Karte von Soline"
+  },
+  "it": {
+    "title": "Soline",
+    "header": "Soline",
+    "backHome": "← Home",
+    "imageAlt": "Soline",
+    "prices": {
+      "title": "Prezzi dei biglietti",
+      "season1": { "title": "Stagione 1 (1 aprile – 31 ottobre)" },
+      "season2": { "title": "Stagione 2 (1 novembre – 31 marzo)" },
+      "type": "Tipo di biglietto",
+      "price": "Prezzo",
+      "adults": "Adulti",
+      "students": "Studenti, scolari, pensionati",
+      "children": "Bambini fino a 6 anni",
+      "family": "Biglietto famiglia",
+      "annual": "Abbonamento annuale",
+      "guided": "Visita guidata (su prenotazione)",
+      "waiting": "Attesa del gruppo (all'ora)",
+      "noShow": "Mancata presentazione del gruppo",
+      "free": "Gratuito"
+    },
+    "map": "Clicca per le indicazioni:",
+    "mapAlt": "Mappa di Soline"
+  }
+}
