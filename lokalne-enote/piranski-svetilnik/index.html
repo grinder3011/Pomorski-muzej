@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Piranski svetilnik</title>
+  <title data-i18n="page_title">Piranski svetilnik</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -21,6 +21,13 @@
 
     header h1 {
       margin: 0;
+    }
+
+    header h2.subtitle {
+      margin: 5px 0 0;
+      font-size: 1rem;
+      font-weight: normal;
+      color: #cce7ff;
     }
 
     .container {
@@ -115,11 +122,12 @@
 <body>
 
   <header>
-    <h1>Piranski svetilnik</h1>
+    <h1 data-i18n="museum_title">Piranski svetilnik</h1>
+    <h2 class="subtitle" data-i18n="museum_subtitle">Najbolj znan svetilnik Pirana</h2>
   </header>
 
   <div class="back-home-container">
-    <a href="../../index.html" class="back-home-btn" aria-label="Back to home" title="Domov">← Domov</a>
+    <a href="../../index.html" class="back-home-btn" aria-label="Back to home" title="Domov" data-i18n="back_to_home">← Domov</a>
   </div>
   <div class="container">
 
@@ -130,28 +138,28 @@
 
     <!-- Prices -->
     <div class="prices">
-      <h2>Cenik vstopnic</h2>
+      <h2 data-i18n="ticket_prices_title">Cenik vstopnic</h2>
       <table>
         <tr>
-          <th>Vrsta vstopnice</th>
-          <th>Cena</th>
+          <th data-i18n="ticket_type">Vrsta vstopnice</th>
+          <th data-i18n="ticket_price">Cena</th>
         </tr>
         <tr>
-          <td>Odrasli</td>
+          <td data-i18n="adults">Odrasli</td>
           <td>2,00 €</td>
         </tr>
         <tr>
-          <td>Otroci do 6 let</td>
-          <td>Brezplačno</td>
+          <td data-i18n="children_under_6">Otroci do 6 let</td>
+          <td data-i18n="free_ticket">Brezplačno</td>
         </tr>
       </table>
-      <p style="margin-top: 10px;">* Cena velja za samostojen ogled brez vodstva.</p>
+      <p style="margin-top: 10px;" data-i18n="note_price">* Cena velja za samostojen ogled brez vodstva.</p>
     </div>
 
     <!-- Google Maps -->
     <div class="map-section">
       <a href="https://maps.app.goo.gl/rnwsZ9KT1gzrcX6t6" target="_blank">
-        <h2>Klikni za pot do nas:</h2>
+        <h2 data-i18n="click_for_directions">Klikni za pot do nas:</h2>
       </a>
       <a href="https://maps.app.goo.gl/rnwsZ9KT1gzrcX6t6" target="_blank">
         <img src="map-svetilnik.jpg" alt="Zemljevid Piranski svetilnik" />
@@ -159,6 +167,11 @@
     </div>
 
   </div>
+
+  <script type="module">
+    import { loadTranslations } from '../../i18n.js';
+    loadTranslations('translations-piranski-svetilnik');
+  </script>
 
 </body>
 </html>
