@@ -1,0 +1,58 @@
+{
+  "sl": {
+    "title": "Monfort",
+    "backHome": "← Domov",
+    "ariaBackHome": "Nazaj domov",
+    "pricesTitle": "Cenik vstopnic",
+    "ticketType": "Vrsta vstopnice",
+    "price": "Cena",
+    "adults": "Odrasli",
+    "students": "Študenti, dijaki, upokojenci",
+    "children": "Otroci do 6 let",
+    "guided": "Vodstvo (po predhodnem dogovoru)",
+    "free": "Brezplačno",
+    "directionsTitle": "Klikni za pot do nas:"
+  },
+  "en": {
+    "title": "Monfort",
+    "backHome": "← Home",
+    "ariaBackHome": "Back to home",
+    "pricesTitle": "Ticket Prices",
+    "ticketType": "Type of Ticket",
+    "price": "Price",
+    "adults": "Adults",
+    "students": "Students, pupils, seniors",
+    "children": "Children up to 6 years",
+    "guided": "Guided tour (by prior arrangement)",
+    "free": "Free",
+    "directionsTitle": "Click for directions:"
+  },
+  "it": {
+    "title": "Monfort",
+    "backHome": "← Home",
+    "ariaBackHome": "Torna alla home",
+    "pricesTitle": "Prezzi dei biglietti",
+    "ticketType": "Tipo di biglietto",
+    "price": "Prezzo",
+    "adults": "Adulti",
+    "students": "Studenti, alunni, pensionati",
+    "children": "Bambini fino a 6 anni",
+    "guided": "Visita guidata (su prenotazione)",
+    "free": "Gratuito",
+    "directionsTitle": "Clicca per il percorso:"
+  },
+  "de": {
+    "title": "Monfort",
+    "backHome": "← Startseite",
+    "ariaBackHome": "Zurück zur Startseite",
+    "pricesTitle": "Eintrittspreise",
+    "ticketType": "Ticketart",
+    "price": "Preis",
+    "adults": "Erwachsene",
+    "students": "Studenten, Schüler, Rentner",
+    "children": "Kinder bis 6 Jahre",
+    "guided": "Führung (nach Vereinbarung)",
+    "free": "Kostenlos",
+    "directionsTitle": "Klicken Sie für die Anfahrt:"
+  }
+}
