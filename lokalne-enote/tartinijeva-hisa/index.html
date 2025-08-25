@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title data-i18n="title_tartini_house">Tartinijeva hiša</title>
+  <title data-i18n="page_title">Tartinijeva hiša</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -23,10 +23,8 @@
       margin: 0;
     }
 
-    header h2.subtitle {
-      margin: 5px 0 0;
-      font-size: 1rem;
-      font-weight: normal;
+    header p {
+      margin: 6px 0 0 0; /* space for optional subtitle */
       opacity: 0.9;
     }
 
@@ -109,14 +107,13 @@
       background-color: #006680;
       outline: none;
     }
-
   </style>
 </head>
 <body>
 
   <header>
-    <h1 data-i18n="title_tartini_house">Tartinijeva hiša</h1>
-    <h2 class="subtitle" data-i18n="museum_subtitle"></h2>
+    <h1 data-i18n="museum_title">Tartinijeva hiša</h1>
+    <p data-i18n="museum_subtitle"></p>
   </header>
 
   <div class="back-home-container">
@@ -125,37 +122,37 @@
 
   <div class="container">
 
-    <img src="tartinijeva-hisa.jpg" alt="Tartinijeva hiša" class="museum-image" data-i18n="alt_tartini_house" />
+    <img src="tartinijeva-hisa.jpg" alt="Tartinijeva hiša" class="museum-image" />
 
     <!-- Open/Closed Widget -->
-    <iframe src="https://grinder3011.github.io/Pomorski-muzej/status-muzeja/status-widget.html?location=Tartinijeva-hiša"  width="300" height="180" style="border:none;"></iframe>
+    <iframe src="https://grinder3011.github.io/Pomorski-muzej/status-muzeja/status-widget.html?location=Tartinijeva-hiša" width="300" height="180" style="border:none;"></iframe>
 
     <!-- Prices -->
     <div class="prices">
-      <h2 data-i18n="ticket_prices">Cenik vstopnic</h2>
+      <h2 data-i18n="ticket_prices_title">Cenik vstopnic</h2>
       <table>
         <tr>
           <th data-i18n="ticket_type">Vrsta vstopnice</th>
           <th data-i18n="ticket_price">Cena</th>
         </tr>
         <tr>
-          <td data-i18n="adult">Odrasli</td>
+          <td data-i18n="adults">Odrasli</td>
           <td>4,00 €</td>
         </tr>
         <tr>
-          <td data-i18n="student_senior">Študenti, dijaki, upokojenci</td>
+          <td data-i18n="students_senior">Študenti, dijaki, upokojenci</td>
           <td>2,50 €</td>
         </tr>
         <tr>
-          <td data-i18n="family">Družinska (2 odrasla + otroci)</td>
+          <td data-i18n="family_ticket">Družinska (2 odrasla + otroci)</td>
           <td>8,00 €</td>
         </tr>
         <tr>
           <td data-i18n="children_under_6">Otroci do 6 let</td>
-          <td data-i18n="free">Brezplačno</td>
+          <td data-i18n="free_ticket">Brezplačno</td>
         </tr>
         <tr>
-          <td data-i18n="guided">Vodstvo (po predhodnem dogovoru)</td>
+          <td data-i18n="guided_tour">Vodstvo (po predhodnem dogovoru)</td>
           <td>15,00 €</td>
         </tr>
       </table>
@@ -164,22 +161,19 @@
     <!-- Google Maps -->
     <div class="map-section">
       <a href="https://maps.app.goo.gl/Vx5hLsbS8PfBFjbHA" target="_blank">
-        <h2 data-i18n="directions">Klikni za pot do nas:</h2>
+        <h2 data-i18n="click_for_directions">Klikni za pot do nas:</h2>
       </a>
       <a href="https://maps.app.goo.gl/Vx5hLsbS8PfBFjbHA" target="_blank">
-        <img src="map-tartinijeva-hisa.png" alt="Zemljevid Tartinijeva hiša" data-i18n="map_tartini_house" />
+        <img src="map-tartinijeva-hisa.png" alt="Zemljevid Tartinijeva hiša" />
       </a>
     </div>
 
   </div>
 
-  <!-- Translation scripts -->
-  <script src="../../translator.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const userLang = localStorage.getItem("language") || "sl";
-      loadTranslations(`tartinijeva-hisa.json`, userLang);
-    });
+  <script type="module">
+    import { loadTranslations } from '../../i18n.js';
+    // Load this page's translations JSON (same pattern as other pages)
+    loadTranslations('translations-tartinijeva-hisa');
   </script>
 
 </body>
