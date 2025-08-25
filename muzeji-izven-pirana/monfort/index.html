@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Monfort</title>
+  <title data-i18n="title">Monfort</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -78,7 +78,6 @@
       transform: scale(1.02);
     }
 
-        
     .back-home-container {
       text-align: center;
       margin: 15px 0;
@@ -103,17 +102,16 @@
       background-color: #006680;
       outline: none;
     }
-
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Monfort</h1>
+    <h1 data-i18n="title">Monfort</h1>
   </header>
 
   <div class="back-home-container">
-    <a href="../../index.html" class="back-home-btn" aria-label="Back to home" title="Domov">← Domov</a>
+    <a href="../../index.html" class="back-home-btn" aria-label="Nazaj domov" title="Domov" data-i18n="backHome" data-i18n-aria="ariaBackHome">← Domov</a>
   </div>
   <div class="container">
 
@@ -124,26 +122,26 @@
 
     <!-- Prices -->
     <div class="prices">
-      <h2>Cenik vstopnic</h2>
+      <h2 data-i18n="pricesTitle">Cenik vstopnic</h2>
       <table>
         <tr>
-          <th>Vrsta vstopnice</th>
-          <th>Cena</th>
+          <th data-i18n="ticketType">Vrsta vstopnice</th>
+          <th data-i18n="price">Cena</th>
         </tr>
         <tr>
-          <td>Odrasli</td>
+          <td data-i18n="adults">Odrasli</td>
           <td>4,00 €</td>
         </tr>
         <tr>
-          <td>Študenti, dijaki, upokojenci</td>
+          <td data-i18n="students">Študenti, dijaki, upokojenci</td>
           <td>3,00 €</td>
         </tr>
         <tr>
-          <td>Otroci do 6 let</td>
-          <td>Brezplačno</td>
+          <td data-i18n="children">Otroci do 6 let</td>
+          <td data-i18n="free">Brezplačno</td>
         </tr>
         <tr>
-          <td>Vodstvo (po predhodnem dogovoru)</td>
+          <td data-i18n="guided">Vodstvo (po predhodnem dogovoru)</td>
           <td>15,00 €</td>
         </tr>
       </table>
@@ -152,7 +150,7 @@
     <!-- Google Maps -->
     <div class="map-section">
       <a href="https://maps.app.goo.gl/KUS4i959jWkrmbL68" target="_blank">
-        <h2>Klikni za pot do nas:</h2>
+        <h2 data-i18n="directionsTitle">Klikni za pot do nas:</h2>
       </a>
       <a href="https://maps.app.goo.gl/KUS4i959jWkrmbL68" target="_blank">
         <img src="map-monfort.png" alt="Zemljevid Monfort" />
@@ -161,5 +159,10 @@
 
   </div>
 
+  <script type="module">
+    import { loadTranslations, applyTranslations } from "../../i18n.js";
+    await loadTranslations("translations-monfort");
+    applyTranslations();
+  </script>
 </body>
 </html>
