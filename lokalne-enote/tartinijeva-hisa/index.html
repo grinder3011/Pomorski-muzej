@@ -174,11 +174,11 @@
   </div>
 
   <!-- Translation scripts -->
-  <script src="../../translations.js"></script>
+  <script src="../../translator.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const userLang = localStorage.getItem("language") || "sl";
-      loadTranslations(userLang);
+      loadTranslations(`tartinijeva-hisa.json`, userLang);
     });
   </script>
 
