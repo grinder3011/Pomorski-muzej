@@ -6,7 +6,13 @@
     "todayClosed": "Danes zaprto",
     "locationNotFound": "Lokacija ni najdena",
     "dataLoadError": "Napaka pri nalaganju podatkov.",
-    "missingLocationParam": "Manjka parameter ?location="
+    "missingLocationParam": "Manjka parameter ?location=",
+    "Palača-Gabrielli": "Palača Gabrielli",
+    "Piranski-svetilnik": "Piranski svetilnik",
+    "Tartinijeva-hiša": "Tartinijeva hiša",
+    "Monfort": "Monfort",
+    "Soline": "Soline",
+    "Tonina-hiša": "Tonina hiša"
   },
   "en": {
     "status_open": "Open",
@@ -15,7 +21,13 @@
     "todayClosed": "Closed today",
     "locationNotFound": "Location not found",
     "dataLoadError": "Error loading data.",
-    "missingLocationParam": "Missing ?location= parameter"
+    "missingLocationParam": "Missing ?location= parameter",
+    "Palača-Gabrielli": "Gabrielli Palace",
+    "Piranski-svetilnik": "Piran Lighthouse",
+    "Tartinijeva-hiša": "Tartini House",
+    "Monfort": "Monfort",
+    "Soline": "Sečovlje Saltpans",
+    "Tonina-hiša": "Tonina House"
   },
   "it": {
     "status_open": "Aperto",
@@ -24,7 +36,13 @@
     "todayClosed": "Chiuso oggi",
     "locationNotFound": "Località non trovata",
     "dataLoadError": "Errore durante il caricamento dei dati.",
-    "missingLocationParam": "Parametro ?location= mancante"
+    "missingLocationParam": "Parametro ?location= mancante",
+    "Palača-Gabrielli": "Palazzo Gabrielli",
+    "Piranski-svetilnik": "Faro di Pirano",
+    "Tartinijeva-hiša": "Casa Tartini",
+    "Monfort": "Monfort",
+    "Soline": "Saline di Sicciole",
+    "Tonina-hiša": "Casa Tonina"
   },
   "de": {
     "status_open": "Geöffnet",
@@ -33,6 +51,12 @@
     "todayClosed": "Heute geschlossen",
     "locationNotFound": "Standort nicht gefunden",
     "dataLoadError": "Fehler beim Laden der Daten.",
-    "missingLocationParam": "Fehlender Parameter ?location="
+    "missingLocationParam": "Fehlender Parameter ?location=",
+    "Palača-Gabrielli": "Palais Gabrielli",
+    "Piranski-svetilnik": "Leuchtturm von Piran",
+    "Tartinijeva-hiša": "Tartinihaus",
+    "Monfort": "Monfort",
+    "Soline": "Salinen von Sečovlje",
+    "Tonina-hiša": "Tonina-Haus"
   }
 }
