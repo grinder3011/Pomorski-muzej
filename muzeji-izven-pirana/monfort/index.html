@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title data-i18n="title">Monfort</title>
+  <title data-i18n="page_title">Tartinijeva hiša</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -78,6 +78,13 @@
       transform: scale(1.02);
     }
 
+    iframe {
+      width: 100%;
+      height: 200px; /* increased from 100px */
+      border: none;
+      margin-bottom: 40px; /* more breathing room */
+    }
+
     .back-home-container {
       text-align: center;
       margin: 15px 0;
@@ -102,46 +109,51 @@
       background-color: #006680;
       outline: none;
     }
+
   </style>
 </head>
 <body>
 
   <header>
-    <h1 data-i18n="title">Monfort</h1>
+    <h1 data-i18n="museum_title">Tartinijeva hiša</h1>
   </header>
 
   <div class="back-home-container">
-    <a href="../../index.html" class="back-home-btn" aria-label="Nazaj domov" title="Domov" data-i18n="backHome" data-i18n-aria="ariaBackHome">← Domov</a>
+    <a href="../../index.html" class="back-home-btn" aria-label="Back to home" title="Domov" data-i18n="back_to_home">← Domov</a>
   </div>
   <div class="container">
 
-    <img src="monfort.jpg" alt="Monfort" class="museum-image" />
+    <img src="tartinijeva-hisa.jpg" alt="Tartinijeva hiša" class="museum-image" />
 
     <!-- Open/Closed Widget -->
-    <iframe src="https://grinder3011.github.io/Pomorski-muzej/status-muzeja/status-widget.html?location=Monfort" width="300" height="180" style="border:none;"></iframe>
+    <iframe src="https://grinder3011.github.io/Pomorski-muzej/status-muzeja/status-widget.html?location=Tartinijeva-hiša"  width="300" height="180" style="border:none;"></iframe>
 
     <!-- Prices -->
     <div class="prices">
-      <h2 data-i18n="pricesTitle">Cenik vstopnic</h2>
+      <h2 data-i18n="ticket_prices_title">Cenik vstopnic</h2>
       <table>
         <tr>
-          <th data-i18n="ticketType">Vrsta vstopnice</th>
-          <th data-i18n="price">Cena</th>
+          <th data-i18n="ticket_type">Vrsta vstopnice</th>
+          <th data-i18n="ticket_price">Cena</th>
         </tr>
         <tr>
           <td data-i18n="adults">Odrasli</td>
           <td>4,00 €</td>
         </tr>
         <tr>
-          <td data-i18n="students">Študenti, dijaki, upokojenci</td>
-          <td>3,00 €</td>
+          <td data-i18n="students_senior">Študenti, dijaki, upokojenci</td>
+          <td>2,50 €</td>
         </tr>
         <tr>
-          <td data-i18n="children">Otroci do 6 let</td>
-          <td data-i18n="free">Brezplačno</td>
+          <td data-i18n="family_ticket">Družinska (2 odrasla + otroci)</td>
+          <td>8,00 €</td>
         </tr>
         <tr>
-          <td data-i18n="guided">Vodstvo (po predhodnem dogovoru)</td>
+          <td data-i18n="children_under_6">Otroci do 6 let</td>
+          <td data-i18n="free_ticket">Brezplačno</td>
+        </tr>
+        <tr>
+          <td data-i18n="guided_tour">Vodstvo (po predhodnem dogovoru)</td>
           <td>15,00 €</td>
         </tr>
       </table>
@@ -149,20 +161,20 @@
 
     <!-- Google Maps -->
     <div class="map-section">
-      <a href="https://maps.app.goo.gl/KUS4i959jWkrmbL68" target="_blank">
-        <h2 data-i18n="directionsTitle">Klikni za pot do nas:</h2>
+      <a href="https://maps.app.goo.gl/Vx5hLsbS8PfBFjbHA" target="_blank">
+        <h2 data-i18n="click_for_directions">Klikni za pot do nas:</h2>
       </a>
-      <a href="https://maps.app.goo.gl/KUS4i959jWkrmbL68" target="_blank">
-        <img src="map-monfort.png" alt="Zemljevid Monfort" />
+      <a href="https://maps.app.goo.gl/Vx5hLsbS8PfBFjbHA" target="_blank">
+        <img src="map-tartinijeva-hisa.png" alt="Zemljevid Tartinijeva hiša" />
       </a>
     </div>
 
   </div>
 
   <script type="module">
-    import { loadTranslations, applyTranslations } from "../../i18n.js";
-    await loadTranslations("translations-monfort");
-    applyTranslations();
+    import { loadTranslations } from '../../i18n.js';
+    await loadTranslations('translations-tartinijeva-hisa');
   </script>
+
 </body>
 </html>
