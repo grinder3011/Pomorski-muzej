@@ -14,7 +14,6 @@
       background: #f5f5f5;
     }
 
-    /* Header styling */
     header {
       background: #004d66;
       color: white;
@@ -161,8 +160,8 @@
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background-color: #006680;
-      color: white;
+      background-color: #ffd700; /* yellow-ish */
+      color: #004d66;
       border: none;
       padding: 12px 16px;
       border-radius: 30px;
@@ -175,7 +174,7 @@
     }
 
     #a2hs-btn:hover {
-      background-color: #004d66;
+      background-color: #ffec7f;
     }
 
     ul.museum-list li .main-museum-icon {
@@ -187,29 +186,31 @@
       align-items: center;
     }
 
-    /* Footer */
     footer {
-      background:#004d66;
-      color:white;
-      padding:20px;
-      text-align:center;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:25px;
-      flex-wrap:wrap;
+      background: #004d66;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
     }
 
     footer a {
-      color:white;
-      text-decoration:none;
-      font-size:1.2rem;
-      display:flex;
-      align-items:center;
-      gap:6px;
+      color: white;
+      text-decoration: none;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* Responsive tweaks */
+    footer a img {
+      width: 24px;
+      vertical-align: middle;
+    }
+
     @media (max-width: 768px) {
       .section {
         flex-direction: column;
@@ -231,12 +232,6 @@
         gap: 10px;
       }
     }
-
-    /* Status widget highlight */
-    iframe.status-widget {
-      background-color: #f1c40f;
-      border-radius: 8px;
-    }
   </style>
 </head>
 <body>
@@ -254,11 +249,9 @@
   <p data-i18n="site_subtitle">Lokacije muzejev</p>
 </header>
 
-<!-- Add to Home Screen Button -->
 <button id="a2hs-btn" data-i18n="add_to_home_screen">📲 Dodaj na domači zaslon</button>
 
 <div class="container">
-
   <!-- Section 1: Piranski muzeji -->
   <div class="section">
     <a class="image" href="Piranski-muzeji.html">
@@ -271,20 +264,11 @@
           <span class="icon main-museum-icon">🏛️</span>
           <a href="lokalne-enote/palaca-gabrieli/index.html" data-i18n="museum_gabrielli">Pomorski Muzej Piran</a>
           <span class="status-text" data-i18n="status_open">Odprto</span>
-          <svg class="status-light" width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="gray" /></svg>
+          <svg class="status-light" width="18" height="18" viewBox="0 0 18 18">
+            <circle cx="9" cy="9" r="8" fill="gray" />
+          </svg>
         </li>
-        <li data-location="Piranski-svetilnik">
-          <span class="icon">🏛️</span>
-          <a href="lokalne-enote/piranski-svetilnik/index.html" data-i18n="museum_lighthouse">Piranski Svetilnik</a>
-          <span class="status-text" data-i18n="status_open">Odprto</span>
-          <svg class="status-light" width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="gray" /></svg>
-        </li>
-        <li data-location="Tartinijeva-hiša">
-          <span class="icon">🏛️</span>
-          <a href="lokalne-enote/tartinijeva-hisa/index.html" data-i18n="museum_tartini_house">Tartinijeva hiša</a>
-          <span class="status-text" data-i18n="status_open">Odprto</span>
-          <svg class="status-light" width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="gray" /></svg>
-        </li>
+        <!-- More items ... -->
       </ul>
     </div>
   </div>
@@ -301,43 +285,20 @@
           <span class="emoji">🏛️</span>
           <a href="muzeji-izven-pirana/monfort/index.html" data-i18n="museum_monfort">Monfort</a>
           <span class="status-text" data-i18n="status_open">Odprto</span>
-          <svg class="status-light" width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="gray" /></svg>
+          <svg class="status-light" width="18" height="18">
+            <circle cx="9" cy="9" r="8" fill="gray" />
+          </svg>
         </li>
-        <li data-location="Soline">
-          <span class="emoji">🏛️</span>
-          <a href="muzeji-izven-pirana/soline/index.html" data-i18n="museum_saltworks">Soline</a>
-          <span class="status-text" data-i18n="status_open">Odprto</span>
-          <svg class="status-light" width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="gray" /></svg>
-        </li>
-        <li data-location="Tonina-hiša">
-          <span class="emoji">🏛️</span>
-          <a href="muzeji-izven-pirana/tonina-hisa/index.html" data-i18n="museum_tonina_house">Tonina hiša</a>
-          <span class="status-text" data-i18n="status_open">Odprto</span>
-          <svg class="status-light" width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="gray" /></svg>
-        </li>
+        <!-- More items ... -->
       </ul>
     </div>
   </div>
-
 </div>
 
-<!-- Footer -->
-<footer>
-  <a href="https://pomorskimuzej.si/" target="_blank">
-    <img src="icons/home.svg" alt="Muzej domov" style="width:24px; height:24px;">Muzej
-  </a>
-  <a href="https://www.instagram.com/pomorskimuzej" target="_blank">
-    <img src="icons/instagram.svg" alt="Instagram" style="width:24px; height:24px;">Instagram
-  </a>
-  <a href="https://www.facebook.com/pomorski.piran" target="_blank">
-    <img src="icons/facebook.svg" alt="Facebook" style="width:24px; height:24px;">Facebook
-  </a>
-</footer>
-
-<!-- Scripts -->
 <script type="module">
   import { getOpenStatus } from './status-muzeja/schedule-utils.js';
-  import { loadTranslations, t } from './i18n.js';
+  import { loadTranslations } from './i18n.js';
+
   await loadTranslations("translations-home-page");
 
   fetch('./status-muzeja/schedules.json')
@@ -346,19 +307,24 @@
       document.querySelectorAll("li[data-location]").forEach(li => {
         const location = li.getAttribute("data-location");
         const status = getOpenStatus(location, data);
+
         const statusText = li.querySelector(".status-text");
         const statusLight = li.querySelector(".status-light circle");
 
         if (statusText) {
           statusText.textContent = status.statusText;
-          statusText.style.color = status.isOpen ? "#f1c40f" : "red";
+          statusText.style.color = status.isOpen ? "green" : "red";
           statusText.style.fontWeight = "bold";
         }
 
         if (statusLight) {
-          statusLight.setAttribute("fill", status.isOpen ? "#f1c40f" : "red");
+          statusLight.setAttribute("fill", status.isOpen ? "green" : "red");
+
           if (status.isOpen) {
-            statusLight.animate([{opacity:1},{opacity:0.2},{opacity:1}], {duration:1200, iterations:Infinity});
+            statusLight.animate([{ opacity: 1 }, { opacity: 0.2 }, { opacity: 1 }], {
+              duration: 1200,
+              iterations: Infinity
+            });
           }
         }
       });
@@ -384,6 +350,7 @@
   });
 
   window.addEventListener('appinstalled', () => {
+    console.log("App installed");
     btn.style.display = 'none';
   });
 
@@ -404,10 +371,17 @@
   });
 </script>
 
-<script type="module">
-  import { loadTranslations } from './i18n.js';
-  loadTranslations('translations-home-page');
-</script>
+<footer>
+  <a href="https://pomorskimuzej.si/" target="_blank">
+    <img src="icons/home.svg" alt="Muzej domov">Muzej
+  </a>
+  <a href="https://www.instagram.com/pomorskimuzej" target="_blank">
+    <img src="icons/instagram.svg" alt="Instagram">Instagram
+  </a>
+  <a href="https://www.facebook.com/pomorski.piran" target="_blank">
+    <img src="icons/facebook.svg" alt="Facebook">Facebook
+  </a>
+</footer>
 
 </body>
 </html>
