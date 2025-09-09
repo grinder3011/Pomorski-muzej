@@ -94,6 +94,12 @@ header h1 {
   display: none;
   z-index: 1000;
 }
+.custom-select .selected-option::after {
+  content: "▾"; /* down arrow */
+  margin-left: auto;
+  font-size: 0.9rem;
+  color: #004d66;
+}
 .custom-select.open .options {
   display: block;
 }
