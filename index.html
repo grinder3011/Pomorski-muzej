@@ -54,64 +54,67 @@ header h1 {
   border-color: #006680;
   outline: none;
 }
-
 .custom-select {
   position: relative;
   display: inline-block;
   width: 180px;
   cursor: pointer;
-  font-size: 1rem;
   border: 1.5px solid #004d66;
   border-radius: 6px;
   background: white;
   color: #004d66;
+  font-size: 1rem;
 }
-.custom-select .selected-option {
+
+.selected-option {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
 }
-.custom-select .selected-option img {
+
+.selected-option img {
   width: 20px;
   height: 14px;
   object-fit: cover;
 }
-.custom-select .options {
+
+.arrow {
+  margin-left: auto;
+}
+
+.options {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
   border: 1.5px solid #004d66;
   border-radius: 6px;
-  margin-top: 4px;
-  display: none;
+  background: white;
+  display: none; /* hidden by default */
   z-index: 1000;
 }
-.custom-select .selected-option::after {
-  content: "▾"; /* down arrow */
-  margin-left: auto;
-  font-size: 0.9rem;
-  color: #004d66;
-}
+
 .custom-select.open .options {
-  display: block;
+  display: block; /* show when open */
 }
-.custom-select .option {
-  padding: 6px 10px;
+
+.option {
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 6px 10px;
 }
-.custom-select .option img {
-  width: 20px;
-  height: 14px;
-}
-.custom-select .option:hover {
+
+.option:hover {
   background: #e6f2f5;
 }
 
+.option img {
+  width: 20px;
+  height: 14px;
+  object-fit: cover;
+}
   
 header p {
   margin: 0;
@@ -369,50 +372,70 @@ footer a img {
 </div>
 
   <script>
-const customSelect = document.getElementById("language-select");
-const selectedOption = customSelect.querySelector(".selected-option");
-const optionsContainer = customSelect.querySelector(".options");
-
-customSelect.addEventListener("click", () => {
-  customSelect.classList.toggle("open");
-});
-
-// Handle option click
-customSelect.querySelectorAll(".option").forEach(option => {
-  option.addEventListener("click", () => {
-    const value = option.getAttribute("data-value");
-    const label = option.querySelector("span").textContent;
-    const flag = option.querySelector("img").src;
-
-    // Update selected display
-    selectedOption.innerHTML = `<img src="${flag}" alt="${label}" /><span>${label}</span>`;
-    selectedOption.setAttribute("data-value", value);
-
-    // Close dropdown
-    customSelect.classList.remove("open");
-
-    // Dispatch "change" event so existing i18n works
-    const event = new Event("change");
-    customSelect.value = value;
-    customSelect.dispatchEvent(event);
+  
+  // Get DOM elements
+  const customSelect = document.getElementById("language-select");
+  const selectedOption = customSelect.querySelector(".selected-option");
+  const optionsContainer = customSelect.querySelector(".options");
+  
+  // Toggle dropdown open/close
+  customSelect.addEventListener("click", () => {
+    customSelect.classList.toggle("open");
   });
-});
-
-// Close if clicking outside
-document.addEventListener("click", (e) => {
-  if (!customSelect.contains(e.target)) {
-    customSelect.classList.remove("open");
-  }
-});
-
-// Simulate a "value" property so old code works
-Object.defineProperty(customSelect, "value", {
-  get() { return selectedOption.getAttribute("data-value"); },
-  set(val) {
-    const opt = customSelect.querySelector(`.option[data-value="${val}"]`);
-    if (opt) opt.click();
-  }
-});
+  
+  // Handle clicking an option
+  optionsContainer.querySelectorAll(".option").forEach(option => {
+    option.addEventListener("click", (e) => {
+      e.stopPropagation(); // Prevent the parent click from toggling again
+  
+      const value = option.getAttribute("data-value");
+      const label = option.querySelector("span").textContent;
+      const flag = option.querySelector("img").src;
+  
+      // Update the selected display
+      selectedOption.innerHTML = `<img src="${flag}" alt="${label}"><span>${label}</span><span class="arrow">▾</span>`;
+      selectedOption.setAttribute("data-value", value);
+  
+      // Close the dropdown
+      customSelect.classList.remove("open");
+  
+      // Dispatch a "change" event in case your code listens for it
+      const changeEvent = new Event("change");
+      customSelect.value = value;
+      customSelect.dispatchEvent(changeEvent);
+  
+      // Optionally, reorder options so current selection is excluded from dropdown
+      optionsContainer.querySelectorAll(".option").forEach(opt => {
+        opt.style.display = (opt.getAttribute("data-value") === value) ? "none" : "flex";
+      });
+    });
+  });
+  
+  // Close dropdown if clicked outside
+  document.addEventListener("click", (e) => {
+    if (!customSelect.contains(e.target)) {
+      customSelect.classList.remove("open");
+    }
+  });
+  
+  // Simulate a "value" property for compatibility
+  Object.defineProperty(customSelect, "value", {
+    get() {
+      return selectedOption.getAttribute("data-value");
+    },
+    set(val) {
+      const option = optionsContainer.querySelector(`.option[data-value="${val}"]`);
+      if (option) option.click();
+    }
+  });
+  
+  // Initialize dropdown so selected option is hidden from list
+  (function initDropdown() {
+    const currentValue = selectedOption.getAttribute("data-value");
+    optionsContainer.querySelectorAll(".option").forEach(opt => {
+      opt.style.display = (opt.getAttribute("data-value") === currentValue) ? "none" : "flex";
+    });
+  })();
 </script>
 
 <script type="module">
