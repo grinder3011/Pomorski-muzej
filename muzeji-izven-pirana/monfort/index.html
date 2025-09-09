@@ -160,6 +160,14 @@
   </div>
 
  <script type="module">
+    import { initCarousels } from '../../carousel.js';
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      initCarousels();
+    });
+  </script>
+ 
+ <script type="module">
     import { loadTranslations } from '../../i18n.js';
     await loadTranslations('translations-monfort');
   </script>
