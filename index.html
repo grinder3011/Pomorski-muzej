@@ -48,6 +48,11 @@ header h1 {
   cursor: pointer;
   transition: border-color 0.3s ease;
   flex-shrink: 0;
+
+  /* Ensure native arrow shows */
+  -webkit-appearance: menulist;
+  -moz-appearance: menulist;
+  appearance: menulist;
 }
 #language-select:hover,
 #language-select:focus {
