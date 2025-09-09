@@ -55,17 +55,57 @@ header h1 {
   outline: none;
 }
 
-#language-select option {
-  padding-left: 24px;                /* space for the flag */
-  background-repeat: no-repeat;
-  background-position: left center;
-  background-size: 18px 12px;        /* flag size */
+.custom-select {
+  position: relative;
+  display: inline-block;
+  width: 180px;
+  cursor: pointer;
+  font-size: 1rem;
+  border: 1.5px solid #004d66;
+  border-radius: 6px;
+  background: white;
+  color: #004d66;
+}
+.custom-select .selected-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+}
+.custom-select .selected-option img {
+  width: 20px;
+  height: 14px;
+  object-fit: cover;
+}
+.custom-select .options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1.5px solid #004d66;
+  border-radius: 6px;
+  margin-top: 4px;
+  display: none;
+  z-index: 1000;
+}
+.custom-select.open .options {
+  display: block;
+}
+.custom-select .option {
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.custom-select .option img {
+  width: 20px;
+  height: 14px;
+}
+.custom-select .option:hover {
+  background: #e6f2f5;
 }
 
-#language-select option[value="sl"] { background-image: url('flags/sl.png'); }
-#language-select option[value="en"] { background-image: url('flags/en.png'); }
-#language-select option[value="it"] { background-image: url('flags/it.png'); }
-#language-select option[value="de"] { background-image: url('flags/de.png'); }
   
 header p {
   margin: 0;
@@ -73,6 +113,7 @@ header p {
   max-width: 1000px;
   width: 100%;
 }
+  
 .container {
   display: flex;
   flex-direction: column;
@@ -81,6 +122,7 @@ header p {
   max-width: 1000px;
   margin: auto;
 }
+  
 .section {
   display: flex;
   flex-direction: row;
@@ -221,16 +263,37 @@ footer a img {
 </style>
 </head>
 <body>
-
+  
+<!-- HEADER -->
 <header>
   <div class="top-row">
     <h1 data-i18n="site_title">Pomorski Muzej Piran</h1>
-   <select id="language-select" aria-label="Select language">
-    <option value="sl">Slovenščina</option>
-    <option value="en">English</option>
-    <option value="it">Italiano</option>
-    <option value="de">Deutsch</option>
-  </select>
+
+    <!-- Custom dropdown instead of <select> -->
+    <div class="custom-select" id="language-select" tabindex="0">
+      <div class="selected-option" data-value="sl">
+        <img src="flags/sl.png" alt="Slovenščina" />
+        <span>Slovenščina</span>
+      </div>
+      <div class="options">
+        <div class="option" data-value="sl">
+          <img src="flags/sl.png" alt="Slovenščina" />
+          <span>Slovenščina</span>
+        </div>
+        <div class="option" data-value="en">
+          <img src="flags/en.png" alt="English" />
+          <span>English</span>
+        </div>
+        <div class="option" data-value="it">
+          <img src="flags/it.png" alt="Italiano" />
+          <span>Italiano</span>
+        </div>
+        <div class="option" data-value="de">
+          <img src="flags/de.png" alt="Deutsch" />
+          <span>Deutsch</span>
+        </div>
+      </div>
+    </div>
   </div>
   <p data-i18n="site_subtitle">Lokacije muzejev</p>
 </header>
@@ -298,6 +361,53 @@ footer a img {
     </div>
   </div>
 </div>
+
+  <script>
+const customSelect = document.getElementById("language-select");
+const selectedOption = customSelect.querySelector(".selected-option");
+const optionsContainer = customSelect.querySelector(".options");
+
+customSelect.addEventListener("click", () => {
+  customSelect.classList.toggle("open");
+});
+
+// Handle option click
+customSelect.querySelectorAll(".option").forEach(option => {
+  option.addEventListener("click", () => {
+    const value = option.getAttribute("data-value");
+    const label = option.querySelector("span").textContent;
+    const flag = option.querySelector("img").src;
+
+    // Update selected display
+    selectedOption.innerHTML = `<img src="${flag}" alt="${label}" /><span>${label}</span>`;
+    selectedOption.setAttribute("data-value", value);
+
+    // Close dropdown
+    customSelect.classList.remove("open");
+
+    // Dispatch "change" event so existing i18n works
+    const event = new Event("change");
+    customSelect.value = value;
+    customSelect.dispatchEvent(event);
+  });
+});
+
+// Close if clicking outside
+document.addEventListener("click", (e) => {
+  if (!customSelect.contains(e.target)) {
+    customSelect.classList.remove("open");
+  }
+});
+
+// Simulate a "value" property so old code works
+Object.defineProperty(customSelect, "value", {
+  get() { return selectedOption.getAttribute("data-value"); },
+  set(val) {
+    const opt = customSelect.querySelector(`.option[data-value="${val}"]`);
+    if (opt) opt.click();
+  }
+});
+</script>
 
 <script type="module">
 import { getOpenStatus } from './status-muzeja/schedule-utils.js';
