@@ -8,24 +8,32 @@ export function initCarousel(carouselSelector) {
     let currentIndex = 0;
 
     function updateSlidePosition() {
-      const slideWidth = slides[0].getBoundingClientRect().width;
+      const slideWidth = slides[0].offsetWidth; // use offsetWidth for exact pixel width
       track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
     }
 
     nextBtn.addEventListener("click", () => {
-      currentIndex = (currentIndex + 1) % slides.length;
+      if (currentIndex < slides.length - 1) {
+        currentIndex++;
+      } else {
+        currentIndex = 0; // loop back to first
+      }
       updateSlidePosition();
     });
 
     prevBtn.addEventListener("click", () => {
-      currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+      if (currentIndex > 0) {
+        currentIndex--;
+      } else {
+        currentIndex = slides.length - 1; // loop to last
+      }
       updateSlidePosition();
     });
 
-    // Resize fix for responsiveness
+    // Handle window resize (recalculate width)
     window.addEventListener("resize", updateSlidePosition);
 
-    // Init position
+    // Initialize correct position
     updateSlidePosition();
   });
 }
