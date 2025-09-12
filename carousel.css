@@ -1,7 +1,8 @@
 /* Carousel container */
 .carousel {
   position: relative;
-  max-width: 600px; /* adjust for your layout */
+  width: 100%;
+  max-width: 800px; /* max width for large screens */
   margin: 20px auto;
   overflow: hidden;
   border-radius: 10px;
@@ -12,19 +13,32 @@
 .carousel-track {
   display: flex;
   transition: transform 0.5s ease-in-out;
+  width: 100%;
 }
 
 /* Individual slide */
 .carousel-slide {
   min-width: 100%;
   flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio - adjust if needed */
+  position: relative;
+  overflow: hidden;
 }
 
 /* Slide images */
 .carousel-slide img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  display: block;
+  height: 100%;
+  object-fit: cover; /* cover without distortion */
   border-radius: 10px;
+  display: block;
 }
 
 /* Previous / Next buttons */
@@ -54,7 +68,7 @@
   background: rgba(0, 0, 0, 0.8);
 }
 
-/* Optional: add dots indicator */
+/* Optional dots indicator */
 .carousel-dots {
   position: absolute;
   bottom: 10px;
@@ -85,11 +99,17 @@
     padding: 8px 12px;
     font-size: 18px;
   }
+  .carousel-slide {
+    padding-bottom: 60%; /* slightly taller for mobile */
+  }
 }
 
 @media (max-width: 480px) {
   .carousel-btn {
     padding: 6px 10px;
     font-size: 16px;
+  }
+  .carousel-slide {
+    padding-bottom: 66%; /* taller for small screens */
   }
 }
