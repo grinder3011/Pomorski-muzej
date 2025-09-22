@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title data-i18n="page_title">Piranski svetilnik</title>
+  <link rel="stylesheet" href="../../carousel.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -129,9 +130,21 @@
   <div class="back-home-container">
     <a href="../../index.html" class="back-home-btn" aria-label="Back to home" title="Domov" data-i18n="back_to_home">← Domov</a>
   </div>
-  <div class="container">
 
-    <img src="svetilnik.jpg" alt="Piranski svetilnik" class="museum-image" />
+    <div class="container">
+
+      <div class="carousel">
+        <button class="carousel-btn prev">◀</button>
+        <div class="carousel-track-container">
+          <div class="carousel-track">
+            <div class="carousel-slide"><img src="svetilnik.jpg" alt="Piranski svetilnik"></div>
+            <div class="carousel-slide"><img src="svetilnik_2.jpg" alt="Piranski svetilnik-2"></div>
+            <div class="carousel-slide"><img src="svetilnik_3.jpg" alt="Piranski svetilnik-3"></div>
+            <div class="carousel-slide"><img src="svetilnik_4.jpg" alt="Piranski svetilnik-4"></div>
+            </div>
+          </div>
+        <button class="carousel-btn next">▶</button>
+        </div>
 
     <!-- Open/Closed Widget -->
     <iframe src="https://grinder3011.github.io/Pomorski-muzej/status-muzeja/status-widget.html?location=Piranski-svetilnik" width="300" height="180" style="border:none;"></iframe>
@@ -169,12 +182,14 @@
   </div>
 
   <script type="module">
-    import { initCarousels } from '../../carousel.js';
+    import { initCarousel } from '../../carousel.js';
     
     document.addEventListener('DOMContentLoaded', () => {
-      initCarousels();
+      // Pass the carousel selector:
+      initCarousel('.carousel');
     });
   </script>
+
 
 
   <script type="module">
