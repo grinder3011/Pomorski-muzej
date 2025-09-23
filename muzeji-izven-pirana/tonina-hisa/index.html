@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title data-i18n="page_title">Tonina hiša</title>
+  <link rel="stylesheet" href="../../carousel.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -113,9 +114,21 @@
   <div class="back-home-container">
     <a href="../../index.html" class="back-home-btn" aria-label="Back to home" title="Domov" data-i18n="back_to_home">← Domov</a>
   </div>
+
   <div class="container">
 
-    <img src="tonina-hisa.jpg" alt="Tonina hiša" class="museum-image" />
+      <div class="carousel">
+        <button class="carousel-btn prev">◀</button>
+        <div class="carousel-track-container">
+        <div class="carousel-track">
+          <div class="carousel-slide">  <img src="TH_1.jpg" alt="Tonina hiša"></div>
+          <div class="carousel-slide"><img src="TH_2.jpg" alt="Tonina hiša - torkla"></div>
+          <div class="carousel-slide"><img src="TH_3.jpg" alt="Tonina hiša - kuhinja"></div>
+          <div class="carousel-slide"><img src="TH_4.jpg" alt="Tonina hiša - soba"></div>
+          </div>
+        </div>
+        <button class="carousel-btn next">▶</button>
+      </div>
 
     <!-- Open/Closed Widget -->
     <iframe src="https://grinder3011.github.io/Pomorski-muzej/status-muzeja/status-widget.html?location=Tonina-hiša" width="300" height="180" style="border:none;"></iframe>
@@ -165,10 +178,11 @@
   </div>
 
   <script type="module">
-    import { initCarousels } from '../../carousel.js';
+    import { initCarousel } from '../../carousel.js';
     
     document.addEventListener('DOMContentLoaded', () => {
-      initCarousels();
+      // Pass the carousel selector:
+      initCarousel('.carousel');
     });
   </script>
 
