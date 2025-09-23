@@ -65,24 +65,20 @@ header h1 {
   color: #004d66;
   font-size: 1rem;
 }
-
 .selected-option {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
 }
-
 .selected-option img {
   width: 20px;
   height: 14px;
   object-fit: cover;
 }
-
 .arrow {
   margin-left: auto;
 }
-
 .options {
   position: absolute;
   top: 100%;
@@ -94,35 +90,29 @@ header h1 {
   display: none; /* hidden by default */
   z-index: 1000;
 }
-
 .custom-select.open .options {
   display: block; /* show when open */
 }
-
 .option {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
 }
-
 .option:hover {
   background: #e6f2f5;
 }
-
 .option img {
   width: 20px;
   height: 14px;
   object-fit: cover;
 }
-  
 header p {
   margin: 0;
   font-size: 1.2em;
   max-width: 1000px;
   width: 100%;
 }
-  
 .container {
   display: flex;
   flex-direction: column;
@@ -131,7 +121,6 @@ header p {
   max-width: 1000px;
   margin: auto;
 }
-  
 .section {
   display: flex;
   flex-direction: row;
@@ -200,6 +189,46 @@ svg.status-light {
   vertical-align: middle;
   cursor: default;
 }
+#a2hs-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #ffd700;
+  color: #004d66;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 30px;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 999;
+  display: none;
+  transition: background-color 0.3s ease, width 0.3s ease, padding 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#a2hs-btn:hover {
+  background-color: #ffec7f;
+}
+#a2hs-btn.shrunk {
+  width: 60px;
+  padding: 8px;
+  font-size: 14px;
+  justify-content: center;
+}
+#a2hs-btn .icon {
+  display: inline-block;
+  background-color: #004d66;
+  color: white;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  text-align: center;
+  line-height: 22px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
 ul.museum-list li .main-museum-icon {
   background: gold;
   border-radius: 50%;
@@ -249,69 +278,15 @@ footer a img {
   header .top-row {
     gap: 10px;
   }
-}
-
-/* A2HS bar styling */
-.a2hs-bar {
-  position: fixed;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #004d66;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 25px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  z-index: 1000;
-  transition: all 0.3s ease;
-}
-.a2hs-bar button {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.2rem;
-  cursor: pointer;
-}
-.a2hs-bar.shrunk {
-  padding: 12px;
-  border-radius: 50%;
-  background: #006680;
-  width: 50px;
-  height: 50px;
-  justify-content: center;
-}
-.a2hs-bar.shrunk .a2hs-text {
-  display: none;
-}
-.a2hs-bar.shrunk button {
-  color: white;
-  font-size: 1.5rem;
-}
-.a2hs-bar.shrunk::after {
-  content: "Expand";
-  position: absolute;
-  bottom: 60px;
-  background: #333;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-  white-space: nowrap;
-}
-.a2hs-bar.shrunk:hover::after {
-  opacity: 1;
+  #a2hs-btn {
+    bottom: 80px;
+    padding: 16px 20px;
+    font-size: 18px;
+  }
 }
 </style>
 </head>
 <body>
-
 <header>
   <div class="top-row">
     <h1 data-i18n="site_title">Pomorski Muzej Piran</h1>
@@ -343,7 +318,10 @@ footer a img {
   <p data-i18n="site_subtitle">Lokacije muzejev</p>
 </header>
 
-<button id="a2hs-btn" data-i18n="add_to_home_screen">📲 Dodaj na domači zaslon</button>
+<button id="a2hs-btn">
+  <span class="icon">⇔</span>
+  <span class="label" data-i18n="add_to_home_screen">📲 Dodaj na domači zaslon</span>
+</button>
 
 <div class="container">
   <!-- Section 1: Piranski muzeji -->
@@ -406,126 +384,143 @@ footer a img {
     </div>
   </div>
 </div>
-  
-<!-- A2HS bar -->
-<div id="a2hs-bar" class="a2hs-bar" style="display:none;">
-  <span class="a2hs-text" data-i18n="add_to_home_screen">📲 Dodaj na domači zaslon</span>
-  <button id="a2hs-close" aria-label="Shrink Add to Home Screen">×</button>
-</div>
-
-<div class="container">
-  <!-- Content sections remain the same as in your original HTML -->
-</div>
 
 <script>
-  // Language dropdown logic (unchanged)
-  const customSelect = document.getElementById("language-select");
-  const selectedOption = customSelect.querySelector(".selected-option");
-  const optionsContainer = customSelect.querySelector(".options");
-  customSelect.addEventListener("click", () => {
-    customSelect.classList.toggle("open");
-  });
-  optionsContainer.querySelectorAll(".option").forEach(option => {
-    option.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const value = option.getAttribute("data-value");
-      const label = option.querySelector("span").textContent;
-      const flag = option.querySelector("img").src;
-      selectedOption.innerHTML = `<img src="${flag}" alt="${label}"><span>${label}</span><span class="arrow">▾</span>`;
-      selectedOption.setAttribute("data-value", value);
-      customSelect.classList.remove("open");
-      const changeEvent = new Event("change");
-      customSelect.value = value;
-      customSelect.dispatchEvent(changeEvent);
-      optionsContainer.querySelectorAll(".option").forEach(opt => {
-        opt.style.display = (opt.getAttribute("data-value") === value) ? "none" : "flex";
-      });
-    });
-  });
-  document.addEventListener("click", (e) => {
-    if (!customSelect.contains(e.target)) {
-      customSelect.classList.remove("open");
-    }
-  });
-  Object.defineProperty(customSelect, "value", {
-    get() { return selectedOption.getAttribute("data-value"); },
-    set(val) { const option = optionsContainer.querySelector(`.option[data-value="${val}"]`); if (option) option.click(); }
-  });
-  (function initDropdown() {
-    const currentValue = selectedOption.getAttribute("data-value");
-    optionsContainer.querySelectorAll(".option").forEach(opt => {
-      opt.style.display = (opt.getAttribute("data-value") === currentValue) ? "none" : "flex";
-    });
-  })();
-</script>
+// Language dropdown logic
+const customSelect = document.getElementById("language-select");
+const selectedOption = customSelect.querySelector(".selected-option");
+const optionsContainer = customSelect.querySelector(".options");
 
-<script>
-  // Service worker & PWA install prompt
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-    .then(reg => console.log("SW registered!", reg))
-    .catch(err => console.error("SW registration failed!", err));
-  }
+customSelect.addEventListener("click", () => { customSelect.classList.toggle("open"); });
 
-  let deferredPrompt;
-  const a2hsBar = document.getElementById('a2hs-bar');
-  const btnClose = document.getElementById('a2hs-close');
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    a2hsBar.style.display = 'flex';
-  });
-
-  window.addEventListener('appinstalled', () => {
-    console.log("App installed");
-    a2hsBar.style.display = 'none';
-  });
-
-  function checkStandalone() {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-    if(isStandalone) a2hsBar.style.display = 'none';
-  }
-  checkStandalone();
-
-  // Main bar click opens prompt
-  a2hsBar.addEventListener('click', async (e) => {
-    if(e.target !== btnClose && deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if(outcome === 'accepted') a2hsBar.style.display = 'none';
-      else deferredPrompt = null;
-    }
-  });
-
-  // Shrink/expand toggle
-  btnClose.addEventListener('click', (e) => {
+optionsContainer.querySelectorAll(".option").forEach(option => {
+  option.addEventListener("click", (e) => {
     e.stopPropagation();
-    a2hsBar.classList.toggle('shrunk');
-    if(a2hsBar.classList.contains('shrunk')){
-      btnClose.textContent = "⇲";
-      btnClose.setAttribute("aria-label","Expand Add to Home Screen");
-    } else {
-      btnClose.textContent = "×";
-      btnClose.setAttribute("aria-label","Shrink Add to Home Screen");
-    }
+    const value = option.getAttribute("data-value");
+    const label = option.querySelector("span").textContent;
+    const flag = option.querySelector("img").src;
+    selectedOption.innerHTML = `<img src="${flag}" alt="${label}"><span>${label}</span><span class="arrow">▾</span>`;
+    selectedOption.setAttribute("data-value", value);
+    customSelect.classList.remove("open");
+    const changeEvent = new Event("change");
+    customSelect.value = value;
+    customSelect.dispatchEvent(changeEvent);
+    optionsContainer.querySelectorAll(".option").forEach(opt => {
+      opt.style.display = (opt.getAttribute("data-value") === value) ? "none" : "flex";
+    });
   });
+});
+
+document.addEventListener("click", (e) => { if (!customSelect.contains(e.target)) customSelect.classList.remove("open"); });
+
+Object.defineProperty(customSelect, "value", {
+  get() { return selectedOption.getAttribute("data-value"); },
+  set(val) { const option = optionsContainer.querySelector(`.option[data-value="${val}"]`); if (option) option.click(); }
+});
+
+(function initDropdown() {
+  const currentValue = selectedOption.getAttribute("data-value");
+  optionsContainer.querySelectorAll(".option").forEach(opt => {
+    opt.style.display = (opt.getAttribute("data-value") === currentValue) ? "none" : "flex";
+  });
+})();
 </script>
 
-<!-- Footer section remains the same -->
+<script type="module">
+import { getOpenStatus } from './status-muzeja/schedule-utils.js';
+import { loadTranslations } from './i18n.js';
+await loadTranslations("translations-home-page");
+
+fetch('./status-muzeja/schedules.json')
+.then(res => res.json())
+.then(data => {
+  document.querySelectorAll("li[data-location]").forEach(li => {
+    const location = li.getAttribute("data-location");
+    const status = getOpenStatus(location, data);
+    const statusText = li.querySelector(".status-text");
+    const statusLight = li.querySelector(".status-light circle");
+    if(statusText){
+      statusText.textContent = status.statusText;
+      statusText.style.color = status.isOpen ? "green" : "red";
+      statusText.style.fontWeight = "bold";
+    }
+    if(statusLight){
+      statusLight.setAttribute("fill", status.isOpen ? "green" : "red");
+      if(status.isOpen){
+        statusLight.animate([{opacity:1},{opacity:0.2},{opacity:1}],{duration:1200,iterations:Infinity});
+      }
+    }
+  });
+})
+.catch(err => console.error("❌ Error loading schedules.json:", err));
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+  .then(reg => console.log("SW registered!", reg))
+  .catch(err => console.error("SW registration failed!", err));
+}
+
+// A2HS button logic with shrink/expand
+let deferredPrompt;
+const btn = document.getElementById('a2hs-btn');
+const icon = btn.querySelector('.icon');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  btn.style.display = 'flex';
+  btn.disabled = false;
+});
+
+window.addEventListener('appinstalled', () => {
+  console.log("App installed");
+  btn.style.display = 'none';
+});
+
+function checkStandalone() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if(isStandalone) btn.style.display = 'none';
+}
+checkStandalone();
+
+// Click to shrink/expand the button
+icon.addEventListener('click', (e) => {
+  e.stopPropagation();
+  btn.classList.toggle('shrunk');
+});
+
+// Main button click
+btn.addEventListener('click', async (e) => {
+  if(e.target === icon) return; // Ignore clicks on icon for shrink/expand
+  if(!deferredPrompt) return;
+  btn.disabled = true;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  if(outcome === 'accepted') btn.style.display = 'none';
+  else btn.disabled = false;
+  deferredPrompt = null;
+});
+</script>
+
 <footer style="background:#004d66; color:white; padding:20px 10px; text-align:center; display:flex; justify-content:center; gap:30px; flex-wrap:wrap;">
   <a href="https://pomorskimuzej.si/" target="_blank" style="color:white; text-decoration:none; font-size:1.2rem; display:flex; align-items:center; gap:6px;">
     <img src="icons/pmp.png" alt="Muzej domov">Pomorski muzej Sergej Mašera Piran
   </a>
   <a href="https://www.instagram.com/pomorskimuzej" target="_blank" style="color:white; text-decoration:none; font-size:1.2rem; display:flex; align-items:center; gap:6px;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37a4 4 0 1 1-4.5-4.5 4 4 0 0 1 4.5 4.5z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+      <path d="M16 11.37a4 4 0 1 1-4.5-4.5 4 4 0 0 1 4.5 4.5z"/>
+      <line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/>
+    </svg>
     Instagram
   </a>
   <a href="https://www.facebook.com/pomorski.piran" target="_blank" style="color:white; text-decoration:none; font-size:1.2rem; display:flex; align-items:center; gap:6px;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook">
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+    </svg>
     Facebook
   </a>
 </footer>
 
-</body>
-</html>
