@@ -87,11 +87,11 @@ header h1 {
   border: 1.5px solid #004d66;
   border-radius: 6px;
   background: white;
-  display: none; /* hidden by default */
+  display: none;
   z-index: 1000;
 }
 .custom-select.open .options {
-  display: block; /* show when open */
+  display: block;
 }
 .option {
   display: flex;
@@ -189,45 +189,42 @@ svg.status-light {
   vertical-align: middle;
   cursor: default;
 }
-#a2hs-btn {
+#a2hs-bar {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #ffd700;
-  color: #004d66;
-  border: none;
-  padding: 12px 16px;
+  display: flex;
   border-radius: 30px;
-  font-size: 16px;
+  overflow: hidden;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  cursor: pointer;
   z-index: 999;
-  display: none;
-  transition: background-color 0.3s ease, width 0.3s ease, padding 0.3s ease;
+  background: #ffd700;
+  font-size: 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: width 0.3s ease;
+}
+#a2hs-bar.shrunk {
+  width: 50px;
+  padding: 0;
+}
+#a2hs-icon {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-#a2hs-btn:hover {
-  background-color: #ffec7f;
-}
-#a2hs-btn.shrunk {
-  width: 60px;
-  padding: 8px;
-  font-size: 14px;
   justify-content: center;
+  background: #ffb800;
+  padding: 12px;
+  color: #004d66;
 }
-#a2hs-btn .icon {
-  display: inline-block;
-  background-color: #004d66;
-  color: white;
-  border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  text-align: center;
-  line-height: 22px;
-  cursor: pointer;
-  flex-shrink: 0;
+#a2hs-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  color: #004d66;
+}
+#a2hs-bar.shrunk #a2hs-text {
+  display: none;
 }
 ul.museum-list li .main-museum-icon {
   background: gold;
@@ -278,15 +275,20 @@ footer a img {
   header .top-row {
     gap: 10px;
   }
-  #a2hs-btn {
+  #a2hs-bar {
     bottom: 80px;
-    padding: 16px 20px;
-    font-size: 18px;
+  }
+  #a2hs-bar #a2hs-icon {
+    padding: 14px;
+  }
+  #a2hs-bar #a2hs-text {
+    padding: 14px 16px;
   }
 }
 </style>
 </head>
 <body>
+
 <header>
   <div class="top-row">
     <h1 data-i18n="site_title">Pomorski Muzej Piran</h1>
@@ -318,10 +320,11 @@ footer a img {
   <p data-i18n="site_subtitle">Lokacije muzejev</p>
 </header>
 
-<button id="a2hs-btn">
-  <span class="icon">⇔</span>
-  <span class="label" data-i18n="add_to_home_screen">📲 Dodaj na domači zaslon</span>
-</button>
+<!-- Shrinkable Add-to-Home-Screen bar -->
+<div id="a2hs-bar" class="shrunk">
+  <div id="a2hs-icon">📲</div>
+  <div id="a2hs-text" data-i18n="add_to_home_screen">Dodaj na domači zaslon</div>
+</div>
 
 <div class="container">
   <!-- Section 1: Piranski muzeji -->
@@ -391,7 +394,9 @@ const customSelect = document.getElementById("language-select");
 const selectedOption = customSelect.querySelector(".selected-option");
 const optionsContainer = customSelect.querySelector(".options");
 
-customSelect.addEventListener("click", () => { customSelect.classList.toggle("open"); });
+customSelect.addEventListener("click", () => {
+  customSelect.classList.toggle("open");
+});
 
 optionsContainer.querySelectorAll(".option").forEach(option => {
   option.addEventListener("click", (e) => {
@@ -411,11 +416,18 @@ optionsContainer.querySelectorAll(".option").forEach(option => {
   });
 });
 
-document.addEventListener("click", (e) => { if (!customSelect.contains(e.target)) customSelect.classList.remove("open"); });
+document.addEventListener("click", (e) => {
+  if (!customSelect.contains(e.target)) {
+    customSelect.classList.remove("open");
+  }
+});
 
 Object.defineProperty(customSelect, "value", {
   get() { return selectedOption.getAttribute("data-value"); },
-  set(val) { const option = optionsContainer.querySelector(`.option[data-value="${val}"]`); if (option) option.click(); }
+  set(val) {
+    const option = optionsContainer.querySelector(`.option[data-value="${val}"]`);
+    if(option) option.click();
+  }
 });
 
 (function initDropdown() {
@@ -439,6 +451,7 @@ fetch('./status-muzeja/schedules.json')
     const status = getOpenStatus(location, data);
     const statusText = li.querySelector(".status-text");
     const statusLight = li.querySelector(".status-light circle");
+
     if(statusText){
       statusText.textContent = status.statusText;
       statusText.style.color = status.isOpen ? "green" : "red";
@@ -462,44 +475,40 @@ if ('serviceWorker' in navigator) {
   .catch(err => console.error("SW registration failed!", err));
 }
 
-// A2HS button logic with shrink/expand
 let deferredPrompt;
-const btn = document.getElementById('a2hs-btn');
-const icon = btn.querySelector('.icon');
+const a2hsBar = document.getElementById('a2hs-bar');
+const a2hsIcon = document.getElementById('a2hs-icon');
+const a2hsText = document.getElementById('a2hs-text');
 
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  btn.style.display = 'flex';
-  btn.disabled = false;
+  a2hsBar.style.display = 'flex';
+  a2hsBar.classList.add('shrunk');
 });
 
 window.addEventListener('appinstalled', () => {
   console.log("App installed");
-  btn.style.display = 'none';
+  a2hsBar.style.display = 'none';
 });
 
 function checkStandalone() {
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  if(isStandalone) btn.style.display = 'none';
+  if(isStandalone) a2hsBar.style.display = 'none';
 }
 checkStandalone();
 
-// Click to shrink/expand the button
-icon.addEventListener('click', (e) => {
-  e.stopPropagation();
-  btn.classList.toggle('shrunk');
+a2hsIcon.addEventListener('click', () => {
+  a2hsBar.classList.toggle('shrunk');
 });
 
-// Main button click
-btn.addEventListener('click', async (e) => {
-  if(e.target === icon) return; // Ignore clicks on icon for shrink/expand
+a2hsText.addEventListener('click', async () => {
   if(!deferredPrompt) return;
-  btn.disabled = true;
+  a2hsText.disabled = true;
   deferredPrompt.prompt();
   const { outcome } = await deferredPrompt.userChoice;
-  if(outcome === 'accepted') btn.style.display = 'none';
-  else btn.disabled = false;
+  if(outcome === 'accepted') a2hsBar.style.display = 'none';
+  else a2hsText.disabled = false;
   deferredPrompt = null;
 });
 </script>
@@ -509,18 +518,14 @@ btn.addEventListener('click', async (e) => {
     <img src="icons/pmp.png" alt="Muzej domov">Pomorski muzej Sergej Mašera Piran
   </a>
   <a href="https://www.instagram.com/pomorskimuzej" target="_blank" style="color:white; text-decoration:none; font-size:1.2rem; display:flex; align-items:center; gap:6px;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram">
-      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-      <path d="M16 11.37a4 4 0 1 1-4.5-4.5 4 4 0 0 1 4.5 4.5z"/>
-      <line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/>
-    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37a4 4 0 1 1-4.5-4.5 4 4 0 0 1 4.5 4.5z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
     Instagram
   </a>
   <a href="https://www.facebook.com/pomorski.piran" target="_blank" style="color:white; text-decoration:none; font-size:1.2rem; display:flex; align-items:center; gap:6px;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook">
-      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
     Facebook
   </a>
 </footer>
 
+</body>
+</html>
