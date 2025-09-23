@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title data-i18n="page_title">Tartinijeva hiša</title>
+  <link rel="stylesheet" href="../../carousel.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -122,7 +123,17 @@
 
   <div class="container">
 
-    <img src="tartinijeva-hisa.jpg" alt="Tartinijeva hiša" class="museum-image" />
+      <div class="carousel">
+        <button class="carousel-btn prev">◀</button>
+        <div class="carousel-track-container">
+        <div class="carousel-track">
+          <div class="carousel-slide"><img src="tartinijeva-hisa.jpg" alt="Tartinijeva hiša"></div>
+          <div class="carousel-slide"><img src="GT_2.jpg" alt="Tartinijeva vijolina"></div>
+          <div class="carousel-slide"><img src="GT_3.jpg" alt="Tartinijev portret"></div>
+          </div>
+        </div>
+        <button class="carousel-btn next">▶</button>
+      </div>
 
     <!-- Open/Closed Widget -->
     <iframe src="https://grinder3011.github.io/Pomorski-muzej/status-muzeja/status-widget.html?location=Tartinijeva-hiša" width="300" height="180" style="border:none;"></iframe>
@@ -171,10 +182,11 @@
   </div>
 
   <script type="module">
-    import { initCarousels } from '../../carousel.js';
+    import { initCarousel } from '../../carousel.js';
     
     document.addEventListener('DOMContentLoaded', () => {
-      initCarousels();
+      // Pass the carousel selector:
+      initCarousel('.carousel');
     });
   </script>
 
