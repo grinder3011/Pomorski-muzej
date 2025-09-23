@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../../carousel.css">
   <title data-i18n="title">Monfort</title>
   <style>
     body {
@@ -113,9 +114,21 @@
   <div class="back-home-container">
     <a href="../../index.html" class="back-home-btn" aria-label="Nazaj domov" title="Domov" data-i18n="backHome" data-i18n-aria="ariaBackHome">← Domov</a>
   </div>
+
   <div class="container">
 
-    <img src="monfort.jpg" alt="Monfort" class="museum-image" />
+      <div class="carousel">
+        <button class="carousel-btn prev">◀</button>
+        <div class="carousel-track-container">
+        <div class="carousel-track">
+          <div class="carousel-slide"> <img src="monfort.jpg" alt="Monfort"></div>
+          <div class="carousel-slide"><img src="MON_2.jpg" alt="Zbirka jadrnice v monfortu"></div>
+          <div class="carousel-slide"><img src="MON_3.jpg" alt="Zbirka jadrnice v monfortu 2"></div>
+          <div class="carousel-slide"><img src="MON_4.jpg" alt="Monfort iz neba"></div>
+          </div>
+        </div>
+        <button class="carousel-btn next">▶</button>
+      </div>
 
     <!-- Open/Closed Widget -->
     <iframe src="https://grinder3011.github.io/Pomorski-muzej/status-muzeja/status-widget.html?location=Monfort" width="300" height="180" style="border:none;"></iframe>
@@ -160,10 +173,11 @@
   </div>
 
  <script type="module">
-    import { initCarousels } from '../../carousel.js';
+    import { initCarousel } from '../../carousel.js';
     
     document.addEventListener('DOMContentLoaded', () => {
-      initCarousels();
+      // Pass the carousel selector:
+      initCarousel('.carousel');
     });
   </script>
  
