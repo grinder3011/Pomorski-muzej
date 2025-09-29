@@ -1,4 +1,4 @@
-// language-selector.js
+// language-selector.js (standalone, works like home page)
 const customSelect = document.getElementById("language-select");
 if (!customSelect) throw new Error("Language selector not found.");
 
@@ -27,20 +27,10 @@ optionsContainer.querySelectorAll(".option").forEach(option => {
       opt.style.display = (opt.getAttribute("data-value") === value) ? "none" : "flex";
     });
 
-    // Reload page in selected language
-    const currentPath = window.location.pathname;
-
-    // Detect current language folder (first non-empty segment)
-    const parts = currentPath.split('/').filter(seg => seg.length > 0);
-    const langIndex = parts.findIndex(seg => ['sl','en','it','de'].includes(seg));
-    if (langIndex !== -1) {
-      parts[langIndex] = value; // replace language
-      const newPath = '/' + parts.join('/');
-      window.location.href = newPath;
-    } else {
-      // If no language segment detected, prepend it
-      window.location.href = '/' + value + currentPath;
-    }
+    // Trigger change event for translation loader
+    const changeEvent = new Event("change");
+    customSelect.value = value;
+    customSelect.dispatchEvent(changeEvent);
   });
 });
 
