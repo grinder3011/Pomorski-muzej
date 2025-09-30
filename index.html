@@ -39,75 +39,6 @@ header h1 {
   white-space: nowrap;
   flex-shrink: 0;
 }
-#language-select {
-  padding: 6px 10px;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: 1.5px solid #004d66;
-  background-color: white;
-  color: #004d66;
-  cursor: pointer;
-  transition: border-color 0.3s ease;
-  flex-shrink: 0;
-}
-#language-select:hover,
-#language-select:focus {
-  border-color: #006680;
-  outline: none;
-}
-.custom-select {
-  position: relative;
-  display: inline-block;
-  width: 180px;
-  cursor: pointer;
-  border: 1.5px solid #004d66;
-  border-radius: 6px;
-  background: white;
-  color: #004d66;
-  font-size: 1rem;
-}
-.selected-option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-}
-.selected-option img {
-  width: 20px;
-  height: 14px;
-  object-fit: cover;
-}
-.arrow {
-  margin-left: auto;
-}
-.options {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  border: 1.5px solid #004d66;
-  border-radius: 6px;
-  background: white;
-  display: none;
-  z-index: 1000;
-}
-.custom-select.open .options {
-  display: block;
-}
-.option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-}
-.option:hover {
-  background: #e6f2f5;
-}
-.option img {
-  width: 20px;
-  height: 14px;
-  object-fit: cover;
-}
 header p {
   margin: 0;
   font-size: 1.2em;
@@ -391,56 +322,6 @@ footer a img {
 </div>
 
 <script src="../../language-selector.js"></script>
-  
-<script>
-// Language dropdown logic
-const customSelect = document.getElementById("language-select");
-const selectedOption = customSelect.querySelector(".selected-option");
-const optionsContainer = customSelect.querySelector(".options");
-
-customSelect.addEventListener("click", () => {
-  customSelect.classList.toggle("open");
-});
-
-optionsContainer.querySelectorAll(".option").forEach(option => {
-  option.addEventListener("click", (e) => {
-    e.stopPropagation();
-    const value = option.getAttribute("data-value");
-    const label = option.querySelector("span").textContent;
-    const flag = option.querySelector("img").src;
-    selectedOption.innerHTML = `<img src="${flag}" alt="${label}"><span>${label}</span><span class="arrow">▾</span>`;
-    selectedOption.setAttribute("data-value", value);
-    customSelect.classList.remove("open");
-    const changeEvent = new Event("change");
-    customSelect.value = value;
-    customSelect.dispatchEvent(changeEvent);
-    optionsContainer.querySelectorAll(".option").forEach(opt => {
-      opt.style.display = (opt.getAttribute("data-value") === value) ? "none" : "flex";
-    });
-  });
-});
-
-document.addEventListener("click", (e) => {
-  if (!customSelect.contains(e.target)) {
-    customSelect.classList.remove("open");
-  }
-});
-
-Object.defineProperty(customSelect, "value", {
-  get() { return selectedOption.getAttribute("data-value"); },
-  set(val) {
-    const option = optionsContainer.querySelector(`.option[data-value="${val}"]`);
-    if(option) option.click();
-  }
-});
-
-(function initDropdown() {
-  const currentValue = selectedOption.getAttribute("data-value");
-  optionsContainer.querySelectorAll(".option").forEach(opt => {
-    opt.style.display = (opt.getAttribute("data-value") === currentValue) ? "none" : "flex";
-  });
-})();
-</script>
 
 <script type="module">
 import { getOpenStatus } from './status-muzeja/schedule-utils.js';
