@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title data-i18n="page_title">Tartinijeva hiša</title>
   <link rel="stylesheet" href="../../carousel.css">
+  <link rel="stylesheet" href="../../language-selector.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -114,7 +115,30 @@
 
   <header>
     <h1 data-i18n="museum_title">Tartinijeva hiša</h1>
-    <p data-i18n="museum_subtitle"></p>
+     <div class="custom-select" id="language-select" tabindex="0">
+        <div class="selected-option" data-value="sl">
+          <img src="../../flags/sl.png" alt="Slovenščina" />
+          <span>Slovenščina</span>
+        </div>
+        <div class="options">
+          <div class="option" data-value="sl">
+            <img src="../../flags/sl.png" alt="Slovenščina" />
+            <span>Slovenščina</span>
+          </div>
+          <div class="option" data-value="en">
+            <img src="../../flags/en.png" alt="English" />
+            <span>English</span>
+          </div>
+          <div class="option" data-value="it">
+            <img src="../../flags/it.png" alt="Italiano" />
+            <span>Italiano</span>
+          </div>
+          <div class="option" data-value="de">
+            <img src="../../flags/de.png" alt="Deutsch" />
+            <span>Deutsch</span>
+          </div>
+        </div>
+     </div>
   </header>
 
   <div class="back-home-container">
@@ -180,6 +204,8 @@
     </div>
 
   </div>
+
+  <script src="../../language-selector.js"></script>
 
   <script type="module">
     import { initCarousel } from '../../carousel.js';
