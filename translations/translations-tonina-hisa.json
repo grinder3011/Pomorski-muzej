@@ -17,8 +17,8 @@
     "click_for_directions": "Klikni za pot do nas"
   },
   "en": {
-    "page_title": "Tonina House",
-    "museum_title": "Tonina House",
+    "page_title": "Tona's House",
+    "museum_title": "Tona's House",
     "back_to_home": "← Home",
     "ticket_prices_title": "Ticket Prices",
     "ticket_type": "Ticket Type",
@@ -34,9 +34,9 @@
     "click_for_directions": "Click for directions"
   },
   "it": {
-    "page_title": "Casa Tonina",
-    "museum_title": "Casa Tonina",
-    "back_to_home": "← Casa",
+    "page_title": "Casa di Tona",
+    "museum_title": "Casa di Tona",
+    "back_to_home": "← Ritorna",
     "ticket_prices_title": "Prezzi dei biglietti",
     "ticket_type": "Tipo di biglietto",
     "ticket_price": "Prezzo",
@@ -51,8 +51,8 @@
     "click_for_directions": "Clicca per le indicazioni"
   },
   "de": {
-    "page_title": "Tonina-Haus",
-    "museum_title": "Tonina-Haus",
+    "page_title": "Tona-Haus",
+    "museum_title": "Tona-Haus",
     "back_to_home": "← Zuhause",
     "ticket_prices_title": "Preise für Tickets",
     "ticket_type": "Ticketart",
