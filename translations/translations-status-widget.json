@@ -23,11 +23,11 @@
     "dataLoadError": "Error loading data.",
     "missingLocationParam": "Missing ?location= parameter",
     "Palača-Gabrielli": "Maritime Museum Piran",
-    "Piranski-svetilnik": "Piran Lighthouse",
-    "Tartinijeva-hiša": "Tartini House",
+    "Piranski-svetilnik": "Piran's Lighthouse",
+    "Tartinijeva-hiša": "Tartini's House",
     "Monfort": "Monfort",
     "Soline": "Sečovlje Saltpans",
-    "Tonina-hiša": "Tonina House"
+    "Tonina-hiša": "Tona's House"
   },
   "it": {
     "status_open": "Aperto",
@@ -39,10 +39,10 @@
     "missingLocationParam": "Parametro ?location= mancante",
     "Palača-Gabrielli": "Museo del Mare di Pirano",
     "Piranski-svetilnik": "Faro di Pirano",
-    "Tartinijeva-hiša": "Casa Tartini",
+    "Tartinijeva-hiša": "Casa di Tartini",
     "Monfort": "Monfort",
     "Soline": "Saline di Sicciole",
-    "Tonina-hiša": "Casa Tonina"
+    "Tonina-hiša": "Casa di Tona"
   },
   "de": {
     "status_open": "Geöffnet",
@@ -57,6 +57,6 @@
     "Tartinijeva-hiša": "Tartinihaus",
     "Monfort": "Monfort",
     "Soline": "Salinen von Sečovlje",
-    "Tonina-hiša": "Tonina-Haus"
+    "Tonina-hiša": "Tona-Haus"
   }
 }
