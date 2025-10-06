@@ -1,51 +1,59 @@
-// language-selector.js
+// language-selector.js (standalone, works like home page)
+const customSelect = document.getElementById("language-select");
+if (!customSelect) throw new Error("Language selector not found.");
 
-// Get hidden select for backward compatibility
-const langSelect = document.getElementById("language-select");
-if (!langSelect) throw new Error("Language selector (#language-select) not found.");
+const selectedOption = customSelect.querySelector(".selected-option");
+const optionsContainer = customSelect.querySelector(".options");
 
-// Get the visible language buttons
-const langButtons = document.querySelectorAll(".lang-btn");
+// Toggle dropdown open/close
+customSelect.addEventListener("click", () => {
+  customSelect.classList.toggle("open");
+});
 
-// Helper function to set active button and dispatch event
-function setActiveLanguage(lang) {
-  // Update hidden select's dataset
-  langSelect.dataset.value = lang;
+// Handle selection click
+optionsContainer.querySelectorAll(".option").forEach(option => {
+  option.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const value = option.getAttribute("data-value");
+    const label = option.querySelector("span").textContent;
+    const flag = option.querySelector("img").src;
 
-  // Update button highlight
-  langButtons.forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.value === lang);
-  });
+    selectedOption.innerHTML = `<img src="${flag}" alt="${label}"><span>${label}</span><span class="arrow">▾</span>`;
+    selectedOption.setAttribute("data-value", value);
+    customSelect.classList.remove("open");
 
-  // Dispatch custom event so other scripts can respond (translations)
-  langSelect.dispatchEvent(new CustomEvent("languageChange", { detail: { value: lang } }));
-}
+    // Hide selected option in dropdown
+    optionsContainer.querySelectorAll(".option").forEach(opt => {
+      opt.style.display = (opt.getAttribute("data-value") === value) ? "none" : "flex";
+    });
 
-// Button click handlers
-langButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    const lang = btn.dataset.value;
-    localStorage.setItem("selectedLang", lang); // remember selection
-    setActiveLanguage(lang);
+    // Trigger change event for translation loader
+    const changeEvent = new Event("change");
+    customSelect.value = value;
+    customSelect.dispatchEvent(changeEvent);
   });
 });
 
-// Restore previously selected language on page load
-const savedLang = localStorage.getItem("selectedLang");
-if (savedLang) {
-  setActiveLanguage(savedLang);
-} else {
-  // Default from active button
-  const activeBtn = document.querySelector(".lang-btn.active");
-  if (activeBtn) setActiveLanguage(activeBtn.dataset.value);
-}
-
-// Optional: allow setting language from other scripts
-Object.defineProperty(langSelect, "value", {
-  get() {
-    return langSelect.dataset.value;
-  },
-  set(val) {
-    setActiveLanguage(val);
+// Close dropdown if clicked outside
+document.addEventListener("click", (e) => {
+  if (!customSelect.contains(e.target)) {
+    customSelect.classList.remove("open");
   }
 });
+
+// Property to get/set value programmatically
+Object.defineProperty(customSelect, "value", {
+  get() { return selectedOption.getAttribute("data-value"); },
+  set(val) {
+    const option = optionsContainer.querySelector(`.option[data-value="${val}"]`);
+    if(option) option.click();
+  }
+});
+
+// Initialize dropdown visibility
+(function initDropdown() {
+  const currentValue = selectedOption.getAttribute("data-value");
+  optionsContainer.querySelectorAll(".option").forEach(opt => {
+    opt.style.display = (opt.getAttribute("data-value") === currentValue) ? "none" : "flex";
+  });
+})();
