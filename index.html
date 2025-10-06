@@ -240,7 +240,7 @@ footer a img {
     <h1 data-i18n="site_title">Pomorski Muzej Piran</h1>
 
     <div class="language-selector" id="language-select">
-      <img src="flags/sl.png" alt="Slovenščina" data-lang="sl" class="selected">
+      <img src="flags/sl.png" alt="Slovenščina" data-lang="sl">
       <img src="flags/en.png" alt="English" data-lang="en">
       <img src="flags/it.png" alt="Italiano" data-lang="it">
       <img src="flags/de.png" alt="Deutsch" data-lang="de">
@@ -250,7 +250,6 @@ footer a img {
  <p data-i18n="site_subtitle">Lokacije muzejev</p>
 </header>
 
-<!-- Shrinkable Add-to-Home-Screen bar -->
 <div id="a2hs-bar" class="shrunk">
   <div id="a2hs-icon">📲</div>
   <div id="a2hs-text" data-i18n="add_to_home_screen">Dodaj na domači zaslon</div>
@@ -316,12 +315,34 @@ footer a img {
   </div>
 </div>
 
-<script src="language-selector.js"></script>
 <script type="module">
 import { getOpenStatus } from './status-muzeja/schedule-utils.js';
-import { loadTranslations } from './i18n.js';
-await loadTranslations("translations-home-page");
+import { loadTranslations, setLanguage } from './i18n.js';
 
+// Restore saved language or default to 'sl'
+const savedLang = localStorage.getItem('selectedLang') || 'sl';
+document.documentElement.lang = savedLang;
+await loadTranslations("translations-home-page", savedLang);
+
+// Highlight correct flag
+const langImages = document.querySelectorAll('.language-selector img');
+langImages.forEach(img => {
+  if (img.getAttribute('data-lang') === savedLang) img.classList.add('selected');
+});
+
+// Handle flag click
+langImages.forEach(img => {
+  img.addEventListener('click', async () => {
+    const selectedLang = img.getAttribute('data-lang');
+    localStorage.setItem('selectedLang', selectedLang);
+    document.documentElement.lang = selectedLang;
+    langImages.forEach(i => i.classList.remove('selected'));
+    img.classList.add('selected');
+    await loadTranslations("translations-home-page", selectedLang);
+  });
+});
+
+// Museum status logic
 fetch('./status-muzeja/schedules.json')
 .then(res => res.json())
 .then(data => {
@@ -389,18 +410,6 @@ a2hsText.addEventListener('click', async () => {
   if(outcome === 'accepted') a2hsBar.style.display = 'none';
   else a2hsText.disabled = false;
   deferredPrompt = null;
-});
-
-// Simple language selector logic
-const langImages = document.querySelectorAll('.language-selector img');
-langImages.forEach(img => {
-  img.addEventListener('click', () => {
-    langImages.forEach(i => i.classList.remove('selected'));
-    img.classList.add('selected');
-    const selectedLang = img.getAttribute('data-lang');
-    document.documentElement.lang = selectedLang;
-    // Here you would trigger actual translation updates via your i18n.js
-  });
 });
 </script>
 
