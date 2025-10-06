@@ -251,6 +251,7 @@ footer a img {
 </div>
 
 <div class="container">
+  <!-- Section 1: Piranski muzeji -->
   <div class="section">
     <a class="image" href="Piranski-muzeji.html">
       <img src="piranski-muzeji.jpg" alt="Piranske muzejske enote" />
@@ -280,6 +281,7 @@ footer a img {
     </div>
   </div>
 
+  <!-- Section 2: Muzeji izven Pirana -->
   <div class="section">
     <a class="image" href="Muzeji-izven-Pirana.html">
       <img src="muzeji-izven-pirana.jpg" alt="Muzeji izven Pirana" />
@@ -310,11 +312,12 @@ footer a img {
   </div>
 </div>
 
-<script type="module" src="language-selector.js"></script>
+<script src="language-selector.js"></script>
 
 <script type="module">
 import { getOpenStatus } from './status-muzeja/schedule-utils.js';
 import { loadTranslations } from './i18n.js';
+
 await loadTranslations("translations-home-page");
 
 fetch('./status-muzeja/schedules.json')
