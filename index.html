@@ -24,33 +24,14 @@ header {
   gap: 12px;
   text-align: center;
 }
-header .language-bar {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.lang-btn {
-  border: 2px solid transparent;
-  border-radius: 8px;
-  padding: 4px 8px;
-  background: white;
-  color: #004d66;
-  cursor: pointer;
+header .top-row {
   display: flex;
   align-items: center;
-  gap: 6px;
-  transition: all 0.2s ease;
-}
-.lang-btn img {
-  width: 24px;
-  height: 16px;
-}
-.lang-btn.active {
-  border-color: gold;
-  background: #e0f7fa;
-  font-weight: bold;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 1000px;
 }
 header h1 {
   margin: 0;
@@ -223,8 +204,17 @@ footer a img {
   header p {
     font-size: 1em;
   }
+  header .top-row {
+    gap: 10px;
+  }
   #a2hs-bar {
     bottom: 80px;
+  }
+  #a2hs-bar #a2hs-icon {
+    padding: 14px;
+  }
+  #a2hs-bar #a2hs-text {
+    padding: 14px 16px;
   }
 }
 </style>
@@ -232,19 +222,38 @@ footer a img {
 <body>
 
 <header>
-  <div class="language-bar">
-    <button class="lang-btn active" data-value="sl"><img src="flags/sl.png" alt="Slovenščina">Slovenščina</button>
-    <button class="lang-btn" data-value="en"><img src="flags/en.png" alt="English">English</button>
-    <button class="lang-btn" data-value="it"><img src="flags/it.png" alt="Italiano">Italiano</button>
-    <button class="lang-btn" data-value="de"><img src="flags/de.png" alt="Deutsch">Deutsch</button>
+  <div class="top-row">
+    <h1 data-i18n="site_title">Pomorski Muzej Piran</h1>
+    
+    <div class="custom-select" id="language-select" tabindex="0">
+        <div class="selected-option" data-value="sl">
+          <img src="flags/sl.png" alt="Slovenščina" />
+          <span>Slovenščina</span>
+        </div>
+        <div class="options">
+          <div class="option" data-value="sl">
+            <img src="flags/sl.png" alt="Slovenščina" />
+            <span>Slovenščina</span>
+          </div>
+          <div class="option" data-value="en">
+            <img src="flags/en.png" alt="English" />
+            <span>English</span>
+          </div>
+          <div class="option" data-value="it">
+            <img src="flags/it.png" alt="Italiano" />
+            <span>Italiano</span>
+          </div>
+          <div class="option" data-value="de">
+            <img src="flags/de.png" alt="Deutsch" />
+            <span>Deutsch</span>
+          </div>
+        </div>
+    </div>
   </div>
-
-  <h1 data-i18n="site_title">Pomorski Muzej Piran</h1>
-  <p data-i18n="site_subtitle">Lokacije muzejev</p>
-
-  <div id="language-select" style="display:none;"></div>
+ <p data-i18n="site_subtitle">Lokacije muzejev</p>
 </header>
 
+<!-- Shrinkable Add-to-Home-Screen bar -->
 <div id="a2hs-bar" class="shrunk">
   <div id="a2hs-icon">📲</div>
   <div id="a2hs-text" data-i18n="add_to_home_screen">Dodaj na domači zaslon</div>
@@ -317,7 +326,6 @@ footer a img {
 <script type="module">
 import { getOpenStatus } from './status-muzeja/schedule-utils.js';
 import { loadTranslations } from './i18n.js';
-
 await loadTranslations("translations-home-page");
 
 fetch('./status-muzeja/schedules.json')
@@ -328,6 +336,7 @@ fetch('./status-muzeja/schedules.json')
     const status = getOpenStatus(location, data);
     const statusText = li.querySelector(".status-text");
     const statusLight = li.querySelector(".status-light circle");
+
     if(statusText){
       statusText.textContent = status.statusText;
       statusText.style.color = status.isOpen ? "green" : "red";
@@ -340,34 +349,65 @@ fetch('./status-muzeja/schedules.json')
       }
     }
   });
-});
+})
+.catch(err => console.error("❌ Error loading schedules.json:", err));
 </script>
 
 <script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
+  navigator.serviceWorker.register('service-worker.js')
+  .then(reg => console.log("SW registered!", reg))
+  .catch(err => console.error("SW registration failed!", err));
 }
 
-document.querySelectorAll('.lang-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const lang = btn.getAttribute('data-value');
-    const langSelect = document.getElementById('language-select');
-    langSelect.dataset.value = lang;
-    langSelect.dispatchEvent(new CustomEvent('languageChange', { detail: { value: lang } }));
-  });
+let deferredPrompt;
+const a2hsBar = document.getElementById('a2hs-bar');
+const a2hsIcon = document.getElementById('a2hs-icon');
+const a2hsText = document.getElementById('a2hs-text');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  a2hsBar.style.display = 'flex';
+  a2hsBar.classList.add('shrunk');
+});
+
+window.addEventListener('appinstalled', () => {
+  console.log("App installed");
+  a2hsBar.style.display = 'none';
+});
+
+function checkStandalone() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if(isStandalone) a2hsBar.style.display = 'none';
+}
+checkStandalone();
+
+a2hsIcon.addEventListener('click', () => {
+  a2hsBar.classList.toggle('shrunk');
+});
+
+a2hsText.addEventListener('click', async () => {
+  if(!deferredPrompt) return;
+  a2hsText.disabled = true;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  if(outcome === 'accepted') a2hsBar.style.display = 'none';
+  else a2hsText.disabled = false;
+  deferredPrompt = null;
 });
 </script>
 
-<footer>
-  <a href="https://pomorskimuzej.si/" target="_blank"><img src="icons/pmp.png" alt="Muzej domov">Pomorski muzej Sergej Mašera Piran</a>
-  <a href="https://www.instagram.com/pomorskimuzej" target="_blank">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37a4 4 0 1 1-4.5-4.5 4 4 0 0 1 4.5 4.5z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
+<footer style="background:#004d66; color:white; padding:20px 10px; text-align:center; display:flex; justify-content:center; gap:30px; flex-wrap:wrap;">
+  <a href="https://pomorskimuzej.si/" target="_blank" style="color:white; text-decoration:none; font-size:1.2rem; display:flex; align-items:center; gap:6px;">
+    <img src="icons/pmp.png" alt="Muzej domov">Pomorski muzej Sergej Mašera Piran
+  </a>
+  <a href="https://www.instagram.com/pomorskimuzej" target="_blank" style="color:white; text-decoration:none; font-size:1.2rem; display:flex; align-items:center; gap:6px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37a4 4 0 1 1-4.5-4.5 4 4 0 0 1 4.5 4.5z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
     Instagram
   </a>
-  <a href="https://www.facebook.com/pomorski.piran" target="_blank">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+  <a href="https://www.facebook.com/pomorski.piran" target="_blank" style="color:white; text-decoration:none; font-size:1.2rem; display:flex; align-items:center; gap:6px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
     Facebook
   </a>
 </footer>
