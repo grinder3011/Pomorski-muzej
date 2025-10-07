@@ -1,44 +1,33 @@
-/* language-selector.css */
-.custom-select {
-  position: relative;
-  display: inline-block;
-  width: 180px;
+.language-bar {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
   cursor: pointer;
-  border: 1.5px solid #004d66;
   border-radius: 6px;
-  background: white;
-  color: #004d66;
-  font-size: 1rem;
+  background: #e0e0e0;
+  transition: background 0.3s, transform 0.2s;
 }
-.selected-option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
+
+.lang-option img {
+  width: 24px;
+  height: 24px;
 }
-.selected-option img {
-  width: 20px;
-  height: 14px;
-  object-fit: cover;
+
+.lang-option.active {
+  background: #ffd700;
+  font-weight: bold;
 }
-.arrow { margin-left: auto; }
-.options {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  border: 1.5px solid #004d66;
-  border-radius: 6px;
-  background: white;
-  display: none;
-  z-index: 1000;
+
+.lang-option:hover {
+  background: #ffeb99;
+  transform: translateY(-2px);
 }
-.custom-select.open .options { display: block; }
-.option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-}
-.option:hover { background: #e6f2f5; }
-.option img { width: 20px; height: 14px; object-fit: cover; }
