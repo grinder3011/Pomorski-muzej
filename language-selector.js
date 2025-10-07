@@ -1,32 +1,35 @@
-<script>
-const languageBar = document.getElementById("language-bar");
-const langOptions = languageBar.querySelectorAll(".lang-option");
+// language-selector.js (horizontal bar version)
+const customSelect = document.getElementById("language-select");
+if (!customSelect) throw new Error("Language selector not found.");
 
-// Determine saved language or default
-let currentLang = localStorage.getItem('site_lang') || 'sl';
+const options = customSelect.querySelectorAll(".option");
 
-function setActiveLang(lang) {
-  langOptions.forEach(opt => {
-    opt.classList.toggle('active', opt.dataset.value === lang);
-  });
+// Initialize active language from localStorage or default
+let currentLang = localStorage.getItem("site_lang") || "sl";
+
+function setActive(lang) {
   currentLang = lang;
-  localStorage.setItem('site_lang', lang);
+  localStorage.setItem("site_lang", lang);
+
+  options.forEach(opt => {
+    opt.classList.toggle("active", opt.dataset.value === lang);
+  });
+
+  // Trigger the change event for i18n.js
+  const changeEvent = new Event("change");
+  customSelect.value = lang;
+  customSelect.dispatchEvent(changeEvent);
 }
 
 // Initial highlight
-setActiveLang(currentLang);
+setActive(currentLang);
 
-// Add click listeners
-langOptions.forEach(opt => {
-  opt.addEventListener('click', () => {
+// Handle clicks on language options
+options.forEach(opt => {
+  opt.addEventListener("click", () => {
     const selectedLang = opt.dataset.value;
-    if(selectedLang && selectedLang !== currentLang){
-      setActiveLang(selectedLang);
-      // Trigger translation reload (as previously done)
-      import('./i18n.js').then(i18n => {
-        i18n.loadTranslations("translations-home-page");
-      });
+    if (selectedLang !== currentLang) {
+      setActive(selectedLang);
     }
   });
 });
-</script>
