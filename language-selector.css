@@ -1,29 +1,22 @@
-.custom-select {
+.language-bar {
+  display: flex;
+  gap: 10px;
+}
+.language-bar .lang-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-
-.custom-select .options {
-  display: flex;
-  gap: 10px;
-}
-
-.custom-select .option {
   cursor: pointer;
   padding: 4px 6px;
-  border-radius: 6px;
-  transition: background 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  transition: background 0.2s, border 0.2s;
 }
-
-.custom-select .option:hover {
-  background: #e0e0e0;
+.language-bar .lang-item.active {
+  background: white;
+  border-color: #004d66;
 }
-
-.custom-select .option.active {
-  background: #ffd700;
-  color: #004d66;
+.language-bar .lang-item img {
+  width: 24px;
+  height: 16px;
+  margin-right: 4px;
 }
