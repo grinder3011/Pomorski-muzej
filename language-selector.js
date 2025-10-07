@@ -1,36 +1,38 @@
-// language-selector.js - fully rewritten for horizontal language bar
-const languageBar = document.getElementById("language-select");
-if (!languageBar) throw new Error("Language bar not found.");
+const languageSelect = document.getElementById('language-select');
+if (!languageSelect) throw new Error("Language selector not found.");
 
-// Get all language items
-const langItems = languageBar.querySelectorAll(".lang-item");
+// Get saved language or default
+let currentLang = localStorage.getItem('site_lang') || navigator.language.split('-')[0];
+const supportedLangs = ['sl', 'en', 'it', 'de'];
+if (!supportedLangs.includes(currentLang)) currentLang = 'sl';
+localStorage.setItem('site_lang', currentLang);
 
-// Determine current language from localStorage or browser
-let currentLang = localStorage.getItem("site_lang") || navigator.language.split("-")[0];
-if (!["sl","en","it","de"].includes(currentLang)) currentLang = "sl";
-localStorage.setItem("site_lang", currentLang);
-
-// Highlight the active language
-function updateActiveHighlight() {
-  langItems.forEach(item => {
-    if (item.getAttribute("data-value") === currentLang) {
-      item.classList.add("active-lang");
+// Highlight active language
+function highlightActiveLang() {
+  languageSelect.querySelectorAll('.lang-item').forEach(item => {
+    if(item.dataset.value === currentLang) {
+      item.classList.add('active');
     } else {
-      item.classList.remove("active-lang");
+      item.classList.remove('active');
     }
   });
 }
-updateActiveHighlight();
+highlightActiveLang();
 
-// Handle click on language items
-langItems.forEach(item => {
-  item.addEventListener("click", () => {
-    const selectedLang = item.getAttribute("data-value");
-    if (selectedLang && selectedLang !== currentLang) {
-      localStorage.setItem("site_lang", selectedLang);
-      currentLang = selectedLang;
-      updateActiveHighlight();
-      // reload page to trigger i18n.js translation
+// Handle click on a language
+languageSelect.querySelectorAll('.lang-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const selectedLang = item.dataset.value;
+    if(selectedLang === currentLang) return;
+
+    currentLang = selectedLang;
+    localStorage.setItem('site_lang', currentLang);
+    highlightActiveLang();
+
+    // Trigger translation reload
+    if(window.loadTranslations) {
+      window.loadTranslations("translations-home-page");
+    } else {
       location.reload();
     }
   });
