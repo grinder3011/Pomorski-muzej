@@ -1,16 +1,17 @@
 .language-bar {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   justify-content: center;
   align-items: center;
-  padding: 4px 0;
+  flex-wrap: wrap; /* allow wrapping on very small screens */
+  padding: 6px 0;
 }
 
 .language-bar .lang-item {
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 4px 6px;
+  padding: 4px 8px;
   border-radius: 4px;
   border: 1px solid transparent;
   transition: background 0.2s, border 0.2s;
@@ -24,6 +25,7 @@
 }
 
 .language-bar .lang-item.active {
-  background: #ffd700; /* light theme color for highlight */
-  border-color: #004d66; /* accent border */
+  background: #ffd700;      /* theme-accent highlight */
+  border-color: #004d66;    /* subtle border */
+  font-weight: bold;
 }
