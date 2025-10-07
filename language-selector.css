@@ -1,46 +1,38 @@
 .language-bar {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   justify-content: center;
-  align-items: center;
-  flex-wrap: wrap; /* allow wrapping on very small screens */
-  padding: 6px 0;
+  margin-top: 10px;
 }
 
-.language-bar .lang-item {
+.lang-item {
   display: flex;
   align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: 1px solid transparent;
-  transition: background 0.2s, border 0.2s;
-  font-size: 0.9rem;
+  border-radius: 6px;
+  transition: background 0.2s ease, color 0.2s ease;
+  font-weight: normal;
 }
 
-.language-bar .lang-item img {
+.lang-item img {
   width: 24px;
-  height: 16px;
-  margin-right: 4px;
+  height: 24px;
 }
 
-.language-bar .lang-item.active {
-  background: #ffd700;      /* theme-accent highlight */
-  border-color: #004d66;    /* subtle border */
+.lang-item.active {
+  background-color: #004d66;
+  color: #ffd700;
   font-weight: bold;
 }
 
-/* Instead of <u> tags, underline links in the museum list */
+.lang-item:hover:not(.active) {
+  background-color: #007a99;
+  color: #fff;
+}
+
+/* Optional: underline museum links via CSS instead of <u> */
 ul.museum-list li a {
-  color: #004d66;
-  text-decoration: underline; /* this replaces the <u> tag */
-  transition: color 0.3s ease;
-  word-break: break-word;
+  text-decoration: underline;
 }
-
-ul.museum-list li a:hover {
-  text-decoration: none;
-  color: #007a99;
-  font-weight: 600;
-}
-
