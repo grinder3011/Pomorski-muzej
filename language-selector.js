@@ -2,10 +2,10 @@
 const customSelect = document.getElementById("language-select");
 if (!customSelect) throw new Error("Language selector not found.");
 
-// Collect all language items (the horizontal buttons)
+// Grab all language buttons
 const langItems = customSelect.querySelectorAll(".lang-item");
 
-// Helper: set active highlight
+// Set active highlight
 function setActiveLang(lang) {
   langItems.forEach(item => {
     if (item.getAttribute("data-value") === lang) {
@@ -16,20 +16,20 @@ function setActiveLang(lang) {
   });
 }
 
-// Get preferred language
+// Get preferred language from localStorage or browser
 let lang = localStorage.getItem('site_lang') || navigator.language.split('-')[0];
 const supportedLangs = ['sl','en','it','de'];
 if (!supportedLangs.includes(lang)) lang = 'sl';
 localStorage.setItem('site_lang', lang);
 setActiveLang(lang);
 
-// Add click handlers to horizontal flags
+// Click handlers
 langItems.forEach(item => {
   item.addEventListener("click", () => {
     const newLang = item.getAttribute("data-value");
     if (newLang && newLang !== lang) {
       localStorage.setItem('site_lang', newLang);
-      location.reload(); // triggers translation as before
+      location.reload(); // triggers translations as before
     }
   });
 });
