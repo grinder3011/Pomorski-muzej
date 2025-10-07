@@ -1,4 +1,4 @@
-.language-bar {
+.horizontal-bar {
   display: flex;
   gap: 12px;
   justify-content: center;
@@ -6,7 +6,7 @@
   margin-top: 10px;
 }
 
-.lang-option {
+.option {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -17,17 +17,17 @@
   transition: background 0.3s, transform 0.2s;
 }
 
-.lang-option img {
+.option img {
   width: 24px;
   height: 24px;
 }
 
-.lang-option.active {
+.option.active {
   background: #ffd700;
   font-weight: bold;
 }
 
-.lang-option:hover {
+.option:hover {
   background: #ffeb99;
   transform: translateY(-2px);
 }
