@@ -188,6 +188,28 @@ footer a img {
   width: 24px;
   vertical-align: middle;
 }
+.language-bar {
+  display: flex;
+  gap: 10px;
+}
+.language-bar .lang-item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  transition: background 0.2s, border 0.2s;
+}
+.language-bar .lang-item.active {
+  background: white;
+  border-color: #004d66;
+}
+.language-bar .lang-item img {
+  width: 24px;
+  height: 16px;
+  margin-right: 4px;
+}
 @media (max-width: 768px) {
   .section {
     flex-direction: column;
@@ -224,31 +246,22 @@ footer a img {
 <header>
   <div class="top-row">
     <h1 data-i18n="site_title">Pomorski Muzej Piran</h1>
-
-    <div class="custom-select" id="language-select" tabindex="0">
-        <div class="selected-option" data-value="sl">
-          <img src="flags/sl.png" alt="Slovenščina" />
-          <span>Slovenščina</span>
-        </div>
-        <div class="options">
-          <div class="option" data-value="sl">
-            <img src="flags/sl.png" alt="Slovenščina" />
-            <span>Slovenščina</span>
-          </div>
-          <div class="option" data-value="en">
-            <img src="flags/en.png" alt="English" />
-            <span>English</span>
-          </div>
-          <div class="option" data-value="it">
-            <img src="flags/it.png" alt="Italiano" />
-            <span>Italiano</span>
-          </div>
-          <div class="option" data-value="de">
-            <img src="flags/de.png" alt="Deutsch" />
-            <span>Deutsch</span>
-          </div>
-        </div>
+    
+    <div class="language-bar" id="language-select">
+      <div class="lang-item" data-value="sl">
+        <img src="flags/sl.png" alt="Slovenščina"><span>Slovenščina</span>
+      </div>
+      <div class="lang-item" data-value="en">
+        <img src="flags/en.png" alt="English"><span>English</span>
+      </div>
+      <div class="lang-item" data-value="it">
+        <img src="flags/it.png" alt="Italiano"><span>Italiano</span>
+      </div>
+      <div class="lang-item" data-value="de">
+        <img src="flags/de.png" alt="Deutsch"><span>Deutsch</span>
+      </div>
     </div>
+
   </div>
  <p data-i18n="site_subtitle">Lokacije muzejev</p>
 </header>
@@ -321,9 +334,36 @@ footer a img {
   </div>
 </div>
 
-<script type="module" src="i18n.js"></script>
-<script type="module" src="status-muzeja/main-status.js"></script>
 <script src="language-selector.js"></script>
+<script type="module">
+import { getOpenStatus } from './status-muzeja/schedule-utils.js';
+import { loadTranslations } from './i18n.js';
+await loadTranslations("translations-home-page");
+
+fetch('./status-muzeja/schedules.json')
+.then(res => res.json())
+.then(data => {
+  document.querySelectorAll("li[data-location]").forEach(li => {
+    const location = li.getAttribute("data-location");
+    const status = getOpenStatus(location, data);
+    const statusText = li.querySelector(".status-text");
+    const statusLight = li.querySelector(".status-light circle");
+
+    if(statusText){
+      statusText.textContent = status.statusText;
+      statusText.style.color = status.isOpen ? "green" : "red";
+      statusText.style.fontWeight = "bold";
+    }
+    if(statusLight){
+      statusLight.setAttribute("fill", status.isOpen ? "green" : "red");
+      if(status.isOpen){
+        statusLight.animate([{opacity:1},{opacity:0.2},{opacity:1}],{duration:1200,iterations:Infinity});
+      }
+    }
+  });
+})
+.catch(err => console.error("❌ Error loading schedules.json:", err));
+</script>
 
 <script>
 if ('serviceWorker' in navigator) {
