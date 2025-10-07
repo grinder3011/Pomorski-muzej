@@ -1,33 +1,29 @@
-.horizontal-bar {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
-.option {
+.custom-select {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  gap: 10px;
+}
+
+.custom-select .options {
+  display: flex;
+  gap: 10px;
+}
+
+.custom-select .option {
   cursor: pointer;
+  padding: 4px 6px;
   border-radius: 6px;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.custom-select .option:hover {
   background: #e0e0e0;
-  transition: background 0.3s, transform 0.2s;
 }
 
-.option img {
-  width: 24px;
-  height: 24px;
-}
-
-.option.active {
+.custom-select .option.active {
   background: #ffd700;
-  font-weight: bold;
-}
-
-.option:hover {
-  background: #ffeb99;
-  transform: translateY(-2px);
+  color: #004d66;
 }
