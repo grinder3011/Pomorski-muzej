@@ -1,35 +1,53 @@
-// language-selector.js (horizontal bar version)
 const customSelect = document.getElementById("language-select");
 if (!customSelect) throw new Error("Language selector not found.");
 
-const options = customSelect.querySelectorAll(".option");
+const selectedOption = customSelect.querySelector(".selected-option");
+const optionsContainer = customSelect.querySelector(".options");
 
-// Initialize active language from localStorage or default
-let currentLang = localStorage.getItem("site_lang") || "sl";
-
-function setActive(lang) {
-  currentLang = lang;
-  localStorage.setItem("site_lang", lang);
-
-  options.forEach(opt => {
-    opt.classList.toggle("active", opt.dataset.value === lang);
+// Initialize active state
+const initActive = () => {
+  const currentValue = selectedOption.getAttribute("data-value");
+  optionsContainer.querySelectorAll(".option").forEach(opt => {
+    opt.classList.toggle("active", opt.getAttribute("data-value") === currentValue);
   });
+};
+initActive();
 
-  // Trigger the change event for i18n.js
-  const changeEvent = new Event("change");
-  customSelect.value = lang;
-  customSelect.dispatchEvent(changeEvent);
-}
+// Handle option click
+optionsContainer.querySelectorAll(".option").forEach(option => {
+  option.addEventListener("click", e => {
+    e.stopPropagation();
+    const value = option.getAttribute("data-value");
+    const label = option.textContent.trim();
+    const flag = option.querySelector("img").src;
 
-// Initial highlight
-setActive(currentLang);
+    selectedOption.innerHTML = `<img src="${flag}" alt="${label}"><span>${label}</span>`;
+    selectedOption.setAttribute("data-value", value);
 
-// Handle clicks on language options
-options.forEach(opt => {
-  opt.addEventListener("click", () => {
-    const selectedLang = opt.dataset.value;
-    if (selectedLang !== currentLang) {
-      setActive(selectedLang);
-    }
+    // Update active class
+    optionsContainer.querySelectorAll(".option").forEach(opt => {
+      opt.classList.toggle("active", opt.getAttribute("data-value") === value);
+    });
+
+    // Trigger change for i18n.js
+    const changeEvent = new Event("change");
+    customSelect.value = value;
+    customSelect.dispatchEvent(changeEvent);
   });
+});
+
+// Optional dropdown toggle
+customSelect.addEventListener("click", () => {
+  customSelect.classList.toggle("open");
+});
+
+// Programmatic value support
+Object.defineProperty(customSelect, "value", {
+  get() {
+    return selectedOption.getAttribute("data-value");
+  },
+  set(val) {
+    const option = optionsContainer.querySelector(`.option[data-value="${val}"]`);
+    if (option) option.click();
+  }
 });
