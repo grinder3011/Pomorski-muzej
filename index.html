@@ -45,29 +45,6 @@ header p {
   max-width: 1000px;
   width: 100%;
 }
-.custom-select.horizontal-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.custom-select.horizontal-bar .options {
-  display: flex;
-  gap: 10px;
-  margin-left: 10px;
-}
-.custom-select.horizontal-bar .option {
-  cursor: pointer;
-  padding: 4px 6px;
-  border-radius: 6px;
-  transition: background 0.2s;
-}
-.custom-select.horizontal-bar .option:hover {
-  background: #e0e0e0;
-}
-.custom-select.horizontal-bar .option.active {
-  background: #ffd700;
-  color: #004d66;
-}
 .container {
   display: flex;
   flex-direction: column;
@@ -247,23 +224,33 @@ footer a img {
 <header>
   <div class="top-row">
     <h1 data-i18n="site_title">Pomorski Muzej Piran</h1>
-    
-    <!-- Horizontal language bar -->
-    <div id="language-select" class="custom-select horizontal-bar" tabindex="0">
-      <div class="selected-option" data-value="sl">
-        <img src="flags/sl.png" alt="Slovenščina">
-        <span>Slovenščina</span>
-      </div>
-      <div class="options">
-        <div class="option" data-value="sl"><img src="flags/sl.png" alt="Slovenščina">Sl</div>
-        <div class="option" data-value="en"><img src="flags/en.png" alt="English">En</div>
-        <div class="option" data-value="it"><img src="flags/it.png" alt="Italiano">It</div>
-        <div class="option" data-value="de"><img src="flags/de.png" alt="Deutsch">De</div>
-      </div>
-    </div>
 
+    <div class="custom-select" id="language-select" tabindex="0">
+        <div class="selected-option" data-value="sl">
+          <img src="flags/sl.png" alt="Slovenščina" />
+          <span>Slovenščina</span>
+        </div>
+        <div class="options">
+          <div class="option" data-value="sl">
+            <img src="flags/sl.png" alt="Slovenščina" />
+            <span>Slovenščina</span>
+          </div>
+          <div class="option" data-value="en">
+            <img src="flags/en.png" alt="English" />
+            <span>English</span>
+          </div>
+          <div class="option" data-value="it">
+            <img src="flags/it.png" alt="Italiano" />
+            <span>Italiano</span>
+          </div>
+          <div class="option" data-value="de">
+            <img src="flags/de.png" alt="Deutsch" />
+            <span>Deutsch</span>
+          </div>
+        </div>
+    </div>
   </div>
-  <p data-i18n="site_subtitle">Lokacije muzejev</p>
+ <p data-i18n="site_subtitle">Lokacije muzejev</p>
 </header>
 
 <!-- Shrinkable Add-to-Home-Screen bar -->
@@ -336,7 +323,7 @@ footer a img {
 
 <script type="module" src="i18n.js"></script>
 <script type="module" src="status-muzeja/main-status.js"></script>
-<script src="language-selector-horizontal.js"></script>
+<script src="language-selector.js"></script>
 
 <script>
 if ('serviceWorker' in navigator) {
