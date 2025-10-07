@@ -29,3 +29,18 @@
   border-color: #004d66;    /* subtle border */
   font-weight: bold;
 }
+
+/* Instead of <u> tags, underline links in the museum list */
+ul.museum-list li a {
+  color: #004d66;
+  text-decoration: underline; /* this replaces the <u> tag */
+  transition: color 0.3s ease;
+  word-break: break-word;
+}
+
+ul.museum-list li a:hover {
+  text-decoration: none;
+  color: #007a99;
+  font-weight: 600;
+}
+
