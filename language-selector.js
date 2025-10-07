@@ -5,7 +5,7 @@ if (!customSelect) throw new Error("Language selector not found.");
 // Grab all language buttons
 const langItems = customSelect.querySelectorAll(".lang-item");
 
-// Set active highlight
+// Helper: set active highlight
 function setActiveLang(lang) {
   langItems.forEach(item => {
     if (item.getAttribute("data-value") === lang) {
@@ -14,6 +14,11 @@ function setActiveLang(lang) {
       item.classList.remove("active");
     }
   });
+  // Update customSelect.value so i18n.js sees it
+  customSelect.value = lang;
+  // Dispatch a change event so translations apply
+  const changeEvent = new Event("change");
+  customSelect.dispatchEvent(changeEvent);
 }
 
 // Get preferred language from localStorage or browser
@@ -29,7 +34,8 @@ langItems.forEach(item => {
     const newLang = item.getAttribute("data-value");
     if (newLang && newLang !== lang) {
       localStorage.setItem('site_lang', newLang);
-      location.reload(); // triggers translations as before
+      setActiveLang(newLang);
+      location.reload(); // reload triggers translation for all elements
     }
   });
 });
