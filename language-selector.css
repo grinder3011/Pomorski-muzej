@@ -36,3 +36,44 @@
 ul.museum-list li a {
   text-decoration: underline;
 }
+
+/* Mobile & Tablet optimization for horizontal language bar */
+@media (max-width: 768px) {
+  #language-select {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  .lang-option {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  /* Hide full language names, show short codes instead */
+  .lang-option span[data-short]::before {
+    content: attr(data-short);
+  }
+
+  .lang-option span {
+    font-size: 0; /* visually hide full name text */
+  }
+
+  /* Adjust flag size */
+  .lang-option img {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .lang-option {
+    padding: 0.2rem 0.4rem;
+  }
+
+  .lang-option img {
+    width: 18px;
+    height: 18px;
+  }
+}
