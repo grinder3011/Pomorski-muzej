@@ -45,22 +45,25 @@ ul.museum-list li a {
     gap: 0.4rem;
   }
 
-  .lang-option {
+  .lang-item {
     padding: 0.3rem 0.5rem;
     font-size: 0.9rem;
   }
 
   /* Hide full language names, show short codes instead */
-  .lang-option span[data-short]::before {
+  .lang-item span[data-short]::before {
     content: attr(data-short);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
 
-  .lang-option span {
+  .lang-item span {
     font-size: 0; /* visually hide full name text */
   }
 
   /* Adjust flag size */
-  .lang-option img {
+  .lang-item img {
     width: 20px;
     height: 20px;
     margin-right: 0.3rem;
@@ -68,11 +71,11 @@ ul.museum-list li a {
 }
 
 @media (max-width: 480px) {
-  .lang-option {
+  .lang-item {
     padding: 0.2rem 0.4rem;
   }
 
-  .lang-option img {
+  .lang-item img {
     width: 18px;
     height: 18px;
   }
