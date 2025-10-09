@@ -7,10 +7,7 @@
 <meta name="theme-color" content="#004d66">
 <title>Pomorski Muzej Piran</title>
 <link rel="stylesheet" href="language-selector.css">  
-<link rel="stylesheet" href="add-to-homescreen/a2hs.css">
-
 <style>
-/* Base styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -48,7 +45,6 @@ header p {
   max-width: 1000px;
   width: 100%;
 }
-
 .container {
   display: flex;
   flex-direction: column;
@@ -107,11 +103,12 @@ ul.museum-list li .icon {
 }
 ul.museum-list li a {
   color: #004d66;
-  text-decoration: underline;
+  text-decoration: none;
   transition: color 0.3s ease;
   word-break: break-word;
 }
 ul.museum-list li a:hover {
+  text-decoration: none;
   color: #007a99;
   font-weight: 600;
 }
@@ -124,6 +121,43 @@ svg.status-light {
   vertical-align: middle;
   cursor: default;
 }
+#a2hs-bar {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 999;
+  background: #ffd700;
+  font-size: 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: width 0.3s ease;
+}
+#a2hs-bar.shrunk {
+  width: 50px;
+  padding: 0;
+}
+#a2hs-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffb800;
+  padding: 12px;
+  color: #004d66;
+}
+#a2hs-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  color: #004d66;
+}
+#a2hs-bar.shrunk #a2hs-text {
+  display: none;
+}
 ul.museum-list li .main-museum-icon {
   background: gold;
   border-radius: 50%;
@@ -133,7 +167,18 @@ ul.museum-list li .main-museum-icon {
   align-items: center;
 }
 
-/* Footer */
+/* Add underline to museum links */
+ul.museum-list li a {
+  text-decoration: underline; /* adds underline to the link */
+}
+
+/* Optional: maintain hover color change */
+ul.museum-list li a:hover {
+  color: #007a99;
+  font-weight: 600;
+  text-decoration: underline; /* keeps underline on hover */
+}
+  
 footer {
   background: #004d66;
   color: white;
@@ -157,62 +202,33 @@ footer a img {
   vertical-align: middle;
 }
 
-/* Add-to-Home-Screen button */
-#a2hs-bar {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 20px;
-  background-color: #004d66;
-  color: white;
-  padding: 16px 20px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: bold;
-  font-size: 1rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  cursor: pointer;
-  z-index: 1000;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-#a2hs-bar.shrunk {
-  transform: translateX(-50%) translateY(100%);
-  opacity: 0;
-}
-#a2hs-icon {
-  font-size: 1.5rem;
-}
-
-/* Responsive styles */
 @media (max-width: 768px) {
-  .container {
-    padding: 20px 15px;
-    max-width: 100%;
-  }
   .section {
     flex-direction: column;
-    margin-left: 0;
-  }
-  .links {
-    padding: 15px;
   }
   ul.museum-list li {
     font-size: 1.1rem;
     grid-template-columns: 2rem 1fr auto auto;
   }
 }
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   header h1 {
     font-size: 1.8em;
   }
   header p {
-    font-size: 1.1em;
+    font-size: 1em;
+  }
+  header .top-row {
+    gap: 10px;
   }
   #a2hs-bar {
     bottom: 80px;
-    font-size: 1rem;
+  }
+  #a2hs-bar #a2hs-icon {
+    padding: 14px;
+  }
+  #a2hs-bar #a2hs-text {
+    padding: 14px 16px;
   }
 }
 </style>
@@ -221,6 +237,7 @@ footer a img {
 
 <header>
   <div class="top-row">
+    
     <!-- Horizontal Language Bar -->
     <div id="language-select" class="language-bar">
       <div class="lang-item" data-value="sl">
@@ -240,6 +257,7 @@ footer a img {
         <span data-short="DE">Deutsch</span>
       </div>
     </div>
+
   </div>
  <h1 data-i18n="site_title">Pomorski Muzej Piran</h1>
  <p data-i18n="site_subtitle">Lokacije muzejev</p>
@@ -252,7 +270,7 @@ footer a img {
 </div>
 
 <div class="container">
-  <!-- Section 1 -->
+  <!-- Section 1: Piranski muzeji -->
   <div class="section">
     <a class="image" href="Piranski-muzeji.html">
       <img src="piranski-muzeji.jpg" alt="Piranske muzejske enote" />
@@ -282,7 +300,7 @@ footer a img {
     </div>
   </div>
 
-  <!-- Section 2 -->
+  <!-- Section 2: Muzeji izven Pirana -->
   <div class="section">
     <a class="image" href="Muzeji-izven-Pirana.html">
       <img src="muzeji-izven-pirana.jpg" alt="Muzeji izven Pirana" />
@@ -344,16 +362,61 @@ fetch('./status-muzeja/schedules.json')
 .catch(err => console.error("❌ Error loading schedules.json:", err));
 </script>
 
-<script src="add-to-homescreen/a2hs.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+  .then(reg => console.log("SW registered!", reg))
+  .catch(err => console.error("SW registration failed!", err));
+}
 
-<footer>
-  <a href="https://pomorskimuzej.si/" target="_blank">
+let deferredPrompt;
+const a2hsBar = document.getElementById('a2hs-bar');
+const a2hsIcon = document.getElementById('a2hs-icon');
+const a2hsText = document.getElementById('a2hs-text');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  a2hsBar.style.display = 'flex';
+  a2hsBar.classList.add('shrunk');
+});
+
+window.addEventListener('appinstalled', () => {
+  console.log("App installed");
+  a2hsBar.style.display = 'none';
+});
+
+function checkStandalone() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if(isStandalone) a2hsBar.style.display = 'none';
+}
+checkStandalone();
+
+a2hsIcon.addEventListener('click', () => {
+  a2hsBar.classList.toggle('shrunk');
+});
+
+a2hsText.addEventListener('click', async () => {
+  if(!deferredPrompt) return;
+  a2hsText.disabled = true;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  if(outcome === 'accepted') a2hsBar.style.display = 'none';
+  else a2hsText.disabled = false;
+  deferredPrompt = null;
+});
+</script>
+
+<footer style="background:#004d66; color:white; padding:20px 10px; text-align:center; display:flex; justify-content:center; gap:30px; flex-wrap:wrap;">
+  <a href="https://pomorskimuzej.si/" target="_blank" style="color:white; text-decoration:none; font-size:1.2rem; display:flex; align-items:center; gap:6px;">
     <img src="icons/pmp.png" alt="Muzej domov">Pomorski muzej Sergej Mašera Piran
   </a>
-  <a href="https://www.instagram.com/pomorskimuzej" target="_blank">
+  <a href="https://www.instagram.com/pomorskimuzej" target="_blank" style="color:white; text-decoration:none; font-size:1.2rem; display:flex; align-items:center; gap:6px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37a4 4 0 1 1-4.5-4.5 4 4 0 0 1 4.5 4.5z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
     Instagram
   </a>
-  <a href="https://www.facebook.com/pomorski.piran" target="_blank">
+  <a href="https://www.facebook.com/pomorski.piran" target="_blank" style="color:white; text-decoration:none; font-size:1.2rem; display:flex; align-items:center; gap:6px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
     Facebook
   </a>
 </footer>
