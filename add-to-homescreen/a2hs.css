@@ -1,0 +1,54 @@
+/* Add to Home Screen Bar */
+#a2hs-bar {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: none;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 999;
+  background: #ffd700;
+  font-size: 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: width 0.3s ease;
+}
+
+#a2hs-bar.shrunk {
+  width: 50px;
+  padding: 0;
+}
+
+#a2hs-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffb800;
+  padding: 12px;
+  color: #004d66;
+}
+
+#a2hs-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  color: #004d66;
+}
+
+#a2hs-bar.shrunk #a2hs-text {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  #a2hs-bar {
+    bottom: 80px;
+  }
+  #a2hs-bar #a2hs-icon {
+    padding: 14px;
+  }
+  #a2hs-bar #a2hs-text {
+    padding: 14px 16px;
+  }
+}
