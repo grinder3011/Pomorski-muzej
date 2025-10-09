@@ -7,6 +7,11 @@
 <meta name="theme-color" content="#004d66">
 <title>Pomorski Muzej Piran</title>
 <link rel="stylesheet" href="language-selector.css">  
+
+// For "add to home screen" button
+<link rel="stylesheet" href="a2hs.css">
+<script src="a2hs.js"></script>
+  
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -121,43 +126,7 @@ svg.status-light {
   vertical-align: middle;
   cursor: default;
 }
-#a2hs-bar {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  display: flex;
-  border-radius: 30px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  z-index: 999;
-  background: #ffd700;
-  font-size: 16px;
-  cursor: pointer;
-  user-select: none;
-  transition: width 0.3s ease;
-}
-#a2hs-bar.shrunk {
-  width: 50px;
-  padding: 0;
-}
-#a2hs-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ffb800;
-  padding: 12px;
-  color: #004d66;
-}
-#a2hs-text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 16px;
-  color: #004d66;
-}
-#a2hs-bar.shrunk #a2hs-text {
-  display: none;
-}
+
 ul.museum-list li .main-museum-icon {
   background: gold;
   border-radius: 50%;
@@ -360,51 +329,6 @@ fetch('./status-muzeja/schedules.json')
   });
 })
 .catch(err => console.error("❌ Error loading schedules.json:", err));
-</script>
-
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js')
-  .then(reg => console.log("SW registered!", reg))
-  .catch(err => console.error("SW registration failed!", err));
-}
-
-let deferredPrompt;
-const a2hsBar = document.getElementById('a2hs-bar');
-const a2hsIcon = document.getElementById('a2hs-icon');
-const a2hsText = document.getElementById('a2hs-text');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  a2hsBar.style.display = 'flex';
-  a2hsBar.classList.add('shrunk');
-});
-
-window.addEventListener('appinstalled', () => {
-  console.log("App installed");
-  a2hsBar.style.display = 'none';
-});
-
-function checkStandalone() {
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  if(isStandalone) a2hsBar.style.display = 'none';
-}
-checkStandalone();
-
-a2hsIcon.addEventListener('click', () => {
-  a2hsBar.classList.toggle('shrunk');
-});
-
-a2hsText.addEventListener('click', async () => {
-  if(!deferredPrompt) return;
-  a2hsText.disabled = true;
-  deferredPrompt.prompt();
-  const { outcome } = await deferredPrompt.userChoice;
-  if(outcome === 'accepted') a2hsBar.style.display = 'none';
-  else a2hsText.disabled = false;
-  deferredPrompt = null;
-});
 </script>
 
 <footer style="background:#004d66; color:white; padding:20px 10px; text-align:center; display:flex; justify-content:center; gap:30px; flex-wrap:wrap;">
