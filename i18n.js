@@ -29,19 +29,14 @@ export async function loadTranslations(jsonFileBaseName) {
       const translation = translations[key];
 
       if (translation) {
-        const link = el.querySelector('a');
-        if (link) {
-          // Only replace the text inside <a>, href handled separately
-          link.textContent = translation;
-        } else {
-          replaceTextContent(el, translation);
-        }
+        // Always replace the element's text content directly
+        replaceTextContent(el, translation);
       } else {
         el.textContent = `[${key}]`;
       }
     });
 
-    // 🔹 New feature: apply hrefs for links with data-i18n-href
+    // Apply hrefs for links with data-i18n-href
     document.querySelectorAll('[data-i18n-href]').forEach(link => {
       const key = link.getAttribute('data-i18n-href');
       const url = translations[key];
@@ -78,7 +73,7 @@ function replaceTextContent(el, translation) {
   });
 }
 
-// ✅ JS lookup helper
+// JS lookup helper
 export function t(key) {
   if (window.translations && window.translations[key]) {
     return window.translations[key];
