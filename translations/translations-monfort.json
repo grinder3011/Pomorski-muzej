@@ -8,9 +8,11 @@
     "price": "Cena",
     "adults": "Odrasli",
     "students": "Študenti, dijaki, upokojenci",
-    "children": "Otroci do 6 let",
-    "guided": "Vodstvo (po predhodnem dogovoru)",
-    "free": "Brezplačno",
+    "children": "Otroci",
+    "guided": "Pri vseh cenah je vključeno vodstvo.",
+    "more-info-text": "Več informacij o urnikih in cenah na:",
+    "more-info-label": "www.pomorskimuzej.si",
+    "more-info-url": "https://pomorskimuzej.si/sl/urniki-in-ceniki#monfort",
     "directionsTitle": "Klikni za pot do nas:"
   },
   "en": {
@@ -22,14 +24,16 @@
     "price": "Price",
     "adults": "Adults",
     "students": "Students, pupils, seniors",
-    "children": "Children up to 6 years",
-    "guided": "Guided tour (by prior arrangement)",
-    "free": "Free",
+    "children": "Children",
+    "guided": "Guided tour is included in all prices.",
+    "more-info-text": "More information about schedules and prices at:",
+    "more-info-label": "www.pomorskimuzej.si",
+    "more-info-url": "https://pomorskimuzej.si/en/schedules-and-price-lists#monfort",
     "directionsTitle": "Click for directions:"
   },
   "it": {
     "title": "Monfort",
-    "backHome": "← Home",
+    "backHome": "← Inizio",
     "ariaBackHome": "Torna alla home",
     "pricesTitle": "Prezzi dei biglietti",
     "ticketType": "Tipo di biglietto",
@@ -37,8 +41,10 @@
     "adults": "Adulti",
     "students": "Studenti, alunni, pensionati",
     "children": "Bambini fino a 6 anni",
-    "guided": "Visita guidata (su prenotazione)",
-    "free": "Gratuito",
+    "guided": "La visita guidata è inclusa in tutti i prezzi.",
+    "more-info-text": "Ulteriori informazioni su orari e prezzi disponibili su:",
+    "more-info-label": "www.pomorskimuzej.si",
+    "more-info-url": "https://pomorskimuzej.si/it/orari-e-prezzi#monfort",
     "directionsTitle": "Clicca per il percorso:"
   },
   "de": {
@@ -50,9 +56,11 @@
     "price": "Preis",
     "adults": "Erwachsene",
     "students": "Studenten, Schüler, Rentner",
-    "children": "Kinder bis 6 Jahre",
-    "guided": "Führung (nach Vereinbarung)",
-    "free": "Kostenlos",
+    "children": "Kinder",
+    "guided": "Bei allen Preisen ist die Führung inbegriffen.",
+    "more-info-text": "Weitere Informationen zu Fahrplänen und Preisen unter:",
+    "more-info-label": "www.pomorskimuzej.si",
+    "more-info-url": "https://pomorskimuzej.si/en/schedules-and-price-lists#monfort",
     "directionsTitle": "Klicken Sie für die Anfahrt:"
   }
 }
