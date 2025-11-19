@@ -32,6 +32,9 @@
     "adults_4_units": "Adults 4 units ticket",
     "family_ticket_4_units": "Family ticket for 4 units",
     "guided_tour": "Guided Tour (by prior arrangement)",
+    "more-info-text": "More information about schedules and prices at:",
+    "more-info-label": "www.pomorskimuzej.si",
+    "more-info-url": "https://pomorskimuzej.si/en/schedules-and-price-lists#gabrielli",
     "click_for_directions": "Click for directions"
   },
   "it": {
@@ -48,6 +51,9 @@
     "adults_4_units": "Biglietto adulti per 4 sedi",
     "family_ticket_4_units": "Biglietto famigliare per 4 sedi",
     "guided_tour": "Visita guidata (su prenotazione)",
+    "more-info-text": "Ulteriori informazioni su orari e prezzi disponibili su:",
+    "more-info-label": "www.pomorskimuzej.si",
+    "more-info-url": "https://pomorskimuzej.si/it/orari-e-prezzi#gabrielli",
     "click_for_directions": "Clicca per le indicazioni"
   },
   "de": {
@@ -64,6 +70,9 @@
     "adults_4_units": "Erwachsene 4-Fahrten-Karte",
     "family_ticket_4_units": "Familienkarte für 4 Fahrten",
     "guided_tour": "Führung (nach vorheriger Vereinbarung)",
+    "more-info-text": "Weitere Informationen zu Fahrplänen und Preisen unter:",
+    "more-info-label": "www.pomorskimuzej.si",
+    "more-info-url": "https://pomorskimuzej.si/en/schedules-and-price-lists#gabrielli",
     "click_for_directions": "Klicken Sie für den Weg"
   }
 }
