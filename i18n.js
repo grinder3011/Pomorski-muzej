@@ -4,18 +4,13 @@ export async function loadTranslations(jsonFileBaseName) {
 
     // Get the preferred language (from localStorage or browser language)
     let lang = localStorage.getItem('site_lang') || navigator.language.split('-')[0];
-    
-    // If the language is not supported, default to 'sl'
     if (!supportedLangs.includes(lang)) lang = 'sl';
-
-    // Save the selected language in localStorage
     localStorage.setItem('site_lang', lang);
 
-    // Determine the base path of your site (to support GitHub pages / subfolders)
+    // Determine the base path of your site
     const repoRoot = '/Pomorski-muzej';
     const path = `${repoRoot}/translations/${jsonFileBaseName}.json?t=${Date.now()}`;
     console.log('Fetching translation file:', path);
-
 
     // Fetch the translation file
     const res = await fetch(path);
@@ -25,7 +20,7 @@ export async function loadTranslations(jsonFileBaseName) {
     const translations = allTranslations[lang];
     if (!translations) throw new Error(`No translations found for language "${lang}"`);
 
-    // Store translations globally so that they can be accessed elsewhere
+    // Store translations globally
     window.translations = translations;
 
     // Apply translations to elements
@@ -36,6 +31,7 @@ export async function loadTranslations(jsonFileBaseName) {
       if (translation) {
         const link = el.querySelector('a');
         if (link) {
+          // Only replace the text inside <a>, href handled separately
           link.textContent = translation;
         } else {
           replaceTextContent(el, translation);
@@ -43,6 +39,13 @@ export async function loadTranslations(jsonFileBaseName) {
       } else {
         el.textContent = `[${key}]`;
       }
+    });
+
+    // 🔹 New feature: apply hrefs for links with data-i18n-href
+    document.querySelectorAll('[data-i18n-href]').forEach(link => {
+      const key = link.getAttribute('data-i18n-href');
+      const url = translations[key];
+      if (url) link.href = url;
     });
 
     // Language selector logic
@@ -75,7 +78,7 @@ function replaceTextContent(el, translation) {
   });
 }
 
-// ✅ New helper for JS lookups
+// ✅ JS lookup helper
 export function t(key) {
   if (window.translations && window.translations[key]) {
     return window.translations[key];
