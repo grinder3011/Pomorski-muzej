@@ -13,7 +13,8 @@
     "adults_4_units": "Odrasli za 4 enote",
     "family_ticket_4_units": "Družinska vstopnica za 4 enote",
     "guided_tour": "Vodstvo (po predhodnem dogovoru)",
-    "more-info": "Več informacij o urnikih in cenah na: <a href='https://pomorskimuzej.si/sl/urniki-in-ceniki#gabrielli' target='_blank' rel='noopener noreferrer'>www.pomorskimuzej.si</a>",
+    "more-info-text": "Več informacij o urnikih in cenah na:",
+    "more-info-url": "https://pomorskimuzej.si/sl/urniki-in-ceniki#gabrielli"
     "click_for_directions": "Klikni za pot do nas"
   },
   "en": {
