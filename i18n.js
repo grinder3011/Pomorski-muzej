@@ -29,7 +29,6 @@ export async function loadTranslations(jsonFileBaseName) {
       const translation = translations[key];
 
       if (translation) {
-        // Always replace the element's text content directly
         replaceTextContent(el, translation);
       } else {
         el.textContent = `[${key}]`;
@@ -64,13 +63,18 @@ export async function loadTranslations(jsonFileBaseName) {
   }
 }
 
-// Helper function to replace only the text nodes
+// Helper function to replace element text content safely
 function replaceTextContent(el, translation) {
+  let hasTextNode = false;
   el.childNodes.forEach(child => {
     if (child.nodeType === Node.TEXT_NODE) {
       child.textContent = translation;
+      hasTextNode = true;
     }
   });
+  if (!hasTextNode) {
+    el.textContent = translation;
+  }
 }
 
 // JS lookup helper
