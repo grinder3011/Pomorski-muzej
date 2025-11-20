@@ -10,8 +10,8 @@
     "Palača-Gabrielli": "Pomorski muzej Piran",
     "Piranski-svetilnik": "Piranski svetilnik",
     "Tartinijeva-hiša": "Tartinijeva hiša",
-    "Monfort": "Monfort",
-    "Soline": "Soline",
+    "Monfort": "Razstavišče Monfort",
+    "Soline": "Muzej solinarstva",
     "Tonina-hiša": "Tonina hiša"
   },
   "en": {
@@ -23,10 +23,10 @@
     "dataLoadError": "Error loading data.",
     "missingLocationParam": "Missing ?location= parameter",
     "Palača-Gabrielli": "Maritime Museum Piran",
-    "Piranski-svetilnik": "Piran's Lighthouse",
+    "Piranski-svetilnik": "The Piran Lighthouse",
     "Tartinijeva-hiša": "Tartini's House",
-    "Monfort": "Monfort",
-    "Soline": "Sečovlje Saltpans",
+    "Monfort": "Monfort exhibition ground",
+    "Soline": "Museum of salt-making",
     "Tonina-hiša": "Tona's House"
   },
   "it": {
@@ -38,11 +38,11 @@
     "dataLoadError": "Errore durante il caricamento dei dati.",
     "missingLocationParam": "Parametro ?location= mancante",
     "Palača-Gabrielli": "Museo del Mare di Pirano",
-    "Piranski-svetilnik": "Faro di Pirano",
-    "Tartinijeva-hiša": "Casa di Tartini",
-    "Monfort": "Monfort",
-    "Soline": "Saline di Sicciole",
-    "Tonina-hiša": "Casa di Tona"
+    "Piranski-svetilnik": "Il faro di Pirano",
+    "Tartinijeva-hiša": "Casa Tartini",
+    "Monfort": "Lo spazio espositivo Monfort",
+    "Soline": "Il Museo delle saline",
+    "Tonina-hiša": "La casa di Tona"
   },
   "de": {
     "status_open": "Geöffnet",
@@ -55,8 +55,8 @@
     "Palača-Gabrielli": "Maritimes Museum Piran",
     "Piranski-svetilnik": "Leuchtturm von Piran",
     "Tartinijeva-hiša": "Tartinihaus",
-    "Monfort": "Monfort",
-    "Soline": "Salinen von Sečovlje",
+    "Monfort": "Ausstellungszentrum Monfort",
+    "Soline": "Salzgewinnungsmuseum",
     "Tonina-hiša": "Tona-Haus"
   }
 }
