@@ -14,6 +14,7 @@ body {
   padding: 0;
   background: #f5f5f5;
 }
+
 header {
   background: #004d66;
   color: white;
@@ -24,6 +25,7 @@ header {
   gap: 12px;
   text-align: center;
 }
+
 header .top-row {
   display: flex;
   align-items: center;
@@ -33,18 +35,24 @@ header .top-row {
   width: 100%;
   max-width: 1000px;
 }
+
 header h1 {
   margin: 0;
   font-size: 2.5em;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
   flex-shrink: 0;
+  line-height: 1.1;
 }
+
 header p {
   margin: 0;
   font-size: 1.2em;
   max-width: 1000px;
   width: 100%;
 }
+
 .container {
   display: flex;
   flex-direction: column;
@@ -53,6 +61,7 @@ header p {
   max-width: 1000px;
   margin: auto;
 }
+
 .section {
   display: flex;
   flex-direction: row;
@@ -62,16 +71,19 @@ header p {
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   margin-left: 10px;
 }
+
 .image {
   flex: 1;
   min-width: 200px;
 }
+
 .image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
+
 .links {
   flex: 1;
   padding: 20px;
@@ -79,14 +91,17 @@ header p {
   flex-direction: column;
   justify-content: center;
 }
+
 .links h3 {
   margin-top: 0;
 }
+
 ul.museum-list {
   list-style: none;
   padding-left: 0;
   margin: 0;
 }
+
 ul.museum-list li {
   display: grid;
   grid-template-columns: 2rem 1fr auto auto;
@@ -95,32 +110,38 @@ ul.museum-list li {
   margin-bottom: 14px;
   font-size: 1.15rem;
 }
+
 ul.museum-list li .icon {
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1.2rem;
 }
+
 ul.museum-list li a {
   color: #004d66;
-  text-decoration: none;
+  text-decoration: underline;
   transition: color 0.3s ease;
   word-break: break-word;
 }
+
 ul.museum-list li a:hover {
-  text-decoration: none;
+  text-decoration: underline;
   color: #007a99;
   font-weight: 600;
 }
+
 .status-text {
   white-space: nowrap;
   margin-right: 6px;
 }
+
 svg.status-light {
   flex-shrink: 0;
   vertical-align: middle;
   cursor: default;
 }
+
 #a2hs-bar {
   position: fixed;
   bottom: 20px;
@@ -136,10 +157,12 @@ svg.status-light {
   user-select: none;
   transition: width 0.3s ease;
 }
+
 #a2hs-bar.shrunk {
   width: 50px;
   padding: 0;
 }
+
 #a2hs-icon {
   display: flex;
   align-items: center;
@@ -148,6 +171,7 @@ svg.status-light {
   padding: 12px;
   color: #004d66;
 }
+
 #a2hs-text {
   display: flex;
   align-items: center;
@@ -155,9 +179,11 @@ svg.status-light {
   padding: 12px 16px;
   color: #004d66;
 }
+
 #a2hs-bar.shrunk #a2hs-text {
   display: none;
 }
+
 ul.museum-list li .main-museum-icon {
   background: gold;
   border-radius: 50%;
@@ -167,18 +193,6 @@ ul.museum-list li .main-museum-icon {
   align-items: center;
 }
 
-/* Add underline to museum links */
-ul.museum-list li a {
-  text-decoration: underline; /* adds underline to the link */
-}
-
-/* Optional: maintain hover color change */
-ul.museum-list li a:hover {
-  color: #007a99;
-  font-weight: 600;
-  text-decoration: underline; /* keeps underline on hover */
-}
-  
 footer {
   background: #004d66;
   color: white;
@@ -189,6 +203,7 @@ footer {
   gap: 30px;
   flex-wrap: wrap;
 }
+
 footer a {
   color: white;
   text-decoration: none;
@@ -197,6 +212,7 @@ footer a {
   align-items: center;
   gap: 6px;
 }
+
 footer a img {
   width: 24px;
   vertical-align: middle;
@@ -211,9 +227,11 @@ footer a img {
     grid-template-columns: 2rem 1fr auto auto;
   }
 }
+
 @media (max-width: 600px) {
   header h1 {
-    font-size: 1.8em;
+    font-size: 1.6em;
+    line-height: 1.2;
   }
   header p {
     font-size: 1em;
@@ -237,8 +255,6 @@ footer a img {
 
 <header>
   <div class="top-row">
-    
-    <!-- Horizontal Language Bar -->
     <div id="language-select" class="language-bar">
       <div class="lang-item" data-value="sl">
         <img src="flags/sl.png" alt="Slovenščina" />
@@ -257,22 +273,20 @@ footer a img {
         <span data-short="DE">Deutsch</span>
       </div>
     </div>
-
   </div>
- <h1 data-i18n="site_title">Pomorski Muzej Piran</h1>
- <p data-i18n="site_subtitle">Lokacije muzejev</p>
+
+  <h1 data-i18n="site_title">Pomorski Muzej<br>Sergej Mašera Piran</h1>
+  <p data-i18n="site_subtitle">Lokacije muzejev</p>
 </header>
 
-<!-- Shrinkable Add-to-Home-Screen bar -->
 <div id="a2hs-bar" class="shrunk">
   <div id="a2hs-icon">📲</div>
   <div id="a2hs-text" data-i18n="add_to_home_screen">Dodaj na domači zaslon</div>
 </div>
 
 <div class="container">
-  <!-- Section 1: Piranski muzeji -->
+
   <div class="section">
-    <!-- TODO: Add href when destination is ready -->
     <a class="image">
       <img src="piranski-muzeji.jpg" alt="Muzejske enote v Piranu" />
     </a>
@@ -301,9 +315,7 @@ footer a img {
     </div>
   </div>
 
-  <!-- Section 2: Muzeji izven Pirana -->
   <div class="section">
-    <!-- TODO: Add href when destination is ready -->
     <a class="image" >
       <img src="muzeji-izven-pirana.jpg" alt="Muzeji izven Pirana" />
     </a>
