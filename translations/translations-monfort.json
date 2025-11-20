@@ -1,6 +1,6 @@
 {
   "sl": {
-    "title": "Monfort",
+    "title": "Razstavišče Monfort",
     "backHome": "← Domov",
     "ariaBackHome": "Nazaj domov",
     "pricesTitle": "Cenik vstopnic",
@@ -16,7 +16,7 @@
     "directionsTitle": "Klikni za pot do nas:"
   },
   "en": {
-    "title": "Monfort",
+    "title": "Monfort exhibition ground",
     "backHome": "← Home",
     "ariaBackHome": "Back to home",
     "pricesTitle": "Ticket Prices",
@@ -32,7 +32,7 @@
     "directionsTitle": "Click for directions:"
   },
   "it": {
-    "title": "Monfort",
+    "title": "Lo spazio espositivo Monfort",
     "backHome": "← Inizio",
     "ariaBackHome": "Torna alla home",
     "pricesTitle": "Prezzi dei biglietti",
@@ -48,7 +48,7 @@
     "directionsTitle": "Clicca per il percorso:"
   },
   "de": {
-    "title": "Monfort",
+    "title": "Ausstellungszentrum Monfort",
     "backHome": "← Startseite",
     "ariaBackHome": "Zurück zur Startseite",
     "pricesTitle": "Eintrittspreise",
