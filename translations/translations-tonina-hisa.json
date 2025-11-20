@@ -10,10 +10,9 @@
     "students_senior": "Študenti, dijaki, upokojenci",
     "children": "Otroci",
     "guided_included_note": "Pri vseh cenah je vključeno vodenje.",
-    "opening_hours_title": "Odprtost",
-    "every_day_hours": "Vsak dan: 10:00 – 14:00",
-    "monday_thursday_closed": "Ponedeljek in četrtek zaprto.",
-    "closed_dec_to_mar": "Od 1. decembra do 31. marca zaprto.",
+    "more-info-text": "Več informacij o urnikih in cenah na:",
+    "more-info-label": "www.pomorskimuzej.si",
+    "more-info-url": "https://pomorskimuzej.si/sl/urniki-in-ceniki#tonina-hisa",
     "click_for_directions": "Klikni za pot do nas"
   },
   "en": {
@@ -27,16 +26,15 @@
     "students_senior": "Students, High Schoolers, Seniors",
     "children": "Children",
     "guided_included_note": "Guided tour included in all prices.",
-    "opening_hours_title": "Opening Hours",
-    "every_day_hours": "Every day: 10:00 – 14:00",
-    "monday_thursday_closed": "Closed on Monday and Thursday.",
-    "closed_dec_to_mar": "Closed from 1 December to 31 March.",
+    "more-info-text": "More information about schedules and prices at:",
+    "more-info-label": "www.pomorskimuzej.si",
+    "more-info-url": "https://pomorskimuzej.si/en/schedules-and-price-lists#tonina-hisa",
     "click_for_directions": "Click for directions"
   },
   "it": {
-    "page_title": "Casa di Tona",
-    "museum_title": "Casa di Tona",
-    "back_to_home": "← Ritorna",
+    "page_title": "La casa di Tona",
+    "museum_title": "La casa di Tona",
+    "back_to_home": "← Inizio",
     "ticket_prices_title": "Prezzi dei biglietti",
     "ticket_type": "Tipo di biglietto",
     "ticket_price": "Prezzo",
@@ -44,10 +42,9 @@
     "students_senior": "Studenti, scuole superiori, pensionati",
     "children": "Bambini",
     "guided_included_note": "Visita guidata inclusa in tutti i prezzi.",
-    "opening_hours_title": "Orari di apertura",
-    "every_day_hours": "Tutti i giorni: 10:00 – 14:00",
-    "monday_thursday_closed": "Chiuso lunedì e giovedì.",
-    "closed_dec_to_mar": "Chiuso dal 1° dicembre al 31 marzo.",
+    "more-info-text": "Ulteriori informazioni su orari e prezzi disponibili su:",
+    "more-info-label": "www.pomorskimuzej.si",
+    "more-info-url": "https://pomorskimuzej.si/it/orari-e-prezzi#tonina-hisa",
     "click_for_directions": "Clicca per le indicazioni"
   },
   "de": {
@@ -61,10 +58,9 @@
     "students_senior": "Studenten, Schüler, Senioren",
     "children": "Kinder",
     "guided_included_note": "Führung in allen Preisen inbegriffen.",
-    "opening_hours_title": "Öffnungszeiten",
-    "every_day_hours": "Täglich: 10:00 – 14:00",
-    "monday_thursday_closed": "Montag und Donnerstag geschlossen.",
-    "closed_dec_to_mar": "Vom 1. Dezember bis 31. März geschlossen.",
+    "more-info-text": "Weitere Informationen zu Fahrplänen und Preisen unter:",
+    "more-info-label": "www.pomorskimuzej.si",
+    "more-info-url": "https://pomorskimuzej.si/en/schedules-and-price-lists#tonina-hisa",
     "click_for_directions": "Klicken Sie für den Weg"
   }
 }
