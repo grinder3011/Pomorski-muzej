@@ -1,38 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin - Schedule Editor</title>
+  <title>Admin - Urejanje urnikov</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .card { padding: 20px; border: 1px solid #ccc; border-radius: 12px; margin-bottom: 20px; }
-    .period { border: 1px solid #aaa; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
-    .day-hours { display: flex; gap: 5px; margin-bottom: 5px; }
-    .hidden { display: none; }
-    input[type=text] { width: 120px; padding: 3px; }
-    button { padding: 5px 10px; margin-top: 5px; cursor: pointer; }
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; color: #333; }
+    .card { padding: 20px; border: 1px solid #ccc; border-radius: 12px; margin-bottom: 20px; background: #fff; }
+    .period { border: 1px solid #aaa; border-radius: 8px; padding: 10px; margin-bottom: 10px; background: #f0f0f0; }
+    .day-hours { display: flex; gap: 5px; margin-bottom: 5px; align-items: center; }
+    .day-hours label { width: 40px; }
+    input[type=text] { width: 150px; padding: 5px; border-radius: 4px; border: 1px solid #ccc; }
+    button { padding: 5px 10px; margin-top: 5px; cursor: pointer; border-radius: 5px; border: none; background: #007bff; color: #fff; }
+    button:hover { background: #0056b3; }
+    h1, h3 { margin-top: 0; }
+    .hint { font-size: 0.85em; color: #666; }
   </style>
 </head>
 <body>
-  <h1>Admin Schedule Editor</h1>
+  <h1>Urejanje urnikov</h1>
 
   <!-- LOGIN PANEL -->
   <div id="loginPanel" class="card">
-    <h3>Login</h3>
-    <input id="username" type="text" placeholder="Username"><br><br>
-    <input id="password" type="password" placeholder="Password"><br><br>
-    <button onclick="login()">Login</button>
+    <h3>Prijava</h3>
+    <input id="username" type="text" placeholder="Uporabniško ime"><br><br>
+    <input id="password" type="password" placeholder="Geslo"><br><br>
+    <button onclick="login()">Prijava</button>
     <p id="loginMessage" style="color:red;"></p>
   </div>
 
   <!-- MAIN PANEL -->
   <div id="mainPanel" class="hidden">
     <div id="schedulePreview"></div>
-    <button id="editBtn" class="hidden" onclick="startEditing()">Edit Schedule</button>
+    <button id="editBtn" class="hidden">Uredi urnik</button>
     <div id="editorPanel" class="hidden"></div>
-    <button id="applyBtn" class="hidden" onclick="applyChanges()">Apply Changes (Mock)</button>
-    <button id="resetBtn" class="hidden" onclick="resetChanges()">Reset</button>
+    <button id="applyBtn" class="hidden">Uporabi spremembe (samo za prikaz)</button>
+    <button id="resetBtn" class="hidden">Ponastavi</button>
   </div>
 
 <script>
@@ -49,7 +52,7 @@ function login() {
     document.getElementById('mainPanel').classList.remove('hidden');
     loadJSON();
   } else {
-    msg.textContent = 'Invalid credentials (use admin/admin).';
+    msg.textContent = 'Neveljavni podatki (uporabite admin/admin).';
   }
 }
 
@@ -63,7 +66,7 @@ function loadJSON() {
       document.getElementById('editBtn').classList.remove('hidden');
     })
     .catch(err => {
-      document.getElementById('schedulePreview').textContent = 'Failed to load JSON.';
+      document.getElementById('schedulePreview').textContent = 'Napaka pri nalaganju JSON.';
       console.error(err);
     });
 }
@@ -81,11 +84,11 @@ function renderPreview() {
     currentData.locations[loc].periods.forEach((p, idx) => {
       const periodDiv = document.createElement('div');
       periodDiv.className = 'period';
-      periodDiv.innerHTML = `<b>Period ${idx+1}:</b> ${p.start} - ${p.end}`;
+      periodDiv.innerHTML = `<b>Obdobje ${idx+1}:</b> ${p.start} - ${p.end}`;
       const ul = document.createElement('ul');
       for (const day in p.hours) {
         const li = document.createElement('li');
-        li.textContent = `${day}: ${p.hours[day] ?? 'Closed'}`;
+        li.textContent = `${day}: ${p.hours[day] ?? 'Zaprto'}`;
         ul.appendChild(li);
       }
       periodDiv.appendChild(ul);
@@ -117,7 +120,7 @@ function startEditing() {
     });
 
     const addBtn = document.createElement('button');
-    addBtn.textContent = 'Add Period';
+    addBtn.textContent = 'Dodaj obdobje';
     addBtn.onclick = () => {
       const newPeriod = {start:'', end:'', hours:{Mon:null,Tue:null,Wed:null,Thu:null,Fri:null,Sat:null,Sun:null}};
       currentData.locations[loc].periods.push(newPeriod);
@@ -136,17 +139,17 @@ function createPeriodForm(loc, idx, periodData) {
   div.id = `period-${loc}-${idx}`;
 
   const startInput = document.createElement('input');
-  startInput.type = 'text'; startInput.value = periodData.start; startInput.placeholder = 'Start (MM-DD)';
+  startInput.type = 'text'; startInput.value = periodData.start; startInput.placeholder = 'Začetek (MM-DD)';
   startInput.onchange = e => periodData.start = e.target.value;
   div.appendChild(startInput);
 
   const endInput = document.createElement('input');
-  endInput.type = 'text'; endInput.value = periodData.end; endInput.placeholder = 'End (MM-DD)';
+  endInput.type = 'text'; endInput.value = periodData.end; endInput.placeholder = 'Konec (MM-DD)';
   endInput.onchange = e => periodData.end = e.target.value;
   div.appendChild(endInput);
 
   const removeBtn = document.createElement('button');
-  removeBtn.textContent = 'Remove Period';
+  removeBtn.textContent = 'Odstrani obdobje';
   removeBtn.onclick = () => {
     currentData.locations[loc].periods.splice(idx,1);
     div.remove();
@@ -162,22 +165,25 @@ function createPeriodForm(loc, idx, periodData) {
     const input = document.createElement('input');
     input.type = 'text';
     input.value = periodData.hours[day] ?? '';
-    input.placeholder = 'HH:MM-HH:MM[,HH:MM-HH:MM]';
+    input.placeholder = '09:00-17:00 ali 09:00-12:00,17:00-21:00';
     input.onchange = e => {
       const val = e.target.value.trim();
       periodData.hours[day] = val ? (val.includes(',') ? val.split(',') : val) : null;
     };
+    const hint = document.createElement('span');
+    hint.className = 'hint';
+    hint.textContent = ' Vpišite ure v formatu HH:MM-HH:MM, za več razponov ločite z vejico.';
     dayDiv.appendChild(label);
     dayDiv.appendChild(input);
+    dayDiv.appendChild(hint);
     div.appendChild(dayDiv);
   }
   return div;
 }
 
 function applyChanges() {
-  // just update the preview
   renderPreview();
-  alert('Changes applied (mock only, not saved to GitHub).');
+  alert('Spremembe uporabljene (samo za prikaz, še niso shranjene).');
 }
 
 function resetChanges() {
