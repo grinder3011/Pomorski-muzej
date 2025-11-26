@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Schedule Editor</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    .card { padding: 20px; border: 1px solid #ccc; border-radius: 12px; max-width: 600px; }
+    #dataView { white-space: pre-wrap; border: 1px solid #aaa; border-radius: 8px; padding: 10px; margin-top: 20px; max-height: 400px; overflow-y: auto; }
+    #editor { width: 100%; height: 300px; margin-top: 10px; }
+    .hidden { display: none; }
+    button { padding: 8px 14px; margin-top: 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Admin Schedule Editor</h1>
+
+  <!-- LOGIN PANEL -->
+  <div id="loginPanel" class="card">
+    <h3>Login</h3>
+    <input id="username" type="text" placeholder="Username" style="width:100%; margin-bottom:10px;"><br>
+    <input id="password" type="password" placeholder="Password" style="width:100%; margin-bottom:10px;"><br>
+    <button onclick="login()">Login</button>
+    <p id="loginMessage" style="color:red;"></p>
+  </div>
+
+  <!-- MAIN PANEL -->
+  <div id="mainPanel" class="hidden">
+    <h2>Loaded Schedule Data</h2>
+    <div id="dataView"></div>
+
+    <textarea id="editor" class="hidden"></textarea>
+    <br>
+    <button id="editBtn" class="hidden" onclick="startEditing()">Edit Data</button>
+    <button id="saveBtn" class="hidden" onclick="applyChanges()">Apply Changes (Mock)</button>
+  </div>
+
+<script>
+  function login() {
+    const user = document.getElementById('username').value;
+    const pass = document.getElementById('password').value;
+    const msg = document.getElementById('loginMessage');
+
+    if (user === 'admin' && pass === 'admin') {
+      document.getElementById('loginPanel').classList.add('hidden');
+      document.getElementById('mainPanel').classList.remove('hidden');
+      loadJSON();
+    } else {
+      msg.textContent = 'Invalid credentials (use admin/admin).';
+    }
+  }
+
+  function loadJSON() {
+    fetch('status-muzeja/schedules.json')
+      .then(response => response.json())
+      .then(data => {
+        const pretty = JSON.stringify(data, null, 2);
+        document.getElementById('dataView').textContent = pretty;
+        document.getElementById('editBtn').classList.remove('hidden');
+      })
+      .catch(err => {
+        document.getElementById('dataView').textContent = 'Failed to load JSON.';
+        console.error(err);
+      });
+  }
+
+  function startEditing() {
+    const view = document.getElementById('dataView');
+    const editor = document.getElementById('editor');
+
+    editor.value = view.textContent;
+    editor.classList.remove('hidden');
+    document.getElementById('saveBtn').classList.remove('hidden');
+  }
+
+  function applyChanges() {
+    const editor = document.getElementById('editor');
+    try {
+      const parsed = JSON.parse(editor.value);
+      const pretty = JSON.stringify(parsed, null, 2);
+      document.getElementById('dataView').textContent = pretty;
+      alert('Changes applied (mock only, not saved to GitHub).');
+    } catch (e) {
+      alert('JSON is invalid.');
+    }
+  }
+</script>
+</body>
+</html>
