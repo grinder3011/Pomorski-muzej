@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin - Schedule Editor</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 40px; }
-    .card { padding: 20px; border: 1px solid #ccc; border-radius: 12px; max-width: 600px; }
-    #dataView { white-space: pre-wrap; border: 1px solid #aaa; border-radius: 8px; padding: 10px; margin-top: 20px; max-height: 400px; overflow-y: auto; }
-    #editor { width: 100%; height: 300px; margin-top: 10px; }
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .card { padding: 20px; border: 1px solid #ccc; border-radius: 12px; margin-bottom: 20px; }
+    .period { border: 1px solid #aaa; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+    .day-hours { display: flex; gap: 5px; margin-bottom: 5px; }
     .hidden { display: none; }
-    button { padding: 8px 14px; margin-top: 10px; cursor: pointer; }
+    input[type=text] { width: 120px; padding: 3px; }
+    button { padding: 5px 10px; margin-top: 5px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -19,72 +20,170 @@
   <!-- LOGIN PANEL -->
   <div id="loginPanel" class="card">
     <h3>Login</h3>
-    <input id="username" type="text" placeholder="Username" style="width:100%; margin-bottom:10px;"><br>
-    <input id="password" type="password" placeholder="Password" style="width:100%; margin-bottom:10px;"><br>
+    <input id="username" type="text" placeholder="Username"><br><br>
+    <input id="password" type="password" placeholder="Password"><br><br>
     <button onclick="login()">Login</button>
     <p id="loginMessage" style="color:red;"></p>
   </div>
 
   <!-- MAIN PANEL -->
   <div id="mainPanel" class="hidden">
-    <h2>Loaded Schedule Data</h2>
-    <div id="dataView"></div>
-
-    <textarea id="editor" class="hidden"></textarea>
-    <br>
-    <button id="editBtn" class="hidden" onclick="startEditing()">Edit Data</button>
-    <button id="saveBtn" class="hidden" onclick="applyChanges()">Apply Changes (Mock)</button>
+    <div id="schedulePreview"></div>
+    <button id="editBtn" class="hidden" onclick="startEditing()">Edit Schedule</button>
+    <div id="editorPanel" class="hidden"></div>
+    <button id="applyBtn" class="hidden" onclick="applyChanges()">Apply Changes (Mock)</button>
+    <button id="resetBtn" class="hidden" onclick="resetChanges()">Reset</button>
   </div>
 
 <script>
-  function login() {
-    const user = document.getElementById('username').value;
-    const pass = document.getElementById('password').value;
-    const msg = document.getElementById('loginMessage');
+let originalData = null;
+let currentData = null;
 
-    if (user === 'admin' && pass === 'admin') {
-      document.getElementById('loginPanel').classList.add('hidden');
-      document.getElementById('mainPanel').classList.remove('hidden');
-      loadJSON();
-    } else {
-      msg.textContent = 'Invalid credentials (use admin/admin).';
-    }
+function login() {
+  const user = document.getElementById('username').value;
+  const pass = document.getElementById('password').value;
+  const msg = document.getElementById('loginMessage');
+
+  if (user === 'admin' && pass === 'admin') {
+    document.getElementById('loginPanel').classList.add('hidden');
+    document.getElementById('mainPanel').classList.remove('hidden');
+    loadJSON();
+  } else {
+    msg.textContent = 'Invalid credentials (use admin/admin).';
   }
+}
 
-  function loadJSON() {
-    fetch('status-muzeja/schedules.json')
-      .then(response => response.json())
-      .then(data => {
-        const pretty = JSON.stringify(data, null, 2);
-        document.getElementById('dataView').textContent = pretty;
-        document.getElementById('editBtn').classList.remove('hidden');
-      })
-      .catch(err => {
-        document.getElementById('dataView').textContent = 'Failed to load JSON.';
-        console.error(err);
-      });
+function loadJSON() {
+  fetch('status-muzeja/schedules.json')
+    .then(response => response.json())
+    .then(data => {
+      originalData = JSON.parse(JSON.stringify(data));
+      currentData = JSON.parse(JSON.stringify(data));
+      renderPreview();
+      document.getElementById('editBtn').classList.remove('hidden');
+    })
+    .catch(err => {
+      document.getElementById('schedulePreview').textContent = 'Failed to load JSON.';
+      console.error(err);
+    });
+}
+
+function renderPreview() {
+  const container = document.getElementById('schedulePreview');
+  container.innerHTML = '';
+  for (const loc in currentData.locations) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    const title = document.createElement('h3');
+    title.textContent = loc;
+    card.appendChild(title);
+
+    currentData.locations[loc].periods.forEach((p, idx) => {
+      const periodDiv = document.createElement('div');
+      periodDiv.className = 'period';
+      periodDiv.innerHTML = `<b>Period ${idx+1}:</b> ${p.start} - ${p.end}`;
+      const ul = document.createElement('ul');
+      for (const day in p.hours) {
+        const li = document.createElement('li');
+        li.textContent = `${day}: ${p.hours[day] ?? 'Closed'}`;
+        ul.appendChild(li);
+      }
+      periodDiv.appendChild(ul);
+      card.appendChild(periodDiv);
+    });
+
+    container.appendChild(card);
   }
+}
 
-  function startEditing() {
-    const view = document.getElementById('dataView');
-    const editor = document.getElementById('editor');
+function startEditing() {
+  const editor = document.getElementById('editorPanel');
+  editor.innerHTML = '';
+  editor.classList.remove('hidden');
+  document.getElementById('applyBtn').classList.remove('hidden');
+  document.getElementById('resetBtn').classList.remove('hidden');
 
-    editor.value = view.textContent;
-    editor.classList.remove('hidden');
-    document.getElementById('saveBtn').classList.remove('hidden');
+  for (const loc in currentData.locations) {
+    const locCard = document.createElement('div');
+    locCard.className = 'card';
+    const title = document.createElement('h3');
+    title.textContent = loc;
+    locCard.appendChild(title);
+
+    const periods = currentData.locations[loc].periods;
+    periods.forEach((p, idx) => {
+      const periodDiv = createPeriodForm(loc, idx, p);
+      locCard.appendChild(periodDiv);
+    });
+
+    const addBtn = document.createElement('button');
+    addBtn.textContent = 'Add Period';
+    addBtn.onclick = () => {
+      const newPeriod = {start:'', end:'', hours:{Mon:null,Tue:null,Wed:null,Thu:null,Fri:null,Sat:null,Sun:null}};
+      currentData.locations[loc].periods.push(newPeriod);
+      const periodDiv = createPeriodForm(loc, currentData.locations[loc].periods.length-1, newPeriod);
+      locCard.insertBefore(periodDiv, addBtn);
+    };
+    locCard.appendChild(addBtn);
+
+    editor.appendChild(locCard);
   }
+}
 
-  function applyChanges() {
-    const editor = document.getElementById('editor');
-    try {
-      const parsed = JSON.parse(editor.value);
-      const pretty = JSON.stringify(parsed, null, 2);
-      document.getElementById('dataView').textContent = pretty;
-      alert('Changes applied (mock only, not saved to GitHub).');
-    } catch (e) {
-      alert('JSON is invalid.');
-    }
+function createPeriodForm(loc, idx, periodData) {
+  const div = document.createElement('div');
+  div.className = 'period';
+  div.id = `period-${loc}-${idx}`;
+
+  const startInput = document.createElement('input');
+  startInput.type = 'text'; startInput.value = periodData.start; startInput.placeholder = 'Start (MM-DD)';
+  startInput.onchange = e => periodData.start = e.target.value;
+  div.appendChild(startInput);
+
+  const endInput = document.createElement('input');
+  endInput.type = 'text'; endInput.value = periodData.end; endInput.placeholder = 'End (MM-DD)';
+  endInput.onchange = e => periodData.end = e.target.value;
+  div.appendChild(endInput);
+
+  const removeBtn = document.createElement('button');
+  removeBtn.textContent = 'Remove Period';
+  removeBtn.onclick = () => {
+    currentData.locations[loc].periods.splice(idx,1);
+    div.remove();
+  };
+  div.appendChild(removeBtn);
+
+  // Day hours inputs
+  for (const day of ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']) {
+    const dayDiv = document.createElement('div');
+    dayDiv.className = 'day-hours';
+    const label = document.createElement('label');
+    label.textContent = day + ':';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = periodData.hours[day] ?? '';
+    input.placeholder = 'HH:MM-HH:MM[,HH:MM-HH:MM]';
+    input.onchange = e => {
+      const val = e.target.value.trim();
+      periodData.hours[day] = val ? (val.includes(',') ? val.split(',') : val) : null;
+    };
+    dayDiv.appendChild(label);
+    dayDiv.appendChild(input);
+    div.appendChild(dayDiv);
   }
+  return div;
+}
+
+function applyChanges() {
+  // just update the preview
+  renderPreview();
+  alert('Changes applied (mock only, not saved to GitHub).');
+}
+
+function resetChanges() {
+  currentData = JSON.parse(JSON.stringify(originalData));
+  startEditing();
+}
 </script>
 </body>
 </html>
