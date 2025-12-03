@@ -184,7 +184,7 @@ function createPeriodForm(loc, idx, periodData) {
   // Hours
   Object.keys(periodData.hours).forEach(day => {
     const dayDiv=document.createElement('div');
-    dayDiv.className='flex flex-wrap gap-2 items-center mt-1';
+    dayDiv.className = 'flex flex-wrap gap-2 items-center' + (dayIndex === 0 ? ' mt-4' : ' mt-1');
 
     const label=document.createElement('span');
     label.textContent=dayNames[day]+':';
