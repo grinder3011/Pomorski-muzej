@@ -89,7 +89,7 @@ function renderSchedule() {
     locData.periods.forEach((p, idx) => {
       const periodDiv = document.createElement('div');
       periodDiv.className = 'border p-2 rounded mb-2 bg-white';
-      periodDiv.innerHTML = `<strong>Obdobje ${idx+1}:</strong> ${p.start} - ${p.end}`;
+      periodDiv.innerHTML = `<strong>Obdobje ${idx+1}:</strong> ${p.start} - ${p.end}</br>`;
 
       const ul = document.createElement('ul');
       for (const day in p.hours) {
@@ -184,7 +184,7 @@ function createPeriodForm(loc, idx, periodData) {
   // Hours
   Object.keys(periodData.hours).forEach(day => {
     const dayDiv=document.createElement('div');
-    dayDiv.className = 'flex flex-wrap gap-2 items-center' + (dayIndex === 0 ? ' mt-4' : ' mt-1');
+    dayDiv.className='flex flex-wrap gap-2 items-center mt-1';
 
     const label=document.createElement('span');
     label.textContent=dayNames[day]+':';
