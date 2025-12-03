@@ -130,6 +130,7 @@ function createPeriodForm(loc,idx,periodData){
   const div=document.createElement('div');
   div.className='border p-2 rounded mb-2 bg-white';
 
+  // Date pickers
   const dateDiv=document.createElement('div');
   dateDiv.className='flex flex-col sm:flex-row gap-2 mb-2';
   const startInput=document.createElement('input');
@@ -141,6 +142,7 @@ function createPeriodForm(loc,idx,periodData){
   dateDiv.appendChild(startInput); dateDiv.appendChild(endInput);
   div.appendChild(dateDiv);
 
+  // Remove period button
   const removeBtn=document.createElement('button');
   removeBtn.textContent='Odstrani obdobje';
   removeBtn.className='mb-2 bg-red-500 text-white px-2 py-1 rounded';
@@ -149,19 +151,23 @@ function createPeriodForm(loc,idx,periodData){
 
   Object.keys(periodData.hours).forEach(day=>{
     const dayDiv=document.createElement('div');
-    dayDiv.className='flex flex-col sm:flex-row gap-2 items-start mt-1 sm:items-center';
+    dayDiv.className='flex flex-col sm:flex-row gap-2 items-start sm:items-center mt-1';
     const label=document.createElement('span');
     label.textContent=dayNames[day]+':';
     label.className='w-16 flex-shrink-0 font-medium';
     dayDiv.appendChild(label);
 
+    // Add button first
     const rangesWrap=document.createElement('div');
     rangesWrap.className='flex flex-wrap gap-2 flex-1';
-    let ranges=[];
-    const raw=periodData.hours[day];
-    if(raw===null||raw===undefined) ranges=[];
-    else if(Array.isArray(raw)) ranges=raw.map(x=>String(x).trim()).filter(x=>x);
-    else ranges=String(raw).split(',').map(x=>x.trim()).filter(x=>x);
+
+    const addBtn=document.createElement('button');
+    addBtn.textContent='+';
+    addBtn.className='ml-2 bg-blue-400 text-white px-2 py-1 rounded';
+    dayDiv.appendChild(rangesWrap);
+    dayDiv.appendChild(addBtn);
+
+    function updateAddBtn(){addBtn.style.display=rangesWrap.children.length>=2?'none':'inline-block';}
 
     function addRange(value=''){
       if(rangesWrap.children.length>=2) return;
@@ -189,25 +195,24 @@ function createPeriodForm(loc,idx,periodData){
       updateBacking(); updateAddBtn();
     }
 
+    addBtn.onclick=()=>addRange('');
+
+    // Load existing ranges
+    const raw=periodData.hours[day];
+    let ranges=[];
+    if(raw===null||raw===undefined) ranges=[];
+    else if(Array.isArray(raw)) ranges=raw.map(x=>String(x).trim()).filter(x=>x);
+    else ranges=String(raw).split(',').map(x=>x.trim()).filter(x=>x);
     if(ranges.length===0) addRange('');
     else ranges.forEach(r=>addRange(r));
 
-    const addBtn=document.createElement('button');
-    addBtn.textContent='+';
-    addBtn.className='ml-2 bg-blue-400 text-white px-2 py-1 rounded';
-    addBtn.onclick=()=>addRange('');
-    function updateAddBtn(){addBtn.style.display=rangesWrap.children.length>=2?'none':'inline-block';}
     updateAddBtn();
 
-    dayDiv.appendChild(rangesWrap);
-    dayDiv.appendChild(addBtn);
-    div.appendChild(dayDiv);
-
-    // helper text
+    // Helper text
     const helper=document.createElement('p');
     helper.className='text-gray-500 text-sm mb-1';
     helper.textContent='Vnesite 1 ali 2 časovna obdobja (npr. 09:00-12:00, 17:00-21:00)';
-    div.appendChild(helper);
+    div.appendChild(dayDiv); div.appendChild(helper);
   });
 
   return div;
