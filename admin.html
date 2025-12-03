@@ -33,11 +33,10 @@
     <div id="editor" class="hidden mt-6">
       <h3 class="text-xl font-semibold mb-4">Uredi obdobja</h3>
       <div id="periodList" class="space-y-4"></div>
-      <button onclick="addPeriod()" class="mt-4 bg-blue-600 text-white py-2 px-4 rounded w-full sm:w-auto">Dodaj obdobje</button>
 
       <div class="flex flex-col sm:flex-row gap-3 mt-6">
-        <button onclick="cancelEditing()" class="flex-1 bg-gray-400 text-white py-2 rounded w-full sm:w-auto">Prekliči</button>
-        <button onclick="saveChanges()" class="flex-1 bg-green-600 text-white py-2 rounded w-full sm:w-auto">Uporabi spremembe (samo za prikaz)</button>
+        <button onclick="cancelEditing()" class="flex-1 bg-gray-400 text-white py-2 rounded">Prekliči</button>
+        <button onclick="saveChanges()" class="flex-1 bg-green-600 text-white py-2 rounded">Uporabi spremembe (samo za prikaz)</button>
       </div>
     </div>
   </div>
@@ -115,7 +114,7 @@ function startEditing() {
 
   Object.entries(scheduleData).forEach(([loc, locData]) => {
     const locCard = document.createElement('div');
-    locCard.className = 'border rounded p-3 bg-gray-100 relative';
+    locCard.className = 'border rounded p-3 bg-gray-100';
 
     const title = document.createElement('h4');
     title.className = 'font-semibold mb-2';
@@ -129,7 +128,7 @@ function startEditing() {
 
     const addBtn = document.createElement('button');
     addBtn.textContent = 'Dodaj obdobje';
-    addBtn.className = 'mt-2 bg-blue-500 text-white px-3 py-1 rounded w-full sm:w-auto';
+    addBtn.className = 'mt-2 w-full sm:w-auto text-center bg-blue-500 text-white px-3 py-1 rounded';
     addBtn.onclick = () => {
       const newPeriod = {start:'', end:'', hours:{Mon:null,Tue:null,Wed:null,Thu:null,Fri:null,Sat:null,Sun:null}};
       scheduleData[loc].periods.push(newPeriod);
@@ -147,14 +146,14 @@ function createPeriodForm(loc, idx, periodData) {
   const div = document.createElement('div');
   div.className = 'border p-2 rounded mb-2 bg-white relative';
 
-  // Remove period button at top
+  // Odstrani obdobje button on top
   const removeBtn = document.createElement('button');
   removeBtn.textContent = 'Odstrani obdobje';
-  removeBtn.className = 'bg-red-500 text-white px-2 py-1 rounded mb-2 w-full sm:w-auto text-center';
+  removeBtn.className = 'w-full sm:w-auto text-center bg-red-500 text-white px-2 py-1 rounded mb-2';
   removeBtn.onclick = () => { scheduleData[loc].periods.splice(idx,1); div.remove(); };
-  div.appendChild(removeBtn);
+  div.insertBefore(removeBtn, div.firstChild);
 
-  // Date range
+  // Date pickers
   const dateDiv = document.createElement('div');
   dateDiv.className = 'flex flex-col sm:flex-row gap-2 items-center mb-2';
 
@@ -184,7 +183,7 @@ function createPeriodForm(loc, idx, periodData) {
 
   div.appendChild(dateDiv);
 
-  // Hours per day
+  // Days
   Object.keys(periodData.hours).forEach(day => {
     const dayDiv = document.createElement('div');
     dayDiv.className = 'flex flex-wrap gap-2 items-center mt-1';
