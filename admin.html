@@ -115,7 +115,16 @@ function startEditing() {
 
   Object.entries(scheduleData).forEach(([loc, locData]) => {
     const locCard = document.createElement('div');
-    locCard.className = 'border rounded p-3 bg-gray-100';
+    locCard.className = 'border rounded p-3 bg-gray-100 relative';
+
+    const removeCardBtn = document.createElement('button');
+    removeCardBtn.textContent = 'Odstrani obdobje';
+    removeCardBtn.className = 'absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded';
+    removeCardBtn.onclick = () => {
+      delete scheduleData[loc];
+      locCard.remove();
+    };
+    locCard.appendChild(removeCardBtn);
 
     const title = document.createElement('h4');
     title.className = 'font-semibold mb-2';
@@ -147,7 +156,6 @@ function createPeriodForm(loc, idx, periodData) {
   const div = document.createElement('div');
   div.className = 'border p-2 rounded mb-2 bg-white';
 
-  // Date picker with helper text
   const dateDiv = document.createElement('div');
   dateDiv.className = 'flex flex-col sm:flex-row gap-2 items-center mb-2';
 
@@ -178,12 +186,11 @@ function createPeriodForm(loc, idx, periodData) {
   div.appendChild(dateDiv);
 
   const removeBtn = document.createElement('button');
-  removeBtn.textContent = 'Odstrani';
-  removeBtn.className = 'ml-2 bg-red-500 text-white px-2 py-1 rounded';
+  removeBtn.textContent = 'Odstrani obdobje';
+  removeBtn.className = 'bg-red-500 text-white px-2 py-1 rounded mb-2';
   removeBtn.onclick = () => { scheduleData[loc].periods.splice(idx,1); div.remove(); };
-  div.appendChild(removeBtn);
+  div.insertBefore(removeBtn, div.firstChild);
 
-  // Days with up to 2 time ranges
   Object.keys(periodData.hours).forEach(day => {
     const dayDiv = document.createElement('div');
     dayDiv.className = 'flex flex-wrap gap-2 items-center mt-1';
@@ -207,7 +214,6 @@ function createPeriodForm(loc, idx, periodData) {
       dayDiv.appendChild(input);
     });
 
-    // Add button if <2 ranges
     if(ranges.length < 2){
       const addRangeBtn = document.createElement('button');
       addRangeBtn.textContent = '+';
