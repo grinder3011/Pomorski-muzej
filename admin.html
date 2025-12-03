@@ -43,31 +43,13 @@
   </div>
 
 <script>
-/* -----------------------
-   Configuration / maps
-   ----------------------- */
-const dayNamesSlShort = {
-  Mon: "Pon",
-  Tue: "Tor",
-  Wed: "Sre",
-  Thu: "Čet",
-  Fri: "Pet",
-  Sat: "Sob",
-  Sun: "Ned"
-};
-
-// current year used for date inputs (no year stored in JSON)
+/* maps and state */
+const dayNamesSlShort = { Mon: "Pon", Tue: "Tor", Wed: "Sre", Thu: "Čet", Fri: "Pet", Sat: "Sob", Sun: "Ned" };
 const currentYear = new Date().getFullYear();
+let scheduleData = {};
+let originalData = null;
 
-/* -----------------------
-   State
-   ----------------------- */
-let scheduleData = {};    // { "Location": { periods: [...] }, ... }
-let originalData = null;  // deep copy for reset
-
-/* -----------------------
-   Login + load
-   ----------------------- */
+/* login + load */
 function login() {
   const user = document.getElementById('username').value;
   const pass = document.getElementById('password').value;
@@ -84,12 +66,8 @@ function login() {
 
 function loadJSON() {
   fetch('status-muzeja/schedules.json')
-    .then(r => {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(data => {
-      // existing JSON has structure { locations: { ... } }
       scheduleData = JSON.parse(JSON.stringify(data.locations || {}));
       originalData = JSON.parse(JSON.stringify(scheduleData));
       renderSchedule();
@@ -101,27 +79,17 @@ function loadJSON() {
     });
 }
 
-/* -----------------------
-   Preview rendering (Slovenian day names)
-   ----------------------- */
+/* preview */
 function renderSchedule() {
   const container = document.getElementById('scheduleDisplay');
   container.innerHTML = '';
-
   Object.entries(scheduleData).forEach(([loc, locData]) => {
-    const card = document.createElement('div');
-    card.className = 'border rounded p-4 bg-gray-50';
-
-    const title = document.createElement('h3');
-    title.className = 'font-semibold text-lg mb-2';
-    title.textContent = loc;
-    card.appendChild(title);
+    const card = document.createElement('div'); card.className = 'border rounded p-4 bg-gray-50';
+    const title = document.createElement('h3'); title.className = 'font-semibold text-lg mb-2'; title.textContent = loc; card.appendChild(title);
 
     (locData.periods || []).forEach((p, idx) => {
-      const periodDiv = document.createElement('div');
-      periodDiv.className = 'border p-2 rounded mb-2 bg-white';
+      const periodDiv = document.createElement('div'); periodDiv.className = 'border p-2 rounded mb-2 bg-white';
       periodDiv.innerHTML = `<strong>Obdobje ${idx+1}:</strong> ${p.start || '—'} - ${p.end || '—'}`;
-
       const ul = document.createElement('ul');
       for (const dayKey of ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']) {
         const li = document.createElement('li');
@@ -130,44 +98,29 @@ function renderSchedule() {
         li.textContent = `${dayNamesSlShort[dayKey]}: ${display}`;
         ul.appendChild(li);
       }
-      periodDiv.appendChild(ul);
-      card.appendChild(periodDiv);
+      periodDiv.appendChild(ul); card.appendChild(periodDiv);
     });
 
     container.appendChild(card);
   });
 }
 
-/* -----------------------
-   Editor
-   ----------------------- */
+/* editor */
 function startEditing() {
   const editor = document.getElementById('editor');
   const list = document.getElementById('periodList');
   list.innerHTML = '';
 
   Object.entries(scheduleData).forEach(([loc, locData]) => {
-    const locCard = document.createElement('div');
-    locCard.className = 'border rounded p-3 bg-gray-100';
+    const locCard = document.createElement('div'); locCard.className = 'border rounded p-3 bg-gray-100';
+    const title = document.createElement('h4'); title.className = 'font-semibold mb-2'; title.textContent = loc; locCard.appendChild(title);
 
-    const title = document.createElement('h4');
-    title.className = 'font-semibold mb-2';
-    title.textContent = loc;
-    locCard.appendChild(title);
+    (locData.periods || []).forEach((p, idx) => locCard.appendChild(createPeriodForm(loc, idx, p)));
 
-    (locData.periods || []).forEach((p, idx) => {
-      const periodDiv = createPeriodForm(loc, idx, p);
-      locCard.appendChild(periodDiv);
-    });
-
-    // add button for location
-    const addBtn = document.createElement('button');
-    addBtn.textContent = 'Dodaj obdobje';
-    addBtn.className = 'mt-2 bg-blue-500 text-white px-3 py-1 rounded';
+    const addBtn = document.createElement('button'); addBtn.textContent = 'Dodaj obdobje'; addBtn.className = 'mt-2 bg-blue-500 text-white px-3 py-1 rounded';
     addBtn.onclick = () => {
-      const newPeriod = { start: '', end: '', hours: { Mon:null,Tue:null,Wed:null,Thu:null,Fri:null,Sat:null,Sun:null } };
+      const newPeriod = { start:'', end:'', hours:{ Mon:null,Tue:null,Wed:null,Thu:null,Fri:null,Sat:null,Sun:null } };
       scheduleData[loc].periods.push(newPeriod);
-      // insert before button
       locCard.insertBefore(createPeriodForm(loc, scheduleData[loc].periods.length-1, newPeriod), addBtn);
       sortPeriods(loc);
     };
@@ -179,282 +132,136 @@ function startEditing() {
   editor.classList.remove('hidden');
 }
 
-/* Convert MM-DD (string) to input[type=date] value YYYY-MM-DD */
-function mmddToDateValue(mmdd) {
-  if (!mmdd || !/^\d{2}-\d{2}$/.test(mmdd)) return '';
-  return `${currentYear}-${mmdd}`;
-}
-function dateValueToMmdd(v) {
-  if (!v || v.length < 10) return '';
-  return v.slice(5); // "YYYY-MM-DD" -> "MM-DD"
-}
+/* date helpers */
+function mmddToDateValue(mmdd) { if (!mmdd || !/^\d{2}-\d{2}$/.test(mmdd)) return ''; return `${currentYear}-${mmdd}`; }
+function dateValueToMmdd(v) { if (!v || v.length < 10) return ''; return v.slice(5); }
 
-/* Create a period editor block */
+/* create period form — now pre-populates existing hours into time inputs, adds helper text and "Obdobje od ... do ..." layout */
 function createPeriodForm(loc, idx, periodData) {
-  const div = document.createElement('div');
-  div.className = 'border p-2 rounded mb-2 bg-white';
+  const div = document.createElement('div'); div.className = 'border p-2 rounded mb-2 bg-white';
 
-  // Header row: start (datepicker + mm-dd), end (datepicker + mm-dd), remove
-  const header = document.createElement('div');
-  header.className = 'flex flex-col md:flex-row gap-2 items-start md:items-center';
+  // helper text above pickers
+  const helper = document.createElement('div'); helper.className = 'text-sm text-gray-600 mb-2'; helper.textContent = 'Izberi ali vpiši datum'; div.appendChild(helper);
 
-  // Start controls
-  const startWrap = document.createElement('div');
-  startWrap.className = 'flex flex-col sm:flex-row gap-2 items-center';
-  const startLabel = document.createElement('label'); startLabel.className = 'font-medium'; startLabel.textContent = 'Začetek:';
-  const startDate = document.createElement('input');
-  startDate.type = 'date';
-  startDate.className = 'border p-1 rounded';
-  startDate.value = mmddToDateValue(periodData.start);
-  const startText = document.createElement('input');
-  startText.type = 'text';
-  startText.placeholder = 'MM-DD';
-  startText.value = periodData.start || '';
-  startText.className = 'border p-1 rounded w-24';
-  // sync datepicker -> text
-  startDate.onchange = (e) => {
-    const mmdd = dateValueToMmdd(e.target.value);
-    periodData.start = mmdd;
-    startText.value = mmdd;
-    // keep periods sorted after change
-    sortPeriods(loc);
-  };
-  // sync text -> datepicker (accept only MM-DD)
+  // Date range line: Obdobje od (picker + MM-DD) do (picker + MM-DD)
+  const dateRow = document.createElement('div'); dateRow.className = 'flex gap-2 items-center mb-2 flex-col sm:flex-row w-full';
+  const startWrap = document.createElement('div'); startWrap.className = 'flex items-center gap-2';
+  const startLabel = document.createElement('div'); startLabel.className = 'font-medium'; startLabel.textContent = 'Obdobje od';
+  const startDate = document.createElement('input'); startDate.type='date'; startDate.className='border p-1 rounded'; startDate.value = mmddToDateValue(periodData.start);
+  const startText = document.createElement('input'); startText.type='text'; startText.placeholder='MM-DD'; startText.className='border p-1 rounded w-24'; startText.value = periodData.start || '';
+  startWrap.appendChild(startLabel); startWrap.appendChild(startDate); startWrap.appendChild(startText);
+
+  const middle = document.createElement('div'); middle.textContent = 'do'; middle.className='mx-2 font-medium';
+
+  const endWrap = document.createElement('div'); endWrap.className = 'flex items-center gap-2';
+  const endDate = document.createElement('input'); endDate.type='date'; endDate.className='border p-1 rounded'; endDate.value = mmddToDateValue(periodData.end);
+  const endText = document.createElement('input'); endText.type='text'; endText.placeholder='MM-DD'; endText.className='border p-1 rounded w-24'; endText.value = periodData.end || '';
+  endWrap.appendChild(endDate); endWrap.appendChild(endText);
+
+  // sync datepicker <-> mm-dd text for start/end
+  startDate.onchange = (e) => { const mmdd = dateValueToMmdd(e.target.value); periodData.start = mmdd; startText.value = mmdd; sortPeriods(loc); };
   startText.onchange = (e) => {
     const v = e.target.value.trim();
-    if (/^\d{2}-\d{2}$/.test(v)) {
-      periodData.start = v;
-      startDate.value = mmddToDateValue(v);
-      sortPeriods(loc);
-    } else {
-      // accept empty to clear, otherwise revert to previous
-      if (v === '') {
-        periodData.start = '';
-        startDate.value = '';
-      } else {
-        alert('Vnesite datum v formatu MM-DD (npr. 07-01) ali uporabite koledar.');
-        startText.value = periodData.start || '';
-      }
-    }
+    if (/^\d{2}-\d{2}$/.test(v)) { periodData.start = v; startDate.value = mmddToDateValue(v); sortPeriods(loc); }
+    else { if (v === '') { periodData.start=''; startDate.value=''; } else { alert('Vnesite datum v formatu MM-DD (npr. 07-01) ali uporabite koledar.'); startText.value = periodData.start || ''; } }
   };
-  startWrap.appendChild(startLabel);
-  startWrap.appendChild(startDate);
-  startWrap.appendChild(startText);
-
-  // End controls
-  const endWrap = document.createElement('div');
-  endWrap.className = 'flex flex-col sm:flex-row gap-2 items-center';
-  const endLabel = document.createElement('label'); endLabel.className = 'font-medium'; endLabel.textContent = 'Konec:';
-  const endDate = document.createElement('input');
-  endDate.type = 'date';
-  endDate.className = 'border p-1 rounded';
-  endDate.value = mmddToDateValue(periodData.end);
-  const endText = document.createElement('input');
-  endText.type = 'text';
-  endText.placeholder = 'MM-DD';
-  endText.value = periodData.end || '';
-  endText.className = 'border p-1 rounded w-24';
-  endDate.onchange = (e) => {
-    const mmdd = dateValueToMmdd(e.target.value);
-    periodData.end = mmdd;
-    endText.value = mmdd;
-    sortPeriods(loc);
-  };
+  endDate.onchange = (e) => { const mmdd = dateValueToMmdd(e.target.value); periodData.end = mmdd; endText.value = mmdd; sortPeriods(loc); };
   endText.onchange = (e) => {
     const v = e.target.value.trim();
-    if (/^\d{2}-\d{2}$/.test(v)) {
-      periodData.end = v;
-      endDate.value = mmddToDateValue(v);
-      sortPeriods(loc);
-    } else {
-      if (v === '') {
-        periodData.end = '';
-        endDate.value = '';
-      } else {
-        alert('Vnesite datum v formatu MM-DD (npr. 08-31) ali uporabite koledar.');
-        endText.value = periodData.end || '';
-      }
-    }
-  };
-  endWrap.appendChild(endLabel);
-  endWrap.appendChild(endDate);
-  endWrap.appendChild(endText);
-
-  // Remove period button
-  const removeBtn = document.createElement('button');
-  removeBtn.textContent = 'Odstrani obdobje';
-  removeBtn.className = 'ml-auto bg-red-500 text-white px-3 py-1 rounded';
-  removeBtn.onclick = () => {
-    const arr = scheduleData[loc].periods;
-    const i = arr.indexOf(periodData);
-    if (i >= 0) {
-      arr.splice(i, 1);
-      div.remove();
-    } else {
-      div.remove();
-    }
+    if (/^\d{2}-\d{2}$/.test(v)) { periodData.end = v; endDate.value = mmddToDateValue(v); sortPeriods(loc); }
+    else { if (v === '') { periodData.end=''; endDate.value=''; } else { alert('Vnesite datum v formatu MM-DD (npr. 08-31) ali uporabite koledar.'); endText.value = periodData.end || ''; } }
   };
 
-  const topRow = document.createElement('div');
-  topRow.className = 'flex gap-3 w-full items-center';
-  topRow.appendChild(startWrap);
-  topRow.appendChild(endWrap);
-  topRow.appendChild(removeBtn);
+  dateRow.appendChild(startWrap);
+  dateRow.appendChild(middle);
+  dateRow.appendChild(endWrap);
+  div.appendChild(dateRow);
 
-  div.appendChild(topRow);
+  // Remove period button (placed after date row for clarity)
+  const removeBtn = document.createElement('button'); removeBtn.textContent='Odstrani obdobje'; removeBtn.className='mt-2 bg-red-500 text-white px-3 py-1 rounded';
+  removeBtn.onclick = () => { const arr = scheduleData[loc].periods; const i = arr.indexOf(periodData); if (i>=0) { arr.splice(i,1); div.remove(); } else div.remove(); };
+  div.appendChild(removeBtn);
 
-  // Hours table (Mon..Sun) — each row has structured inputs for single or two ranges
-  const hoursBox = document.createElement('div');
-  hoursBox.className = 'mt-3 space-y-2';
-
+  // Hours area — prepopulate existing data into time inputs
+  const hoursBox = document.createElement('div'); hoursBox.className='mt-3 space-y-2';
   const dayKeys = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
   dayKeys.forEach(dayKey => {
-    const row = document.createElement('div');
-    row.className = 'flex flex-col md:flex-row md:items-center gap-2';
+    const row = document.createElement('div'); row.className='flex flex-col md:flex-row md:items-center gap-2';
+    const lbl = document.createElement('div'); lbl.className='w-20 font-medium'; lbl.textContent = dayNamesSlShort[dayKey] + ':';
+    const rangesWrap = document.createElement('div'); rangesWrap.className='flex gap-2 flex-wrap items-center flex-1';
 
-    const lbl = document.createElement('div');
-    lbl.className = 'w-20 font-medium';
-    lbl.textContent = dayNamesSlShort[dayKey] + ':';
+    // Normalize existing value (string or array) to array of ranges like "HH:MM-HH:MM"
+    const raw = periodData.hours && periodData.hours[dayKey] !== undefined ? periodData.hours[dayKey] : null;
+    let ranges = [];
+    if (raw === null || raw === undefined) ranges = [];
+    else if (Array.isArray(raw)) ranges = raw.map(x=>String(x).trim()).filter(x=>x);
+    else ranges = String(raw).split(',').map(x=>x.trim()).filter(x=>x);
 
-    const rangesWrap = document.createElement('div');
-    rangesWrap.className = 'flex gap-2 flex-wrap items-center flex-1';
+    function addRangePair(initial='') {
+      let fromVal='', toVal='';
+      const m = String(initial).match(/(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})/);
+      if (m) { fromVal = m[1]; toVal = m[2]; }
 
-    // ensure value is normalized: either null, string single, or array
-    const v = periodData.hours && periodData.hours[dayKey] !== undefined ? periodData.hours[dayKey] : null;
-    const ranges = (v === null || v === undefined) ? [] : (Array.isArray(v) ? v.slice() : [v]);
+      const pair = document.createElement('div'); pair.className='flex gap-1 items-center';
+      const from = document.createElement('input'); from.type='time'; from.className='border p-1 rounded'; from.value = fromVal;
+      const dash = document.createElement('span'); dash.textContent='–'; dash.className='px-1';
+      const to = document.createElement('input'); to.type='time'; to.className='border p-1 rounded'; to.value = toVal;
+      const removeRange = document.createElement('button'); removeRange.className='ml-2 bg-red-400 text-white px-2 py-1 rounded'; removeRange.textContent='X';
 
-    // function to add a pair of time inputs
-    function addRangePair(initial = '') {
-      // parse initial which may be "HH:MM-HH:MM" or empty
-      let fromVal = '', toVal = '';
-      if (initial && /^\\d{2}:\\d{2}-\\d{2}:\\d{2}$/.test(initial)) {
-        const parts = initial.split('-');
-        fromVal = parts[0];
-        toVal = parts[1];
-      }
-
-      const pair = document.createElement('div');
-      pair.className = 'flex gap-1 items-center';
-
-      const from = document.createElement('input');
-      from.type = 'time'; from.className = 'border p-1 rounded'; from.value = fromVal;
-      const dash = document.createElement('span'); dash.textContent = '–';
-      const to = document.createElement('input');
-      to.type = 'time'; to.className = 'border p-1 rounded'; to.value = toVal;
-
-      const removeRange = document.createElement('button');
-      removeRange.className = 'ml-2 bg-red-400 text-white px-2 py-1 rounded';
-      removeRange.textContent = 'X';
-
-      // when either changes, update periodData.hours[dayKey]
       function updateBacking() {
-        const vals = [...rangesWrap.querySelectorAll('input[type=time]')]
-          // group by twos
-          .reduce((acc, el, i) => {
-            const pairIndex = Math.floor(i/2);
-            acc[pairIndex] = acc[pairIndex] || [];
-            acc[pairIndex].push(el.value);
-            return acc;
-          }, [])
-          .map(pair => pair.join('-'))
-          .filter(pair => pair && pair !== '-');
-
-        // if none -> null
+        const vals = [];
+        const pairs = rangesWrap.querySelectorAll(':scope > div'); // direct children pairs
+        pairs.forEach(pdiv => {
+          const tfrom = pdiv.querySelector('input[type=time]');
+          const tto = pdiv.querySelectorAll('input[type=time]')[1];
+          if (tfrom && tto && tfrom.value && tto.value) vals.push(tfrom.value + '-' + tto.value);
+        });
         periodData.hours[dayKey] = vals.length === 0 ? null : (vals.length === 1 ? vals[0] : vals);
+        renderSchedule(); // update preview live
       }
 
-      removeRange.onclick = () => {
-        pair.remove();
-        updateBacking();
-      };
+      removeRange.onclick = () => { pair.remove(); updateBacking(); };
+      from.onchange = updateBacking; to.onchange = updateBacking;
 
-      from.onchange = updateBacking;
-      to.onchange = updateBacking;
-
-      pair.appendChild(from);
-      pair.appendChild(dash);
-      pair.appendChild(to);
-      pair.appendChild(removeRange);
-
+      pair.appendChild(from); pair.appendChild(dash); pair.appendChild(to); pair.appendChild(removeRange);
       rangesWrap.appendChild(pair);
       updateBacking();
     }
 
-    // populate existing ranges
-    if (ranges.length === 0) {
-      // nothing -> show one empty pair by default for convenience
-      addRangePair('');
-    } else {
-      ranges.forEach(r => {
-        addRangePair(r);
-      });
-    }
+    // populate existing ranges: if none, show one empty pair as guidance
+    if (ranges.length === 0) addRangePair('');
+    else ranges.forEach(r => addRangePair(r));
 
-    const addBtn = document.createElement('button');
-    addBtn.className = 'ml-2 bg-blue-400 text-white px-2 py-1 rounded';
-    addBtn.textContent = '+';
-    addBtn.onclick = () => addRangePair('');
+    const addBtn = document.createElement('button'); addBtn.className='ml-2 bg-blue-400 text-white px-2 py-1 rounded'; addBtn.textContent='+'; addBtn.onclick = () => addRangePair('');
 
-    row.appendChild(lbl);
-    row.appendChild(rangesWrap);
-    row.appendChild(addBtn);
-
+    row.appendChild(lbl); row.appendChild(rangesWrap); row.appendChild(addBtn);
     hoursBox.appendChild(row);
   });
 
   div.appendChild(hoursBox);
-
   return div;
 }
 
-/* Sort periods within a location by start MM-DD (empty at end) */
+/* sort periods and helpers */
 function sortPeriods(loc) {
   const arr = scheduleData[loc].periods;
-  arr.sort((a,b) => {
-    if (!a.start && !b.start) return 0;
-    if (!a.start) return 1;
-    if (!b.start) return -1;
-    // 'MM-DD' lexicographic sorts correctly as 'MM-DD'
-    return a.start.localeCompare(b.start);
-  });
-  renderSchedule(); // reflect immediately in preview
-}
-
-/* -----------------------
-   Cancel / Save (mock)
-   ----------------------- */
-function cancelEditing() {
-  // restore from originalData
-  scheduleData = JSON.parse(JSON.stringify(originalData));
-  document.getElementById('editor').classList.add('hidden');
+  arr.sort((a,b) => { if (!a.start && !b.start) return 0; if (!a.start) return 1; if (!b.start) return -1; return a.start.localeCompare(b.start); });
   renderSchedule();
 }
 
-function saveChanges() {
-  // apply and update originalData (mock save only)
-  originalData = JSON.parse(JSON.stringify(scheduleData));
-  // optionally sort all locations
-  Object.keys(scheduleData).forEach(loc => sortPeriods(loc));
-  renderSchedule();
-  alert('Spremembe uporabljene (samo za prikaz, še niso shranjene).');
-  document.getElementById('editor').classList.add('hidden');
-}
+/* cancel / save (mock) */
+function cancelEditing() { scheduleData = JSON.parse(JSON.stringify(originalData)); document.getElementById('editor').classList.add('hidden'); renderSchedule(); }
+function saveChanges() { originalData = JSON.parse(JSON.stringify(scheduleData)); Object.keys(scheduleData).forEach(loc=>sortPeriods(loc)); renderSchedule(); alert('Spremembe uporabljene (samo za prikaz, še niso shranjene).'); document.getElementById('editor').classList.add('hidden'); }
 
-/* -----------------------
-   Utility: add a new blank period for first location when needed
-   ----------------------- */
+/* add period helper */
 function addPeriod() {
-  // if multiple locations, add to first one (rare). Better UX later: choose location.
   const firstLoc = Object.keys(scheduleData)[0];
-  if (!firstLoc) {
-    alert('Ni lokacij v podatkih (ne morem dodati obdobja).');
-    return;
-  }
+  if (!firstLoc) { alert('Ni lokacij v podatkih (ne morem dodati obdobja).'); return; }
   const newPeriod = { start:'', end:'', hours:{ Mon:null,Tue:null,Wed:null,Thu:null,Fri:null,Sat:null,Sun:null } };
   scheduleData[firstLoc].periods.push(newPeriod);
-  startEditing(); // rebuild editor to include the new period
+  startEditing();
 }
-
 </script>
 </body>
 </html>
