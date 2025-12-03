@@ -89,7 +89,7 @@ function renderSchedule() {
     locData.periods.forEach((p, idx) => {
       const periodDiv = document.createElement('div');
       periodDiv.className = 'border p-2 rounded mb-2 bg-white';
-      periodDiv.innerHTML = `<strong>Obdobje ${idx+1}:</strong> ${p.start} - ${p.end}</br>`;
+      periodDiv.innerHTML = `<strong>Obdobje ${idx+1}:</strong> ${p.start} - ${p.end}<br>`;
 
       const ul = document.createElement('ul');
       for (const day in p.hours) {
