@@ -30,9 +30,10 @@
     <button id="editBtn" onclick="startEditing()" class="mt-4 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 hidden">Uredi urnik</button>
 
     <!-- Editor -->
-    <div id="editor" class="hidden mt-6 w-full">
+    <div id="editor" class="hidden mt-6">
       <h3 class="text-xl font-semibold mb-4">Uredi obdobja</h3>
       <div id="periodList" class="space-y-4"></div>
+      <button onclick="addPeriod()" class="mt-4 bg-blue-600 text-white py-2 px-4 rounded">Dodaj obdobje</button>
 
       <div class="flex flex-col sm:flex-row gap-3 mt-6">
         <button onclick="cancelEditing()" class="flex-1 bg-gray-400 text-white py-2 rounded">Prekliči</button>
@@ -91,14 +92,17 @@ function renderSchedule() {
     locData.periods.forEach((p, idx) => {
       const periodDiv = document.createElement('div');
       periodDiv.className = 'border p-2 rounded mb-2 bg-white';
+
+      // Add spacing between period line and weekdays
       periodDiv.innerHTML = `<strong>Obdobje ${idx+1}: ${p.start} - ${p.end}</strong><br><br>`;
 
+      const ul = document.createElement('ul');
       for (const day in p.hours) {
-        const dayText = `${dayNames[day]}: ${Array.isArray(p.hours[day]) ? p.hours[day].join(', ') : (p.hours[day] || 'Zaprto')}`;
-        const pElem = document.createElement('p');
-        pElem.textContent = dayText;
-        periodDiv.appendChild(pElem);
+        const li = document.createElement('li');
+        li.textContent = `${dayNames[day]}: ${Array.isArray(p.hours[day]) ? p.hours[day].join(', ') : (p.hours[day] || 'Zaprto')}`;
+        ul.appendChild(li);
       }
+      periodDiv.appendChild(ul);
       card.appendChild(periodDiv);
     });
 
@@ -113,7 +117,7 @@ function startEditing() {
 
   Object.entries(scheduleData).forEach(([loc, locData]) => {
     const locCard = document.createElement('div');
-    locCard.className = 'border rounded p-3 bg-gray-100 relative w-full';
+    locCard.className = 'border rounded p-3 bg-gray-100 relative';
 
     const title = document.createElement('h4');
     title.className = 'font-semibold mb-2';
@@ -133,21 +137,21 @@ function startEditing() {
 
 function createPeriodForm(loc, idx, periodData) {
   const div = document.createElement('div');
-  div.className = 'border p-2 rounded mb-4 bg-white relative';
+  div.className = 'border p-2 rounded mb-2 bg-white relative';
 
-  // Odstrani obdobje button
+  // Odstrani obdobje button top
   const removeBtn = document.createElement('button');
   removeBtn.textContent = 'Odstrani obdobje';
-  removeBtn.className = 'w-full bg-red-500 text-white py-2 rounded mb-2 text-center';
+  removeBtn.className = 'absolute top-0 left-0 right-0 bg-red-500 text-white py-2 rounded-t text-center';
   removeBtn.onclick = () => { 
     scheduleData[loc].periods.splice(idx,1); 
     div.remove(); 
   };
   div.appendChild(removeBtn);
 
-  // Date pickers
+  // Date pickers with helper text
   const dateDiv = document.createElement('div');
-  dateDiv.className = 'flex flex-col sm:flex-row gap-2 items-center mb-2';
+  dateDiv.className = 'flex flex-col sm:flex-row gap-2 items-center mb-2 mt-8';
   const startLabel = document.createElement('span');
   startLabel.textContent = 'Obdobje od';
   startLabel.className='font-medium';
@@ -174,36 +178,41 @@ function createPeriodForm(loc, idx, periodData) {
 
   div.appendChild(dateDiv);
 
-  // Days
+  // Days with responsive start-end inputs
   Object.keys(periodData.hours).forEach(day => {
     const dayDiv = document.createElement('div');
-    dayDiv.className = 'flex flex-wrap gap-2 items-center mt-1 w-full';
+    dayDiv.className = 'flex flex-col sm:flex-row sm:items-center gap-2 mt-1';
+    
     const label = document.createElement('span');
     label.textContent = dayNames[day]+':';
     label.className = 'w-24 flex-shrink-0';
     dayDiv.appendChild(label);
 
-    // Always initialize at least one range
-    const ranges = Array.isArray(periodData.hours[day]) ? periodData.hours[day] : periodData.hours[day] ? [periodData.hours[day]] : [''];
-    periodData.hours[day] = ranges.length === 1 && ranges[0]==='' ? null : ranges.length===1?ranges[0]:ranges;
+    let ranges = Array.isArray(periodData.hours[day]) ? periodData.hours[day] : periodData.hours[day] ? [periodData.hours[day]] : [];
 
     ranges.forEach((range, i) => {
-      const input = document.createElement('input');
-      input.type='time';
-      input.value = range ? range.split('-')[0] : '';
-      input.className='border p-1 rounded flex-1 min-w-[100px]';
-      const input2 = document.createElement('input');
-      input2.type='time';
-      input2.value = range ? range.split('-')[1] : '';
-      input2.className='border p-1 rounded flex-1 min-w-[100px]';
-      input.onchange = input2.onchange = e => {
-        const startVal = input.value;
-        const endVal = input2.value;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'flex gap-1 sm:gap-2 flex-1 flex-wrap';
+      
+      const inputStart = document.createElement('input');
+      inputStart.type='time';
+      inputStart.value = range ? range.split('-')[0] : '';
+      inputStart.className='border p-1 rounded flex-1 min-w-0';
+      
+      const inputEnd = document.createElement('input');
+      inputEnd.type='time';
+      inputEnd.value = range ? range.split('-')[1] : '';
+      inputEnd.className='border p-1 rounded flex-1 min-w-0';
+      
+      inputStart.onchange = inputEnd.onchange = () => {
+        const startVal = inputStart.value;
+        const endVal = inputEnd.value;
         ranges[i] = startVal && endVal ? `${startVal}-${endVal}` : '';
         periodData.hours[day] = ranges.length === 1 ? ranges[0] : ranges;
       };
-      dayDiv.appendChild(input);
-      dayDiv.appendChild(input2);
+      wrapper.appendChild(inputStart);
+      wrapper.appendChild(inputEnd);
+      dayDiv.appendChild(wrapper);
     });
 
     if(ranges.length < 2){
@@ -214,7 +223,8 @@ function createPeriodForm(loc, idx, periodData) {
         if(ranges.length < 2){
           ranges.push('');
           periodData.hours[day] = ranges.length === 1 ? ranges[0] : ranges;
-          dayDiv.insertBefore(createNewTimeInputs(dayDiv, ranges, ranges.length-1, periodData, day), addRangeBtn);
+          const newInputs = createNewTimeInputs(dayDiv, ranges, ranges.length-1, periodData, day);
+          dayDiv.insertBefore(newInputs, addRangeBtn);
           if(ranges.length === 2) addRangeBtn.style.display='none';
         }
       };
@@ -228,22 +238,26 @@ function createPeriodForm(loc, idx, periodData) {
 }
 
 function createNewTimeInputs(dayDiv, ranges, index, periodData, day){
-  const input = document.createElement('input');
-  input.type='time';
-  input.className='border p-1 rounded flex-1 min-w-[100px]';
-  const input2 = document.createElement('input');
-  input2.type='time';
-  input2.className='border p-1 rounded flex-1 min-w-[100px]';
-  input.onchange = input2.onchange = e => {
-    const startVal = input.value;
-    const endVal = input2.value;
+  const wrapper = document.createElement('div');
+  wrapper.className='flex gap-1 sm:gap-2 flex-1 flex-wrap';
+  
+  const inputStart = document.createElement('input');
+  inputStart.type='time';
+  inputStart.className='border p-1 rounded flex-1 min-w-0';
+  
+  const inputEnd = document.createElement('input');
+  inputEnd.type='time';
+  inputEnd.className='border p-1 rounded flex-1 min-w-0';
+  
+  inputStart.onchange = inputEnd.onchange = () => {
+    const startVal = inputStart.value;
+    const endVal = inputEnd.value;
     ranges[index] = startVal && endVal ? `${startVal}-${endVal}` : '';
     periodData.hours[day] = ranges.length === 1 ? ranges[0] : ranges;
   };
-  const wrapper = document.createElement('div');
-  wrapper.className='flex flex-wrap gap-2 w-full';
-  wrapper.appendChild(input);
-  wrapper.appendChild(input2);
+  
+  wrapper.appendChild(inputStart);
+  wrapper.appendChild(inputEnd);
   return wrapper;
 }
 
