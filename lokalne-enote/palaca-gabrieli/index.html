@@ -112,6 +112,30 @@
       outline: none;
     }
 
+    /* FOOTER STYLING — copy this to other pages */
+    footer {
+      background: #004d66;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    footer a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    footer a img {
+      width: 24px;
+      vertical-align: middle;
+    }
+
   </style>
 </head>
 <body>
@@ -233,6 +257,20 @@
     import { loadTranslations } from '../../i18n.js';
     loadTranslations('translations-palaca-gabrieli');
   </script>
+
+<footer>
+  <a href="https://pomorskimuzej.si/" target="_blank">
+    <img src="../../icons/pmp.png" alt="Muzej domov">Pomorski muzej Sergej Mašera Piran
+  </a>
+  <a href="https://www.instagram.com/pomorskimuzej" target="_blank">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37a4 4 0 1 1-4.5-4.5 4 4 0 0 1 4.5 4.5z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
+    Instagram
+  </a>
+  <a href="https://www.facebook.com/pomorski.piran" target="_blank">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+    Facebook
+  </a>
+</footer>
 
 </body>
 </html>
